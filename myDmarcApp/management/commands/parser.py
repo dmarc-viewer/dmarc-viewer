@@ -4,57 +4,73 @@
 #
 #----------------------------------------------------------------------
 
-from django.core.management.base import BaseCommand, CommandError
+from __future__ import unicode_literals
 import xml.etree.ElementTree as ET
-import .choices as choices
-
+from datetime import datetime
 import logging
-tree = ET.parse('test.xml')
+import os
+import pytz
 
+from django.core.management.base import BaseCommand, CommandError
+from myDmarcApp.models import Report, Reporter, ReportError, Record, PolicyOverrideReason, AuthResultDKIM, AuthResultSPF
+from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+import myDmarcApp.choices as choices
+
+logger = logging.getLogger('django')
+logger.info("Parse DMARC Aggregate Report into MyDMARC DB")
 
 class Command(BaseCommand):
     help = 'Parses DMARC aggregate reports'
 
     def add_arguments(self, parser):
-        # Positional arguments
+        # Files
         parser.add_argument('file_name', nargs='+', type=str)
 
+        # Report Type
         parser.add_argument('--type',
             action='store',
             dest='type',
             default=choices.INCOMING,
-            help='Incoming ('+choices.INCOMING+') or outgoing('+choices.OUTGOING+') Report')
+            help='Incoming ('+str(choices.INCOMING)+') or outgoing ('+str(choices.OUTGOING)+') Report')
 
     def handle(self, *args, **options):
 
-        logger = logging.getLogger(__name__)
-        logger.info("Importing DMARC Aggregate Reports")
-
+        # Iterate over files
         for file_name in options['file_name']:
 
-            if os.path.exists(file_name):
-                msg = "Found %s" % file_name
+            # Try next file if this one does not exist
+            if not os.path.exists(file_name):
+                msg = "Could not find %s" % file_name
                 logger.debug(msg)
-            else:
-                msg = "Unable to find DMARC file: %s" % file_name
-                logger.error(msg)
-                raise CommandError(msg)
+                continue
 
+            # Parse the file into XML Element Tree
             tree = ET.parse(file_name)
             root = tree.getroot()
 
+            # Create new report object and assign metadata
             report                      = Report()
-            report.report_type          = options['type'] #Check if this is one of choices.INCOMING or choices.OUTGOING
-            report.version              = root.find('version').text
+
+            report.report_type          = options['type']
+            
+            version                     = root.findtext('version')
+            if version:
+                report.version          = float(version)
 
             node_metadata               = root.find('report_metadata')
-            org_name                    = node_metadata.find('org_name').text
-            email                       = node_metadata.find('email').text
-            extra_contact_info          = node_metadata.find('extra_contact_info').text
-            report.report_id            = node_metadata.find('report_id').text # Check if ID is unique
-            report.report_begin         = datetime.fromtimestamp(float(node_metadata.find('date_range').find('begin').text))
-            report.report_end           = datetime.fromtimestamp(float(node_metadata.find('date_range').find('end').text))
+            report.report_id            = node_metadata.findtext('report_id')
+            report.date_range_begin     = datetime.fromtimestamp(float(
+                                            node_metadata.find('date_range').findtext('begin')), tz=pytz.utc)
+            report.date_range_end       = datetime.fromtimestamp(float(
+                                            node_metadata.find('date_range').findtext('end')), tz=pytz.utc)
 
+            # Report Sender meta data is stored in an extra object
+            # If we don't have it create a new one
+            org_name                    = node_metadata.findtext('org_name')
+            email                       = node_metadata.findtext('email')
+            extra_contact_info          = node_metadata.findtext('extra_contact_info')
             try:
                 reporter = Reporter.objects.get(org_name=org_name, email=email, 
                     extra_contact_info=extra_contact_info)
@@ -66,74 +82,85 @@ class Command(BaseCommand):
                 try:
                     reporter.save()
                 except Exception, e:
-                    msg = "Unable to create DMARC report for %s: $s" % (org_name, e)
+                    msg = "Unable to create DMARC reporter for %s: %s" % (org_name, e)
                     logger.error(msg)
                     raise CommandError(msg)
+            report.reporter                     = reporter
 
+            # Add policy published data to report object 
             node_policy_published   = root.find('policy_published')
-
-            report.policy_published_domain = node_policy_published.find('domain').text
-            report.policy_published_adkim  = node_policy_published.find('adkim').text
-            report.policy_published_aspf   = node_policy_published.find('aspf').text
-            report.policy_published_p      = node_policy_published.find('p').text
-            report.policy_published_sp     = node_policy_published.find('sp').text
-            report.policy_published_pct    = node_policy_published.find('pct').text
-            report.policy_published_fo     = node_policy_published.find('fo').text
+            report.domain           = node_policy_published.findtext('domain')
+            report.adkim            = choices.convert(choices.ALIGNMENT_MODE, 
+                                                        node_policy_published.findtext('adkim'))
+            report.aspf             = choices.convert(choices.ALIGNMENT_MODE, 
+                                                        node_policy_published.findtext('aspf'))
+            report.p                = choices.convert(choices.DISPOSITION_TYPE,
+                                                        node_policy_published.findtext('p'))
+            report.sp               = choices.convert(choices.DISPOSITION_TYPE,
+                                                        node_policy_published.findtext('sp'))
+            pct                     = node_policy_published.findtext('pct')
+            if pct:
+                report.pct          = int(pct)
+            report.fo               = node_policy_published.findtext('fo')
 
             try:
                 report.save()
             except Exception, e:
-                msg = "Unable to save the DMARC report header %s: %s" % (report_id, e)
+                msg = "Unable to create DMARC report for %s: %s" % (report.report_id, e)
                 logger.error(msg)
                 raise CommandError(msg)
 
-            # Save report errors these can be 
+            # Save report errors
             for node_error in node_metadata.findall('error'):
-                error           = ReportError()
-                error.error     = node_error.text
-                error.report    = report
+                error               = ReportError()
+                error.error         = node_error.text
+                error.report        = report
                 try:
                     error.save()
                 except Exception, e:
-                    msg  = "Unable to save error message"
+                    msg  = "Unable to save error for %s: %s" % (report.report_id, e)
                     logger.error(msg)
                     raise CommandError(msg)
 
 
             for node_record in root.findall('record'):
-                record                  = Record()
-                record.report           = report
+                record                   = Record()
+                record.report            = report
 
-                node_row                = node_record.find('row')
-                record.source_ip        = node_row.find('source_ip').text
-                record.count            = int(node_row.find('count').text)
+                node_row                 = node_record.find('row')
+                record.source_ip         = node_row.findtext('source_ip')
+                record.count             = int(node_row.findtext('count'))
 
-                node_policy_evaluated   = node_row.find('policy_evaluated')
-                record.disposition      = node_policy_evaluated.find('disposition').text
-                record.dkim             = node_policy_evaluated.find('dkim').text
-                record.spf              = node_policy_evaluated.find('spf').text
+                node_policy_evaluated    = node_row.find('policy_evaluated')
+                record.disposition       = choices.convert(choices.DISPOSITION_TYPE, 
+                                             node_policy_evaluated.findtext('disposition'))
+                record.dkim              = choices.convert(choices.DMARC_RESULT,
+                                             node_policy_evaluated.findtext('dkim'))
+                record.spf               = choices.convert(choices.DMARC_RESULT,
+                                             node_policy_evaluated.findtext('spf'))
 
-                node_identifiers        = node_row.find('identifiers')
-                record.envelope_to      = node_identifiers.find('envelope_to').text
-                record.envelope_from    = node_identifiers.find('envelope_from').text
-                record.header_from      = node_identifiers.find('header_from').text
+                node_identifiers         = node_record.find('identifiers')
+                record.envelope_to       = node_identifiers.findtext('envelope_to')
+                record.envelope_from     = node_identifiers.findtext('envelope_from')
+                record.header_from       = node_identifiers.findtext('header_from')
 
                 try:
                     record.save()
                 except Exception, e:
-                    msg = "Unable to save the DMARC report record: %s" % e
+                    msg = "Unable to save the DMARC record for %s: %s" % (report.report_id, e)
                     logger.error(msg)
                     raise CommandError(msg)
 
                 for node_reason in node_policy_evaluated.findall('reason'):
                     reason          = PolicyOverrideReason()
                     reason.record   = record
-                    reason.type     = node_reason.find('type').text
-                    reason.comment  = node_reason.find('comment').text
+                    reason.type     = choices.convert(choices.POLICY_REASON_TYPE,
+                                        node_reason.findtext('type'))
+                    reason.comment  = node_reason.findtext('comment')
                     try:
                         reason.save()
                     except Exception, e:
-                        msg = "Could not save reason"
+                        msg = "Unable to save reason for %s: %s" % (report.report_id, e)
                         logger.error(msg)
                         raise CommandError(msg)
 
@@ -141,26 +168,29 @@ class Command(BaseCommand):
                 for node_dkim_result in node_auth_results.findall('dkim'):
                     result_dkim                 = AuthResultDKIM()
                     result_dkim.record          = record
-                    result_dkim.domain          = node_dkim_result.find('domain').text
-                    result_dkim.selector        = node_dkim_result.find('selector').text
-                    result_dkim.result          = node_dkim_result.find('result').text
-                    result_dkim.human_result    = node_dkim_result.find('human_result').text
+                    result_dkim.domain          = node_dkim_result.findtext('domain')
+                    result_dkim.selector        = node_dkim_result.findtext('selector')
+                    result_dkim.result          = choices.convert(choices.DKIM_RESULT,
+                                                    node_dkim_result.findtext('result'))
+                    result_dkim.human_result    = node_dkim_result.findtext('human_result')
                     try:
                         result_dkim.save()
                     except Exception, e:
-                        msg = "Blaaa"
+                        msg = "Unable to save DKIM auth_result for %s: %s" % (report.report_id, e)
                         logger.error(msg)
                         raise CommandError(msg)
 
-                for node_spf_result in node_auth_results.findall('spf')
+                for node_spf_result in node_auth_results.findall('spf'):
                     result_spf          = AuthResultSPF()
                     result_spf.record   = record
-                    result_spf.domain   = node_spf_result.find('domain').text
-                    result_spf.scope    = node_spf_result.find('scope').text
-                    result_spf.result   = node_spf_result.find('result').text
+                    result_spf.domain   = node_spf_result.findtext('domain')
+                    result_spf.scope    = choices.convert(choices.SPF_SCOPE, 
+                                            node_spf_result.findtext('scope'))
+                    result_spf.result   = choices.convert(choices.SPF_RESULT, 
+                                            node_spf_result.findtext('result'))
                     try:
                         result_spf.save()
                     except Exception, e:
-                        msg = "Blaaa"
+                        msg = "Unable to save SPF auth_result for %s: %s" % (report.report_id, e)
                         logger.error(msg)
                         raise CommandError(msg)

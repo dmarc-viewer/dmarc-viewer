@@ -1,3 +1,9 @@
+def convert(choices, val):
+    for choice in choices:
+        if choice[1] == val:
+            return choice[0]
+    return None
+
 INCOMING = 1
 OUTGOING = 2
 REPORT_TYPE = (
@@ -16,8 +22,8 @@ NONE = 1
 QUARANTINE = 2
 REJECT = 3
 DISPOSITION_TYPE = (
-        (NONE, 'none')
-        (QUARANTINE, 'quarantine')
+        (NONE, 'none'),
+        (QUARANTINE, 'quarantine'),
         (REJECT, 'reject')
     )
 
@@ -58,12 +64,12 @@ SPF_SOFTFAIL = 5
 SPF_TEMPERROR = 6
 SPF_PERMERROR = 7
 SPF_RESULT = (
-        (SPF_NONE, 'none')
-        (SPF_NEUTRAL, 'neutral')
-        (SPF_PASS, 'pass')
-        (SPF_FAIL, 'fail')
-        (SPF_SOFTFAIL, 'softfail')
-        (SPF_TEMPERROR, 'temperror')
+        (SPF_NONE, 'none'),
+        (SPF_NEUTRAL, 'neutral'),
+        (SPF_PASS, 'pass'),
+        (SPF_FAIL, 'fail'),
+        (SPF_SOFTFAIL, 'softfail'),
+        (SPF_TEMPERROR, 'temperror'),
         (SPF_PERMERROR, 'permerror')
     )
 
@@ -75,11 +81,11 @@ DKIM_NEUTRAL = 5
 DKIM_TEMPERROR = 6
 DKIM_PERMERROR = 7
 DKIM_RESULT = (
-        (DKIM_NONE, 'none'
-        (DKIM_PASS, 'pass'
-        (DKIM_FAIL, 'fail'
-        (DKIM_POLICY, 'policy'
-        (DKIM_NEUTRAL, 'neutral'
-        (DKIM_TEMPERROR, 'temperror'
-        (DKIM_PERMERROR, 'permerror'
+        (DKIM_NONE, 'none'),
+        (DKIM_PASS, 'pass'),
+        (DKIM_FAIL, 'fail'),
+        (DKIM_POLICY, 'policy'),
+        (DKIM_NEUTRAL, 'neutral'),
+        (DKIM_TEMPERROR, 'temperror'),
+        (DKIM_PERMERROR, 'permerror')
     )
