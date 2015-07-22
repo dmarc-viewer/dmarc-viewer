@@ -89,3 +89,14 @@ DKIM_RESULT = (
         (DKIM_TEMPERROR, 'temperror'),
         (DKIM_PERMERROR, 'permerror')
     )
+
+TIME_UNIT_DAY = 1
+TIME_UNIT_WEEK = 2
+TIME_UNIT_MONTH = 3
+TIME_UNIT_YEAR = 4
+TIME_UNIT = (
+    (TIME_UNIT_DAY, 'day'),
+    (TIME_UNIT_WEEK, 'week'),
+    (TIME_UNIT_MONTH, 'month'),
+    (TIME_UNIT_YEAR, 'year')
+    ) 
