@@ -1,0 +1,17 @@
+{# Load the tag library #}
+
+
+{% bootstrap_messages %}
+
+<h1>Y U do tiz u fgt?! :'( </h1>
+
+<form method='post' action='/edit/' class="form">
+    {{ fs_time_variable.management_form }}
+    {{ fs_time_fixed.management_form }}
+    {% csrf_token %}
+    {% bootstrap_form f_view %}
+    {% bootstrap_form fs_time_fixed.0%}
+    {% bootstrap_form fs_time_variable.0%}
+    <input class="form-control" type="submit" value="JOKR">
+</form>
+
