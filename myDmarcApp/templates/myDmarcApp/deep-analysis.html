@@ -1,0 +1,25 @@
+{% extends 'myDmarcApp/base.html' %}
+
+{% block title %}MyDmarc - Deep Analysis{% endblock %}
+
+{% block content %}
+<div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+    {% for view in views %}
+        <li {% if view.id == the_view.id %}class="active"{% endif %}><a href="/deep-analysis/{{view.id}}/">{{view.title}}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<h1>Deep Analysis</h1>
+<h2>Settings</h2>
+<div>
+    <p><strong>Title</strong> {{the_view.title}}</p> 
+    <p><strong>Description</strong> {{the_view.description}}</p> 
+    <p><strong>Enabled</strong> {{the_view.enabled}}</p> 
+    <p><strong>Report Type</strong> {{the_view.report_type}}</p>
+    <p><strong>Quantity</strong> {{the_view.timevariable.quantity}} <strong>Unit</strong> {{the_view.timevariable.unit}}</p>
+    <p><strong>From</strong> {{the_view.timefixed.date_range_begin}} <strong>To</strong> {{the_view.timefixed.date_range_end}}</p>
+</div>
+</div>
+{% endblock %}
