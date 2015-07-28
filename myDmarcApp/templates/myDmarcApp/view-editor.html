@@ -7,28 +7,34 @@
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
     <h1>Editor</h1>
-
     {% bootstrap_messages %}
     <form method='post' action='/edit/' class="form">
+         {% csrf_token %}
         <h2>View</h2>
-        {{ fs_time_variable.management_form }}
-        {{ fs_time_fixed.management_form }}
-        {% csrf_token %}
-        {% bootstrap_form f_view %}
-        {% bootstrap_form fs_time_fixed.0%}
-        {% bootstrap_form fs_time_variable.0%}
-        <h2>Filter Set</h2>
-        {% bootstrap_form fs_filter_set.0%}
-        {% bootstrap_form fs_report_sender.0%}
-        {% bootstrap_form fs_report_recv.0%}
-        {% bootstrap_form fs_source_ip.0%}
-        {% bootstrap_form fs_raw_dkim_domain.0%}
-        {% bootstrap_form fs_raw_dkim_result.0%}
-        {% bootstrap_form fs_raw_spf_domain.0%}
-        {% bootstrap_form fs_raw_spf_result.0%}
-        {% bootstrap_form fs_aligned_dkim_result.0%}
-        {% bootstrap_form fs_aligned_spf_result.0%}
-        {% bootstrap_form fs_disposition.0%}
+        {% for key, val in view_formsets.items  %}
+            {{ val.management_form }}
+        {% endfor %}
+        {{ filter_set_formset.management_form }}
+
+        {% for key, val in filter_formsets.items  %}
+            {{ val.management_form }}
+        {% endfor %}
+        {% bootstrap_form view_form %}
+        {% bootstrap_form view_formsets.time_fixed.0 %}
+        {% bootstrap_form view_formsets.time_variable.0 %}
+
+        <h2>Filter Set 1</h2>
+        {% bootstrap_form filter_set_formset.0%}
+        {% for key, val in filter_formsets.items  %}
+            {% bootstrap_form val.0 %}
+        {% endfor %}
+
+        <h2>Filter Set 2</h2>
+
+        {% bootstrap_form filter_set_formset.1%}
+        {% for key, val in filter_formsets.items  %}
+            {% bootstrap_form val.1 %}
+        {% endfor %}
         <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
     </form>
 </div>
