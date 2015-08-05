@@ -12,6 +12,8 @@ def edit(request):
     # f...form, fs...formset
     
     if request.method == 'POST':
+        print request.POST
+
         data = request.POST
     else:
         data = None
@@ -20,23 +22,23 @@ def edit(request):
     view_form           = ViewForm(data)
 
     view_formsets       = {
-        'time_variable'       : TimeVariableFormSet(data),
+        #'time_variable'       : TimeVariableFormSet(data),
         'time_fixed'          : TimeFixedFormSet(data),
 
     }
     filter_set_formset     = FilterSetFormSet(data)
-
+         
     filter_formsets = {
         'report_sender'       : ReportSenderFormSet(data),
-        'report_recv'         : ReportReceiverDomainFormSet(data),
-        'source_ip'           : SourceIPFormSet(data),
-        'raw_dkim_domain'     : RawDkimDomainFormSet(data),
-        'raw_dkim_result'     : RawDkimResultFormSet(data),
-        'raw_spf_domain'      : RawSpfDomainFormSet(data),
-        'raw_spf_result'      : RawSpfResultFormSet(data),
-        'aligned_dkim_result' : AlignedDkimResultFormSet(data),
-        'aligned_spf_result'  : AlignedSpfResultFormSet(data),
-        'disposition'         : DispositionFormSet(data)
+        # 'report_recv'         : ReportReceiverDomainFormSet(data),
+        # 'source_ip'           : SourceIPFormSet(data),
+        # 'raw_dkim_domain'     : RawDkimDomainFormSet(data),
+        # 'raw_dkim_result'     : RawDkimResultFormSet(data),
+        # 'raw_spf_domain'      : RawSpfDomainFormSet(data),
+        # 'raw_spf_result'      : RawSpfResultFormSet(data),
+        # 'aligned_dkim_result' : AlignedDkimResultFormSet(data),
+        # 'aligned_spf_result'  : AlignedSpfResultFormSet(data),
+        # 'disposition'         : DispositionFormSet(data)
     }
 
     if request.method == 'POST':
@@ -54,12 +56,8 @@ def edit(request):
                 filter_set = filter_set_formset.save()
 
                 for key, value in filter_formsets.iteritems():
-
                     for i in range(len(filter_set)):
-                        if key == raw_dkim_domain:
-                            print filter_formsets[key][i].value
                         filter_formsets[key][i].instance = filter_set[i]
-                        print filter_formsets[key][i].instance
                     filter_formsets[key].save()
 
             messages.add_message(request, messages.SUCCESS, 'Successfully saved!')

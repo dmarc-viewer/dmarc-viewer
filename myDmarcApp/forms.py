@@ -1,10 +1,15 @@
 from django.forms import ModelForm
+from django.forms.models import inlineformset_factory, modelform_factory
+
+from django.forms.widgets import SplitDateTimeWidget
+from colorful.widgets import ColorFieldWidget
+
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
     TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
-from django.forms.models import inlineformset_factory, modelform_factory
+from myDmarcApp.widgets import MultiSelectWidget
 
 
 
@@ -15,7 +20,9 @@ TimeFixedFormSet                    = inlineformset_factory(View, TimeFixed, can
 ViewForm                            = modelform_factory(View, fields=('title', 'description', 'enabled', 'report_type'))
 
 ReportSenderFormSet                 = inlineformset_factory(FilterSet, ReportSender, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Report Sender'})
+                                    fields=('value',), labels={'value' : 'Report Sender'}, widgets={'value': MultiSelectWidget})
+
+
 ReportReceiverDomainFormSet         = inlineformset_factory(FilterSet, ReportReceiverDomain, can_delete=False, extra=2,
                                     fields=('value',), labels={'value' : 'Report Receiver Domain'})
 SourceIPFormSet                     = inlineformset_factory(FilterSet, SourceIP, can_delete=False, extra=2,
@@ -35,4 +42,4 @@ AlignedSpfResultFormSet             = inlineformset_factory(FilterSet, AlignedSp
 DispositionFormSet                  = inlineformset_factory(FilterSet, Disposition, can_delete=False, extra=2,
                                     fields=('value',), labels={'value' : 'Dispostion'})
 FilterSetFormSet                    = inlineformset_factory(View, FilterSet, can_delete=False, extra=2,
-                                    fields=('label', 'color'))
+                                    fields=('label', 'color'), widgets={'color': ColorFieldWidget})

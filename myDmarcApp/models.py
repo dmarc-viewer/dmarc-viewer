@@ -199,38 +199,3 @@ class AlignedSpfResult(FilterSetFilterField):
 class Disposition(FilterSetFilterField):
     report_field            = "Record.disposition"
     value                   = models.IntegerField(choices = choices.DISPOSITION_TYPE)
-
-
-
-""""
-
-# Filter field 
-#   represents a report model field
-#   has a name
-#   has a value
-#   value can be predefined (results), computed from available entries (domains), free (ip)
-#   each filter a
-# 
-
-
-FilterFields that reference same Model Field are ORed
-FilterFields that reference different Model Fields are ANDed
-
-view 
-viewDescription
-viewFilterFields = view.getFilterFields
-
-filters = view.getFilters
-datasets = []
-for filter in filters:
-    datasetFilterFields = viewFilterFields + filters.getFilterFields
-    dataset = Reports.find().filter(datasetFilterFields)
-    datasets.append(dataset)
-
-
-What I want to do in a View:
-    view_id 
-    view.getDataSetsForViewType()
-    
-
-"""

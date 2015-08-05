@@ -73,10 +73,11 @@ class DispositionInline(SuperInlineModelAdmin, admin.StackedInline):
 class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
     model = FilterSet
     extra = 1
-    inlines = (ReportSenderInline, ReportReceiverDomainInline,\
+    inlines = (ReportReceiverDomainInline,)
+    """inlines = (ReportSenderInline, ReportReceiverDomainInline,\
         SourceIPInline, RawDkimDomainInline, RawDkimResultInline,\
          RawSpfDomainInline, RawSpfResultInline, AlignedDkimResultInline,\
-         AlignedSpfResultInline, DispositionInline,)
+         AlignedSpfResultInline, DispositionInline,)"""
 
 class TimeFixedInline(SuperInlineModelAdmin, admin.StackedInline):
     model = TimeFixed
@@ -87,6 +88,7 @@ class TimeVariableInline(SuperInlineModelAdmin, admin.StackedInline):
     extra = 1
 
 class ViewAdmin(SuperModelAdmin):
-    inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
+    inlines = (TimeVariableInline, FilterSetInline,)
+    # inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
 
 admin.site.register(View, ViewAdmin)

@@ -10,6 +10,7 @@
     {% bootstrap_messages %}
     <form method='post' action='/edit/' class="form">
          {% csrf_token %}
+
         <h2>View</h2>
         {% for key, val in view_formsets.items  %}
             {{ val.management_form }}
@@ -20,21 +21,20 @@
             {{ val.management_form }}
         {% endfor %}
         {% bootstrap_form view_form %}
-        {% bootstrap_form view_formsets.time_fixed.0 %}
-        {% bootstrap_form view_formsets.time_variable.0 %}
-
-        <h2>Filter Set 1</h2>
-        {% bootstrap_form filter_set_formset.0%}
-        {% for key, val in filter_formsets.items  %}
+        {% for key, val in view_formsets.items  %}
             {% bootstrap_form val.0 %}
         {% endfor %}
 
-        <h2>Filter Set 2</h2>
-
-        {% bootstrap_form filter_set_formset.1%}
+        {% comment %}This explicit media specification sucks
+        for colorpicker it does not even work
+        {% endcomment %}
+        <h2>Filter Set</h2>
+        {% bootstrap_form filter_set_formset.0%}
         {% for key, val in filter_formsets.items  %}
-            {% bootstrap_form val.1 %}
+            {{ val.0.media }}
+            {% bootstrap_form val.0 %}
         {% endfor %}
+
         <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
     </form>
 </div>
