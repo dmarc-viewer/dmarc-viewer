@@ -5,7 +5,7 @@
 {% block content %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-    {% for view in views %}
+    {% for view in sidebar_views %}
         <li {% if view.id == the_view.id %}class="active"{% endif %}><a href="/deep-analysis/{{view.id}}/">{{view.title}}</a></li>
     {% endfor %}
     </ul>

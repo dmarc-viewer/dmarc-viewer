@@ -45,7 +45,6 @@ class ReportError(models.Model):
     report                  = models.ForeignKey('Report')
     error                   = models.CharField(max_length = 200)
 
-
 class Record(models.Model):
     report                  = models.ForeignKey('Report')
 
@@ -74,7 +73,6 @@ class PolicyOverrideReason(models.Model):
 class AuthResultDKIM(models.Model):
     record                  = models.ForeignKey('Record')
     domain                  = models.CharField(max_length = 100)
-    selector                = models.CharField(max_length = 100, null = True)
     result                  = models.IntegerField(choices = choices.DKIM_RESULT)
     human_result            = models.CharField(max_length = 200, null = True)
 
@@ -99,7 +97,7 @@ class View(models.Model):
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
     label                   = models.CharField(max_length = 100)
-    color                   = models.CharField(max_length = 6)
+    color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
 
 class FilterField(models.Model):
@@ -153,12 +151,10 @@ class TimeVariable(ViewFilterField):
                 % (begin, end)
 
 class ReportSender(FilterSetFilterField):
-    # For form convenience: choices of findall domains
     report_field            = "Reporter.email"
     value                   = models.CharField(max_length = 100)
 
 class ReportReceiverDomain(FilterSetFilterField):
-    # For form convenience: choices of findall domains
     report_field            = "domain"
     value                   = models.CharField(max_length = 100)
 
@@ -171,7 +167,6 @@ class SourceIP(FilterSetFilterField):
         return super(SourceIP, self).filter()
 
 class RawDkimDomain(FilterSetFilterField):
-    # choices of findall domains
     report_field            = "Record.AuthResultDKIM.domain"
     value                   = models.CharField(max_length = 100)
 
@@ -180,7 +175,6 @@ class RawDkimResult(FilterSetFilterField):
     value                   = models.IntegerField(choices = choices.DKIM_RESULT)
 
 class RawSpfDomain(FilterSetFilterField):
-    # choices of findall domains
     report_field            = "Record.AuthResultSPF.domain"
     value                   = models.CharField(max_length = 100)
 

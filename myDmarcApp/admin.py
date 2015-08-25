@@ -89,6 +89,6 @@ class TimeVariableInline(SuperInlineModelAdmin, admin.StackedInline):
 
 class ViewAdmin(SuperModelAdmin):
     inlines = (TimeVariableInline, FilterSetInline,)
-    # inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
+    inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
 
 admin.site.register(View, ViewAdmin)

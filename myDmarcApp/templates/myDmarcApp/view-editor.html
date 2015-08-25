@@ -5,37 +5,61 @@
 {% block title %}MyDmarc - View Editor{% endblock %}
 
 {% block content %}
-<div class="col-sm-12 col-md-12 main">
+<div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+    {% for view in sidebar_views %}
+        <li {% if view_form.instance.id and view_form.instance.id == view.id %} class="active" {% endif %} >
+            <a href="/edit/{{view.id}}/">{{view.title}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h1>Editor</h1>
     {% bootstrap_messages %}
-    <form method='post' action='/edit/' class="form">
+    <form id="viewFilterForm" method='post' action='/edit/{% if view_form.instance.id %}{{view_form.instance.id}}/ {% endif %}' class="form">
          {% csrf_token %}
-
         <h2>View</h2>
-        {% for key, val in view_formsets.items  %}
-            {{ val.management_form }}
-        {% endfor %}
-        {{ filter_set_formset.management_form }}
 
-        {% for key, val in filter_formsets.items  %}
-            {{ val.management_form }}
-        {% endfor %}
         {% bootstrap_form view_form %}
-        {% for key, val in view_formsets.items  %}
-            {% bootstrap_form val.0 %}
-        {% endfor %}
 
-        {% comment %}This explicit media specification sucks
-        for colorpicker it does not even work
+        <div>
+            <h4>Time</h4>
+        {% bootstrap_form view_time_fixed_form %}
+        {% bootstrap_form view_time_variable_form %}
+        </div>
+
+    {% comment %}
+
+        <div id="filterSet">
+            <h3>Filters</h3>
+
+            {% for filter_set_form in filter_set_formset%}
+                <div class="filter">
+                    <h4>Filter</h4>
+                    {% bootstrap_form filter_set_form %}
+                </div>
+            {% endfor %}
+
+            {{ filter_set_formset.management_form }}
+
         {% endcomment %}
-        <h2>Filter Set</h2>
-        {% bootstrap_form filter_set_formset.0%}
-        {% for key, val in filter_formsets.items  %}
-            {{ val.0.media }}
-            {% bootstrap_form val.0 %}
-        {% endfor %}
 
+            {% comment %}
+                
+            {% for key, val in filter_formsets.items  %}
+                {{ val.management_form }}
+                {% bootstrap_form val.0 %}
+            {% endfor %}
+            {% endcomment %}
+        </div>
         <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
     </form>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#filterSet .filter').formset();
+    })
+</script>
 {% endblock %}

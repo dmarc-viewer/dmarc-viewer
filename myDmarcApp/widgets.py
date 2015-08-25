@@ -1,5 +1,5 @@
 from django import forms
-from django.forms.widgets import SelectMultiple
+from django.forms.widgets import SelectMultiple, TextInput
 from django.utils.safestring import mark_safe
 
 class MultiSelectWidget(SelectMultiple):
@@ -7,15 +7,8 @@ class MultiSelectWidget(SelectMultiple):
 
     def __init__(self, attrs=None, choices=()):
         super(MultiSelectWidget, self).__init__(attrs)
-        self.choices = list((('1', 'First',), ('2', 'Second',)))
-
-    class Media:
-        css = {
-            'all': ("selectize/css/selectize.css", "selectize/css/selectize.default.css", 
-                "selectize/css/selectize.legacy.css", "selectize/css/selectize.bootstrap3.css",)
-        }
-        js = ("selectize/js/standalone/selectize.min.js",)
-        
+        print choices
+        self.choices=choices
         
     def render(self, name, value, attrs=None):
         html = super(MultiSelectWidget, self).render(name, value, attrs)
@@ -23,6 +16,25 @@ class MultiSelectWidget(SelectMultiple):
                     (function($){
                         $(document).ready(function(){
                             $('#id_%s').selectize();
+                        });
+                    })('django' in window && django.jQuery ? django.jQuery: jQuery);
+                </script>''' % name
+        return  mark_safe("%s %s" % (html, js))
+
+
+class ColorPickerWidget(TextInput):
+    """Color Picker for html5 input type color, using bootstrap-colorpicker.js as fallback """
+    input_type = 'color'
+        
+    def render(self, name, value, attrs=None):
+        html = super(ColorPickerWidget, self).render(name, value, attrs)
+        js   =  '''<script type="text/javascript">
+                    (function($){
+                        $(document).ready(function(){
+                            $('#id_%s').each(function(idx, el){
+                                if (el.type != 'color')
+                                    $(el).colorpicker();
+                            });
                         });
                     })('django' in window && django.jQuery ? django.jQuery: jQuery);
                 </script>''' % name
