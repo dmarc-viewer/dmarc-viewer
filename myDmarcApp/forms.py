@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, ValidationError, MultipleChoiceField, CharField, IPAddressField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import SplitDateTimeWidget
@@ -11,8 +11,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
 from myDmarcApp.widgets import MultiSelectWidget, ColorPickerWidget
-
-
+import choices
 
 
 TimeVariableForm                    = modelform_factory(TimeVariable, fields=('unit','quantity'))
@@ -32,10 +31,10 @@ class ViewForm(ModelForm):
     def is_valid(self):
         view_valid = super(ViewForm, self).is_valid()
         if self.time_variable_form.is_valid() == self.time_fixed_form.is_valid():
-            self.time_fixed_form.add_error(None, ValidationError(_('Specify only one of both fields!'), code='double time error',))
+            self.time_fixed_form.add_error(None, ValidationError(_('Specify only one of both!'), code='double time error',))
             time_valid = False
         elif not self.time_variable_form.is_valid() and not self.time_fixed_form.is_valid():
-            self.time_fixed_form.add_error(None, ValidationError(_('Specify at least one of both fields!'), code='double time error',))
+            self.time_fixed_form.add_error(None, ValidationError(_('Specify at least one of both!'), code='double time error',))
             time_valid = False
         else:
             time_valid = True
@@ -62,41 +61,31 @@ class ViewForm(ModelForm):
 
         return view_instance
 
-ReportSenderFormSet                 = inlineformset_factory(FilterSet, ReportSender, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Report Sender'}, widgets={
-                                    'value': MultiSelectWidget(choices=Reporter.objects.distinct().values_list('email', 'email'))})
-
-ReportReceiverDomainFormSet         = inlineformset_factory(FilterSet, ReportReceiverDomain, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Report Receiver Domain'}, widgets={
-                                    'value': MultiSelectWidget(choices=Report.objects.distinct().values_list('domain', 'domain'))})
-
-SourceIPFormSet                     = inlineformset_factory(FilterSet, SourceIP, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Source IP'})
-
-RawDkimDomainFormSet                = inlineformset_factory(FilterSet, RawDkimDomain, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Raw DKIM Domain'}, widgets={
-                                    'value': MultiSelectWidget(choices=AuthResultDKIM.objects.distinct().values_list('domain', 'domain'))})
-
-RawDkimResultFormSet                = inlineformset_factory(FilterSet, RawDkimResult, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Raw DKIM Result'}, widgets={'value': MultiSelectWidget})
-
-RawSpfDomainFormSet                 = inlineformset_factory(FilterSet, RawSpfDomain, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Raw SPF Domain'}, widgets={
-                                    'value': MultiSelectWidget(choices=AuthResultSPF.objects.distinct().values_list('domain', 'domain'))}
-                                    )
-
-RawSpfResultFormSet                 = inlineformset_factory(FilterSet, RawSpfResult, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Raw SPF Result'}, widgets={'value': MultiSelectWidget})
-
-AlignedDkimResultFormSet            = inlineformset_factory(FilterSet, AlignedDkimResult, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Aligned DKIM Result'}, widgets={'value': MultiSelectWidget})
 
 
-AlignedSpfResultFormSet             = inlineformset_factory(FilterSet, AlignedSpfResult, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Aligned SPF Result'}, widgets={'value': MultiSelectWidget})
+class FilterSetForm(ModelForm):
+    report_sender = CharField(initial=Reporter.objects.distinct().values_list('id', 'email'), label='Report Sender', widget=MultiSelectWidget(attrs={'placeholder' : 'Report Sender'}, choices=Reporter.objects.distinct().values_list('id', 'email')))
+    # report_receiver_domain = CharField(label='Report Receiver Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Report Receiver Domain'}, choices=Report.objects.distinct().values_list('domain', 'domain')))
+    
+    # source_ip = IPAddressField(label='Source IP')
+    
+    # raw_dkim_domain = CharField(label='Raw DKIM Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw DKIM Domain'}, choices=AuthResultDKIM.objects.distinct().values_list('domain', 'domain')))
+    # raw_spf_domain = CharField(label='Raw SPF Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw SPF Domain'}, choices=AuthResultSPF.objects.distinct().values_list('domain', 'domain')))
+    
+    # raw_dkim_result = CharField(label='Raw DKIM Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw DKIM Result'}, choices=choices.DKIM_RESULT))
+    # raw_spf_result = CharField(label='Raw SPF Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw SPF Result'}, choices=choices.SPF_RESULT))
 
-DispositionFormSet                  = inlineformset_factory(FilterSet, Disposition, can_delete=False, extra=2,
-                                    fields=('value',), labels={'value' : 'Dispostion'}, widgets={'value': MultiSelectWidget})
+    # aligned_dkim_result = CharField(label='Aligned DKIM Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Aligned DKIM Result'}, choices=choices.DMARC_RESULT))
+    # aligned_spf_result = CharField(label='Aligned SPF Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Aligned SPF Result'}, choices=choices.DMARC_RESULT))
 
-FilterSetFormSet                    = inlineformset_factory(View, FilterSet, can_delete=True, extra=2,
-                                    fields=('label', 'color'), widgets={'color': ColorPickerWidget})
+    # disposition = CharField(label='Disposition', widget=MultiSelectWidget(attrs={'placeholder' : 'Disposition'}, choices=choices.DISPOSITION_TYPE))
+
+    def save(self):
+        print self.report_sender
+
+    class Meta:
+        model = FilterSet
+        fields = ['label', 'color']
+        widgets = {'color': ColorPickerWidget}
+
+FilterSetFormSet                    = inlineformset_factory(View, FilterSet, form=FilterSetForm, can_delete=True, extra=0)

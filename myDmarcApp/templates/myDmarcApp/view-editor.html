@@ -25,33 +25,53 @@
 
         <div>
             <h4>Time</h4>
-        {% bootstrap_form view_time_fixed_form %}
-        {% bootstrap_form view_time_variable_form %}
+            {% bootstrap_form_errors view_time_fixed_form %}
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="radio" name="time_switch" disabled>
+                </div>
+                <div class="col-md-4">
+                    {% bootstrap_field view_time_fixed_form.date_range_begin layout='inline' %}
+                </div>
+                <div class="col-md-4">
+                    {% bootstrap_field view_time_fixed_form.date_range_end layout='inline' %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="radio" name="time_switch" disabled>
+                </div>
+                <div class="col-md-4">
+                    {% bootstrap_field view_time_variable_form.quantity layout='inline' %}
+                </div>
+                <div class="col-md-4">
+                    {% bootstrap_field view_time_variable_form.unit layout='inline' %}
+                </div>
+            </div>
         </div>
 
-    {% comment %}
 
-        <div id="filterSet">
+        <div id="filterSetContainer">
             <h3>Filters</h3>
-
+            <div id="filterSetTemplate" class="filterSet" style="display:none">
+                <h4>Filter</h4>
+                {% bootstrap_form filter_set_formset.empty_form %}
+                {% for key, filter_formset in filter_formsets.items %}
+                    {% bootstrap_form filter_formset.0 %}
+                {% endfor %}
+            </div>
             {% for filter_set_form in filter_set_formset%}
-                <div class="filter">
+                <div class="filterSet">
                     <h4>Filter</h4>
                     {% bootstrap_form filter_set_form %}
-                </div>
+                {% for key, filter_formset in filter_formsets.items  %}
+                    {% bootstrap_form filter_formset.0 %}
+                {% endfor %}
+            </div>
             {% endfor %}
 
             {{ filter_set_formset.management_form }}
 
-        {% endcomment %}
-
-            {% comment %}
-                
-            {% for key, val in filter_formsets.items  %}
-                {{ val.management_form }}
-                {% bootstrap_form val.0 %}
-            {% endfor %}
-            {% endcomment %}
         </div>
         <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
     </form>
@@ -59,7 +79,7 @@
 
 <script type="text/javascript">
     $(function() {
-        $('#filterSet .filter').formset();
+        $('#filterSetContainer .filterSet').formset({formTemplate : '#filterSetTemplate', prefix : 'filterset_set'});
     })
 </script>
 {% endblock %}

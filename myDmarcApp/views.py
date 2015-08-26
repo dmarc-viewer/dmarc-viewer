@@ -9,6 +9,7 @@ def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
 def edit(request, view_id = None):
+
     # Retrieve All views for sidebar
     sidebar_views = View.objects.values('id', 'title')
     
@@ -45,39 +46,19 @@ def edit(request, view_id = None):
                                         time_variabe_form = view_time_variable_form, 
                                         time_fixed_form = view_time_fixed_form)
 
-    # filter_set_formset      = FilterSetFormSet(data)
-         
-    filter_formsets = {
-        # 'report_sender'       : ReportSenderFormSet(data),
-        # 'report_recv'         : ReportReceiverDomainFormSet(data),
-        # 'source_ip'           : SourceIPFormSet(data),
-        # 'raw_dkim_domain'     : RawDkimDomainFormSet(data),
-        # 'raw_dkim_result'     : RawDkimResultFormSet(data),
-        # 'raw_spf_domain'      : RawSpfDomainFormSet(data),
-        # 'raw_spf_result'      : RawSpfResultFormSet(data),
-        # 'aligned_dkim_result' : AlignedDkimResultFormSet(data),
-        # 'aligned_spf_result'  : AlignedSpfResultFormSet(data),
-        # 'disposition'         : DispositionFormSet(data)
-    }
+    filter_set_formset      = FilterSetFormSet(data=data, instance = view_instance)
 
     if request.method == 'POST':
         valid = False
         if view_form.is_valid():
             valid = True            
-    #             # FILTER SET STUFF
-    #             # if filter_set_formset.is_valid():
-    #             #     filter_set_formset.instance = view
-    #             #     filter_set = filter_set_formset.save()
-
-    #                 # for key, value in filter_formsets.iteritems():
-    #                 #     for i in range(len(filter_set)):
-    #                 #         filter_formsets[key][i].instance = filter_set[i]
-    #                 #     filter_formsets[key].save()
-
-    #         valid = True
+            if filter_set_formset.is_valid():
+                valid = True
 
         if valid:
             view_instance = view_form.save()
+            filter_set_formset.instance = view_instance
+            filter_set_formset.save()
 
             messages.add_message(request, messages.SUCCESS, 'Successfully saved!')
         else:
@@ -91,8 +72,7 @@ def edit(request, view_id = None):
             'view_form'               : view_form,
             'view_time_variable_form' : view_time_variable_form,
             'view_time_fixed_form'    : view_time_fixed_form,
-            # 'filter_set_formset'      : filter_set_formset,
-            # 'filter_formsets'         : filter_formsets
+            'filter_set_formset'      : filter_set_formset,
         })
 
 def deep_analysis(request, view_id = None):

@@ -72,7 +72,7 @@ class DispositionInline(SuperInlineModelAdmin, admin.StackedInline):
 
 class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
     model = FilterSet
-    extra = 1
+    extra = 0
     inlines = (ReportReceiverDomainInline,)
     """inlines = (ReportSenderInline, ReportReceiverDomainInline,\
         SourceIPInline, RawDkimDomainInline, RawDkimResultInline,\
@@ -92,3 +92,9 @@ class ViewAdmin(SuperModelAdmin):
     inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
 
 admin.site.register(View, ViewAdmin)
+
+class FilterSetAdmin(SuperModelAdmin):
+    model = FilterSet 
+
+admin.site.register(FilterSet, FilterSetAdmin)
+
