@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError, MultipleChoiceField, CharField, IPAddressField
+from django.forms import ModelForm, ValidationError, MultipleChoiceField, CharField, GenericIPAddressField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import SplitDateTimeWidget
@@ -10,7 +10,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
-from myDmarcApp.widgets import MultiSelectWidget, ColorPickerWidget
+from myDmarcApp.widgets import ColorPickerWidget
 import choices
 
 
@@ -64,24 +64,88 @@ class ViewForm(ModelForm):
 
 
 class FilterSetForm(ModelForm):
-    report_sender = CharField(initial=Reporter.objects.distinct().values_list('id', 'email'), label='Report Sender', widget=MultiSelectWidget(attrs={'placeholder' : 'Report Sender'}, choices=Reporter.objects.distinct().values_list('id', 'email')))
-    # report_receiver_domain = CharField(label='Report Receiver Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Report Receiver Domain'}, choices=Report.objects.distinct().values_list('domain', 'domain')))
-    
-    # source_ip = IPAddressField(label='Source IP')
-    
-    # raw_dkim_domain = CharField(label='Raw DKIM Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw DKIM Domain'}, choices=AuthResultDKIM.objects.distinct().values_list('domain', 'domain')))
-    # raw_spf_domain = CharField(label='Raw SPF Domain', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw SPF Domain'}, choices=AuthResultSPF.objects.distinct().values_list('domain', 'domain')))
-    
-    # raw_dkim_result = CharField(label='Raw DKIM Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw DKIM Result'}, choices=choices.DKIM_RESULT))
-    # raw_spf_result = CharField(label='Raw SPF Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Raw SPF Result'}, choices=choices.SPF_RESULT))
+    def __init__(self, *args, **kwargs):
+        super(FilterSetForm, self).__init__(*args, **kwargs)
+        self.additional_filter_fields = {
+            "report_sender"              : {"choices" : Reporter.objects.distinct().values_list('email', 'email'), 
+                                            "label"   : "Report Sender", 
+                                            "class"   : ReportSender},
+            "report_receiver_domain"     : {"choices" : Report.objects.distinct().values_list('domain', 'domain'), 
+                                            "label"   : "Report Receiver Domain", 
+                                            "class"   : ReportReceiverDomain},
+            "raw_dkim_domain"            : {"choices" : AuthResultDKIM.objects.distinct().values_list('domain', 'domain'), 
+                                            "label"   : "Raw DKIM Domain", 
+                                            "class"   : RawDkimDomain},
+            "raw_spf_domain"             : {"choices" : AuthResultSPF.objects.distinct().values_list('domain', 'domain'), 
+                                            "label"   : "Raw SPF Domain", 
+                                            "class"   : RawSpfDomain},
+            "raw_dkim_result"            :  {"choices" : choices.DKIM_RESULT, 
+                                            "label"   : "Raw DKIM Result", 
+                                            "class"   : RawDkimResult},
+            "raw_spf_result"             : {"choices" : choices.SPF_RESULT, 
+                                            "label"   : "Raw SPF Result", 
+                                            "class"   : RawSpfResult},
+            "aligned_dkim_result"        : {"choices" : choices.DMARC_RESULT, 
+                                            "label"   : "Aligned DKIM Result", 
+                                            "class"   : AlignedDkimResult},
+            "aligned_spf_result"         : {"choices" : choices.DMARC_RESULT, 
+                                            "label"   : "Aligned SPF Result", 
+                                            "class"   : AlignedSpfResult},
+            "disposition"                : {"choices" : choices.DISPOSITION_TYPE, 
+                                            "label"   : "Disposition", 
+                                            "class"   : Disposition}
+            }
+        # Initialize additional multiple choice filter set fields.
+        for field_name, field_dict in self.additional_filter_fields.iteritems():
+            self.fields[field_name]  = MultipleChoiceField(required=False, label=field_dict["label"], choices=field_dict["choices"])
+            if self.instance.id:
+                self.fields[field_name].initial = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
 
-    # aligned_dkim_result = CharField(label='Aligned DKIM Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Aligned DKIM Result'}, choices=choices.DMARC_RESULT))
-    # aligned_spf_result = CharField(label='Aligned SPF Result', widget=MultiSelectWidget(attrs={'placeholder' : 'Aligned SPF Result'}, choices=choices.DMARC_RESULT))
+         # This is extra because its one-to-one ergo no MultipleChoiceField
+        self.fields["source_ip"] =  GenericIPAddressField(required=False, label='Source IP')
+        if self.instance.id:
+            source_ip_initial = SourceIP.objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
+            if len(source_ip_initial):
+                self.fields['source_ip'].initial = source_ip_initial[0]
 
-    # disposition = CharField(label='Disposition', widget=MultiSelectWidget(attrs={'placeholder' : 'Disposition'}, choices=choices.DISPOSITION_TYPE))
+    def save(self, commit=True):
+        instance = super(FilterSetForm, self).save()
 
-    def save(self):
-        print self.report_sender
+        # Add new many-to-one filter fields to a filter set
+        # remove existing if remove in form 
+        for field_name, field_dict in self.additional_filter_fields.iteritems():
+            existing_filters = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
+            for filter_value in field_dict["choices"]:
+                #We don't need the tuple, both values are the same anyways
+                filter_value = filter_value[0]
+                if filter_value not in existing_filters and filter_value in self.cleaned_data[field_name]:
+                    print filter_value
+                    new_filter = field_dict["class"]()
+                    new_filter.foreign_key = self.instance
+                    new_filter.value = filter_value
+                    new_filter.save()
+                if filter_value in existing_filters and filter_value not in self.cleaned_data[field_name]:
+                    field_dict["class"].objects.filter(foreign_key=self.instance.id, value=filter_value).delete()
+
+        # get or create source_ip
+        source_ip       = SourceIP.objects.filter(foreign_key=self.instance.id).first()
+        source_ip_value = self.cleaned_data["source_ip"]
+        if source_ip and not source_ip_value:
+            source_ip.delete()
+
+        if not source_ip and source_ip_value:
+            source_ip = SourceIP(foreign_key=self.instance, value = source_ip_value)
+            source_ip.save()
+
+        if source_ip and source_ip_value:
+            source_ip.value = source_ip_value
+            source_ip.save()
+
+        return instance
+
+    # def clean(self):
+    #     """Do we need to validate the filter data?"""
+    #     return super(FilterSetForm, self).clean()
 
     class Meta:
         model = FilterSet

@@ -73,11 +73,10 @@ class DispositionInline(SuperInlineModelAdmin, admin.StackedInline):
 class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
     model = FilterSet
     extra = 0
-    inlines = (ReportReceiverDomainInline,)
-    """inlines = (ReportSenderInline, ReportReceiverDomainInline,\
+    inlines = (ReportSenderInline, ReportReceiverDomainInline,\
         SourceIPInline, RawDkimDomainInline, RawDkimResultInline,\
          RawSpfDomainInline, RawSpfResultInline, AlignedDkimResultInline,\
-         AlignedSpfResultInline, DispositionInline,)"""
+         AlignedSpfResultInline, DispositionInline,)
 
 class TimeFixedInline(SuperInlineModelAdmin, admin.StackedInline):
     model = TimeFixed

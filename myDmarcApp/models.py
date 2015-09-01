@@ -100,10 +100,11 @@ class FilterSet(models.Model):
     color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
 
+
 class FilterField(models.Model):
     class Meta:
         abstract = True
-    def getFilter(self):
+    def filter(self):
         key = self.report_field.replace('.', "__")
         return "%s=%r" % (key, self.value)
 
@@ -163,8 +164,6 @@ class SourceIP(FilterSetFilterField):
     and maybe consider CIDR notation later"""
     report_field            = "Record.source_ip"
     value                   = models.GenericIPAddressField()
-    def filter(self):
-        return super(SourceIP, self).filter()
 
 class RawDkimDomain(FilterSetFilterField):
     report_field            = "Record.AuthResultDKIM.domain"

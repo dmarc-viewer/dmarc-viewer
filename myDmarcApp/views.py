@@ -51,7 +51,6 @@ def edit(request, view_id = None):
     if request.method == 'POST':
         valid = False
         if view_form.is_valid():
-            valid = True            
             if filter_set_formset.is_valid():
                 valid = True
 
