@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'world',
     'bootstrap3',
+    'djangoformsetjs',
     'myDmarcApp'
 )
 

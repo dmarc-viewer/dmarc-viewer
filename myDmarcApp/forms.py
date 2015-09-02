@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError, MultipleChoiceField, CharField, GenericIPAddressField
+from django.forms import ModelForm, ValidationError, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import SplitDateTimeWidget
@@ -10,7 +10,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
-from myDmarcApp.widgets import ColorPickerWidget
+from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget
 import choices
 
 
@@ -69,35 +69,46 @@ class FilterSetForm(ModelForm):
         self.additional_filter_fields = {
             "report_sender"              : {"choices" : Reporter.objects.distinct().values_list('email', 'email'), 
                                             "label"   : "Report Sender", 
-                                            "class"   : ReportSender},
+                                            "class"   : ReportSender,
+                                            "type"    : unicode},
             "report_receiver_domain"     : {"choices" : Report.objects.distinct().values_list('domain', 'domain'), 
                                             "label"   : "Report Receiver Domain", 
-                                            "class"   : ReportReceiverDomain},
+                                            "class"   : ReportReceiverDomain,
+                                            "type"    : unicode},
             "raw_dkim_domain"            : {"choices" : AuthResultDKIM.objects.distinct().values_list('domain', 'domain'), 
                                             "label"   : "Raw DKIM Domain", 
-                                            "class"   : RawDkimDomain},
+                                            "class"   : RawDkimDomain,
+                                            "type"    : unicode},
             "raw_spf_domain"             : {"choices" : AuthResultSPF.objects.distinct().values_list('domain', 'domain'), 
                                             "label"   : "Raw SPF Domain", 
-                                            "class"   : RawSpfDomain},
+                                            "class"   : RawSpfDomain,
+                                            "type"    : unicode},
             "raw_dkim_result"            :  {"choices" : choices.DKIM_RESULT, 
                                             "label"   : "Raw DKIM Result", 
-                                            "class"   : RawDkimResult},
+                                            "class"   : RawDkimResult,
+                                            "type"    : int},
             "raw_spf_result"             : {"choices" : choices.SPF_RESULT, 
                                             "label"   : "Raw SPF Result", 
-                                            "class"   : RawSpfResult},
+                                            "class"   : RawSpfResult,
+                                            "type"    : int},
             "aligned_dkim_result"        : {"choices" : choices.DMARC_RESULT, 
                                             "label"   : "Aligned DKIM Result", 
-                                            "class"   : AlignedDkimResult},
+                                            "class"   : AlignedDkimResult,
+                                            "type"    : int},
             "aligned_spf_result"         : {"choices" : choices.DMARC_RESULT, 
                                             "label"   : "Aligned SPF Result", 
-                                            "class"   : AlignedSpfResult},
+                                            "class"   : AlignedSpfResult,
+                                            "type"    : int},
             "disposition"                : {"choices" : choices.DISPOSITION_TYPE, 
                                             "label"   : "Disposition", 
-                                            "class"   : Disposition}
+                                            "class"   : Disposition,
+                                            "type"    : int}
             }
         # Initialize additional multiple choice filter set fields.
         for field_name, field_dict in self.additional_filter_fields.iteritems():
-            self.fields[field_name]  = MultipleChoiceField(required=False, label=field_dict["label"], choices=field_dict["choices"])
+
+            # Creating a typed choice field helps performing built in form clean magic
+            self.fields[field_name]  = TypedMultipleChoiceField(coerce=field_dict["type"], required=False, label=field_dict["label"], choices=field_dict["choices"], widget=MultiSelectWidget)
             if self.instance.id:
                 self.fields[field_name].initial = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
 
@@ -111,15 +122,14 @@ class FilterSetForm(ModelForm):
     def save(self, commit=True):
         instance = super(FilterSetForm, self).save()
 
-        # Add new many-to-one filter fields to a filter set
-        # remove existing if remove in form 
+        # Add new many-to-one filter fields to a filter set object
+        # remove existing if removed in form 
         for field_name, field_dict in self.additional_filter_fields.iteritems():
             existing_filters = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
             for filter_value in field_dict["choices"]:
-                #We don't need the tuple, both values are the same anyways
+                # We need the first choices tuple, because this is stored in the db and refers to form values (cleaned data)
                 filter_value = filter_value[0]
                 if filter_value not in existing_filters and filter_value in self.cleaned_data[field_name]:
-                    print filter_value
                     new_filter = field_dict["class"]()
                     new_filter.foreign_key = self.instance
                     new_filter.value = filter_value

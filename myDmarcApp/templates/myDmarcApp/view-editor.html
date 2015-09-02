@@ -19,6 +19,7 @@
     {% bootstrap_messages %}
     <form id="viewFilterForm" method='post' action='/edit/{% if view_form.instance.id %}{{view_form.instance.id}}/ {% endif %}' class="form">
          {% csrf_token %}
+         {% load formset_tags %}
         <h2>View</h2>
 
         {% bootstrap_form view_form %}
@@ -50,36 +51,74 @@
             </div>
         </div>
 
-
-        <div id="filterSetContainer">
-            <h3>Filters</h3>
-            <div id="filterSetTemplate" class="filterSet" style="display:none">
-                <h4>Filter</h4>
-                {% bootstrap_form filter_set_formset.empty_form %}
-                {% for key, filter_formset in filter_formsets.items %}
-                    {% bootstrap_form filter_formset.0 %}
-                {% endfor %}
-            </div>
-            {% for filter_set_form in filter_set_formset%}
-                <div class="filterSet">
-                    <h4>Filter</h4>
-                    {% bootstrap_form filter_set_form %}
-                {% for key, filter_formset in filter_formsets.items  %}
-                    {% bootstrap_form filter_formset.0 %}
-                {% endfor %}
-            </div>
-            {% endfor %}
-
+        <div id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
             {{ filter_set_formset.management_form }}
 
+            <h3>Filters</h3>
+
+            <div data-formset-body>
+                <!-- New forms will be inserted in here -->
+                {% for filter_set_form in filter_set_formset%}
+                    <div data-formset-form>
+                        <h4>Filter</h4>
+                    {% bootstrap_field filter_set_form.id %}
+                    {% bootstrap_field filter_set_form.label %}
+                    {% bootstrap_field filter_set_form.color %}
+                    {% bootstrap_field filter_set_form.source_ip %}
+                    {% bootstrap_field filter_set_form.report_sender %}
+                    {% bootstrap_field filter_set_form.report_receiver_domain %}
+                    {% bootstrap_field filter_set_form.raw_dkim_domain %}
+                    {% bootstrap_field filter_set_form.raw_spf_domain %}
+                    {% bootstrap_field filter_set_form.raw_dkim_result %}
+                    {% bootstrap_field filter_set_form.raw_spf_result %}
+                    {% bootstrap_field filter_set_form.aligned_dkim_result %}
+                    {% bootstrap_field filter_set_form.aligned_spf_result %}
+                    {% bootstrap_field filter_set_form.disposition %}
+                    
+                    {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
+                    <button type="button" class="form-control" data-formset-delete-button>Delete form</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- The empty form template. By wrapping this in a <script> tag, the
+            __prefix__ placeholder can easily be replaced in both attributes and
+            any scripts -->
+            <script type="form-template" data-formset-empty-form>
+                {% escapescript %}
+                <div data-formset-form>
+                    <h4>Filter</h4>
+                    {% bootstrap_field filter_set_formset.empty_form.label %}
+                    {% bootstrap_field filter_set_formset.empty_form.color %}
+                    {% bootstrap_field filter_set_formset.empty_form.source_ip %}
+                    {% bootstrap_field filter_set_formset.empty_form.report_sender %}
+                    {% bootstrap_field filter_set_formset.empty_form.report_receiver_domain %}
+                    {% bootstrap_field filter_set_formset.empty_form.raw_dkim_domain %}
+                    {% bootstrap_field filter_set_formset.empty_form.raw_spf_domain %}
+                    {% bootstrap_field filter_set_formset.empty_form.raw_dkim_result %}
+                    {% bootstrap_field filter_set_formset.empty_form.raw_spf_result %}
+                    {% bootstrap_field filter_set_formset.empty_form.aligned_dkim_result %}
+                    {% bootstrap_field filter_set_formset.empty_form.aligned_spf_result %}
+                    {% bootstrap_field filter_set_formset.empty_form.disposition %}
+
+                    {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
+                    <button type="button" class="form-control" data-formset-delete-button>Delete form</button>
+                </div>
+                {% endescapescript %}
+            </script>
+
+            <!-- This button will add a new form when clicked -->
+            <input type="button" class="form-control" value="Add another" data-formset-add>
+            <script type="text/javascript">
+                $(function($) {
+                    $("#filterSetContainer").formset({
+                        'animateForms': true,
+                    });
+                })
+            </script>
         </div>
         <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
     </form>
 </div>
 
-<script type="text/javascript">
-    $(function() {
-        $('#filterSetContainer .filterSet').formset({formTemplate : '#filterSetTemplate', prefix : 'filterset_set'});
-    })
-</script>
 {% endblock %}
