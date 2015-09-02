@@ -7,7 +7,7 @@
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
     <h1>Editor</h1>
-    <form id="viewFilterForm" method='post' action='{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}' class="form">
+    <form id="viewFilterForm" method='post' action="{% if view_form.instance.id and not clone %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
         <h2>View</h2>
@@ -52,22 +52,30 @@
                 {% for filter_set_form in filter_set_formset%}
                     <div data-formset-form>
                         <h4>Filter</h4>
-                    {% bootstrap_field filter_set_form.id %}
-                    {% bootstrap_field filter_set_form.label %}
-                    {% bootstrap_field filter_set_form.color %}
-                    {% bootstrap_field filter_set_form.source_ip %}
-                    {% bootstrap_field filter_set_form.report_sender %}
-                    {% bootstrap_field filter_set_form.report_receiver_domain %}
-                    {% bootstrap_field filter_set_form.raw_dkim_domain %}
-                    {% bootstrap_field filter_set_form.raw_spf_domain %}
-                    {% bootstrap_field filter_set_form.raw_dkim_result %}
-                    {% bootstrap_field filter_set_form.raw_spf_result %}
-                    {% bootstrap_field filter_set_form.aligned_dkim_result %}
-                    {% bootstrap_field filter_set_form.aligned_spf_result %}
-                    {% bootstrap_field filter_set_form.disposition %}
-                    
-                    {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
-                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete form</button>
+                        {% comment %}
+                            We render the filterset_id 'manually' because
+                            if we clone a view and related filtersets
+                            we don't want the id the be set.
+                            XXX Is this nice?!
+                        {% endcomment %}
+                        <input id="id_filterset_set-{{forloop.counter0}}-id" name="filterset_set-{{forloop.counter0}}-id" 
+                                type="hidden" value="{% if view_form.instance.id and not clone %}{{filter_set_form.id.value }}{% endif %}">
+                        {% bootstrap_field filter_set_form.id %}
+                        {% bootstrap_field filter_set_form.label %}
+                        {% bootstrap_field filter_set_form.color %}
+                        {% bootstrap_field filter_set_form.source_ip %}
+                        {% bootstrap_field filter_set_form.report_sender %}
+                        {% bootstrap_field filter_set_form.report_receiver_domain %}
+                        {% bootstrap_field filter_set_form.raw_dkim_domain %}
+                        {% bootstrap_field filter_set_form.raw_spf_domain %}
+                        {% bootstrap_field filter_set_form.raw_dkim_result %}
+                        {% bootstrap_field filter_set_form.raw_spf_result %}
+                        {% bootstrap_field filter_set_form.aligned_dkim_result %}
+                        {% bootstrap_field filter_set_form.aligned_spf_result %}
+                        {% bootstrap_field filter_set_form.disposition %}
+                        
+                        {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
+                        <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
                     </div>
                 {% endfor %}
             </div>
@@ -79,6 +87,7 @@
                 {% escapescript %}
                 <div data-formset-form>
                     <h4>Filter</h4>
+                    {% bootstrap_field filter_set_formset.empty_form.id %}
                     {% bootstrap_field filter_set_formset.empty_form.label %}
                     {% bootstrap_field filter_set_formset.empty_form.color %}
                     {% bootstrap_field filter_set_formset.empty_form.source_ip %}
@@ -93,13 +102,13 @@
                     {% bootstrap_field filter_set_formset.empty_form.disposition %}
 
                     {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
-                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete form</button>
+                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
                 </div>
                 {% endescapescript %}
             </script>
 
             <!-- This button will add a new form when clicked -->
-            <input type="button" class="form-control btn btn-primary" value="Add another" data-formset-add>
+            <input type="button" class="form-control btn btn-primary" value="Add set of filters" data-formset-add>
             <script type="text/javascript">
                 $(function($) {
                     $("#filterSetContainer").formset({
@@ -108,7 +117,7 @@
                 })
             </script>
         </div>
-        <input class="form-control btn btn-success" type="submit" value="Save the form ;(">
+        <input class="form-control btn btn-success" type="submit" value="Save entire form">
     </form>
 </div>
 

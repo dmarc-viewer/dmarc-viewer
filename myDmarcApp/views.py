@@ -8,7 +8,7 @@ from django.contrib import messages
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
-def edit(request, view_id = None):
+def edit(request, view_id = None, clone = False):
     
     # Assign form data if posted
     if request.method == 'POST':
@@ -54,9 +54,12 @@ def edit(request, view_id = None):
         if valid:
             view_instance = view_form.save()
             filter_set_formset.instance = view_instance
+            print "DA VIEW ID", filter_set_formset.instance.id
             filter_set_formset.save()
 
             messages.add_message(request, messages.SUCCESS, 'Successfully saved!')
+            return redirect("view_management")
+
         else:
             messages.add_message(request, messages.ERROR, 'You are such a prick!')
 
@@ -68,6 +71,7 @@ def edit(request, view_id = None):
             'view_time_variable_form' : view_time_variable_form,
             'view_time_fixed_form'    : view_time_fixed_form,
             'filter_set_formset'      : filter_set_formset,
+            'clone'                   : clone
         })
 
 def delete_view(request, view_id):

@@ -119,6 +119,7 @@ class FilterSetForm(ModelForm):
                 self.fields['source_ip'].initial = source_ip_initial[0]
 
     def save(self, commit=True):
+        print self.instance.view_id
         instance = super(FilterSetForm, self).save()
 
         # Add new many-to-one filter fields to a filter set object
@@ -151,10 +152,6 @@ class FilterSetForm(ModelForm):
             source_ip.save()
 
         return instance
-
-    # def clean(self):
-    #     """Do we need to validate the filter data?"""
-    #     return super(FilterSetForm, self).clean()
 
     class Meta:
         model = FilterSet

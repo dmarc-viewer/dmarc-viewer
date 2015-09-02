@@ -12,15 +12,17 @@
       <tr>
         <th>Title</th>
         <th>Description</th> 
-        <th>Edit</th>
-        <th>Delete</th>
+        <th>Actions</th>
       </tr>
       {% for view in views %}
         <tr>
             <td>{{view.title}}</td>
             <td>{{view.description}}</td> 
-            <td><a class="btn btn-info" role="button" href="/edit-view/{{view.id}}/">Edit</a></td>
-            <td><a class="btn btn-info" role="button" href="/delete-view/{{view.id}}/">Delete</a></td>
+            <td>
+              <a class="btn btn-info" role="button" href="/edit-view/{{view.id}}/">Edit</a>
+              <a class="btn btn-info" role="button" href="/clone-view/{{view.id}}/">Clone</a>
+              <a class="btn btn-info" role="button" href="/delete-view/{{view.id}}/">Delete</a>
+            </td>
         </tr>
       {% endfor %}
     </table>
