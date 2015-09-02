@@ -23,7 +23,6 @@ class ViewForm(ModelForm):
         fields = ['title', 'description', 'enabled', 'report_type']
 
     def __init__(self, *args, **kwargs):
-        
         self.time_variable_form = kwargs.pop('time_variabe_form')
         self.time_fixed_form = kwargs.pop('time_fixed_form')
         super(ViewForm, self).__init__(*args, **kwargs)

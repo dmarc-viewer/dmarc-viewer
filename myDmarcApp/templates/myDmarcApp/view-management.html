@@ -1,0 +1,29 @@
+{% extends 'myDmarcApp/base.html' %}
+   {# Load the tag library #}
+    {% load bootstrap3 %}
+{% block title %}MyDmarc - View Management{% endblock %}
+
+{% block content %}
+<div class="col-sm-12 col-md-12 main">
+    <h1>View Management</h1>
+    {% bootstrap_messages %}
+
+    <table class="table table-condensed">
+      <tr>
+        <th>Title</th>
+        <th>Description</th> 
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      {% for view in views %}
+        <tr>
+            <td>{{view.title}}</td>
+            <td>{{view.description}}</td> 
+            <td><a class="btn btn-info" role="button" href="/edit-view/{{view.id}}/">Edit</a></td>
+            <td><a class="btn btn-info" role="button" href="/delete-view/{{view.id}}/">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+    <a class="btn btn-info" role="button" href="/add-view/">Add View</a>
+</div>
+{% endblock %}

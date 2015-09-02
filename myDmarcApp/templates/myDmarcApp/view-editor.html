@@ -5,22 +5,13 @@
 {% block title %}MyDmarc - View Editor{% endblock %}
 
 {% block content %}
-<div class="col-sm-3 col-md-2 sidebar">
-    <ul class="nav nav-sidebar">
-    {% for view in sidebar_views %}
-        <li {% if view_form.instance.id and view_form.instance.id == view.id %} class="active" {% endif %} >
-            <a href="/edit/{{view.id}}/">{{view.title}}</a>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-12 col-md-12 main">
     <h1>Editor</h1>
-    {% bootstrap_messages %}
-    <form id="viewFilterForm" method='post' action='/edit/{% if view_form.instance.id %}{{view_form.instance.id}}/ {% endif %}' class="form">
+    <form id="viewFilterForm" method='post' action='{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}' class="form">
          {% csrf_token %}
          {% load formset_tags %}
         <h2>View</h2>
+        {% bootstrap_messages %}
 
         {% bootstrap_form view_form %}
 
@@ -76,7 +67,7 @@
                     {% bootstrap_field filter_set_form.disposition %}
                     
                     {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
-                    <button type="button" class="form-control" data-formset-delete-button>Delete form</button>
+                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete form</button>
                     </div>
                 {% endfor %}
             </div>
@@ -102,13 +93,13 @@
                     {% bootstrap_field filter_set_formset.empty_form.disposition %}
 
                     {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
-                    <button type="button" class="form-control" data-formset-delete-button>Delete form</button>
+                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete form</button>
                 </div>
                 {% endescapescript %}
             </script>
 
             <!-- This button will add a new form when clicked -->
-            <input type="button" class="form-control" value="Add another" data-formset-add>
+            <input type="button" class="form-control btn btn-primary" value="Add another" data-formset-add>
             <script type="text/javascript">
                 $(function($) {
                     $("#filterSetContainer").formset({
@@ -117,7 +108,7 @@
                 })
             </script>
         </div>
-        <input class="form-control btn btn-warning" type="submit" value="Y U DO TIZ JOKR?! ;(">
+        <input class="form-control btn btn-success" type="submit" value="Save the form ;(">
     </form>
 </div>
 

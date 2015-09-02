@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from forms import *
@@ -9,9 +9,6 @@ def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
 def edit(request, view_id = None):
-
-    # Retrieve All views for sidebar
-    sidebar_views = View.objects.values('id', 'title')
     
     # Assign form data if posted
     if request.method == 'POST':
@@ -61,24 +58,34 @@ def edit(request, view_id = None):
 
             messages.add_message(request, messages.SUCCESS, 'Successfully saved!')
         else:
-            messages.add_message(request, messages.ERROR, 'You are such a brick!')
+            messages.add_message(request, messages.ERROR, 'You are such a prick!')
 
     if request.method == 'GET':
         pass
 
     return render(request, 'myDmarcApp/view-editor.html', {
-            'sidebar_views'           : sidebar_views,
             'view_form'               : view_form,
             'view_time_variable_form' : view_time_variable_form,
             'view_time_fixed_form'    : view_time_fixed_form,
             'filter_set_formset'      : filter_set_formset,
         })
 
+def delete_view(request, view_id):
+    # XXX: Add try catch
+    # XXX: Add ask confirm in Javascript
+    View.objects.get(pk=view_id).delete()
+    messages.add_message(request, messages.SUCCESS, 'Successfully deleted view!')
+    return redirect("view_management")
+
+
 def deep_analysis(request, view_id = None):
     if not view_id:
         view_id = View.objects.values('id')[0]['id']
     sidebar_views = View.objects.values('id', 'title')
     view =  View.objects.get(pk=view_id)
-    # for f in View._meta.fields:
-    #     print f.name, getattr(view, f.name, None)
+
     return render(request, 'myDmarcApp/deep-analysis.html', {'sidebar_views': sidebar_views, 'the_view': view})
+
+def view_management(request):
+    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
+

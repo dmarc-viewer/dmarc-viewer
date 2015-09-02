@@ -24,6 +24,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -39,7 +40,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/">Home</a></li>
             <li><a href="/deep-analysis/">Deep Analysis</a></li>
-            <li><a href="/edit/">Edit View</a></li>
+            <li><a href="/view-management/">View Management</a></li>
           </ul>
         </div>
       </div>
@@ -53,9 +54,7 @@
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% endcomment %}
 
-            <div class="col-sm-12 col-md-12 main">
-                {% block content %}{% endblock %}
-            </div>
+            {% block content %}{% endblock %}
         </div>
     </div>
 
