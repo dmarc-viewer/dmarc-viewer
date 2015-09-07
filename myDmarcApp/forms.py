@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField
+from django.forms import ModelForm, ValidationError, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import SplitDateTimeWidget
@@ -13,53 +13,79 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
 from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget
 import choices
 
-
-TimeVariableForm                    = modelform_factory(TimeVariable, fields=('unit','quantity'))
-TimeFixedForm                       = modelform_factory(TimeFixed, fields=('date_range_begin', 'date_range_end'))
-
 class ViewForm(ModelForm):
+
     class Meta:
         model = View
         fields = ['title', 'description', 'enabled', 'report_type']
 
     def __init__(self, *args, **kwargs):
-        self.time_variable_form = kwargs.pop('time_variabe_form')
-        self.time_fixed_form = kwargs.pop('time_fixed_form')
         super(ViewForm, self).__init__(*args, **kwargs)
+        self.fields["time_variable_unit"]       = TypedChoiceField(label="Report Date Range Quantity", coerce=int, choices=choices.TIME_UNIT, required=False)
+        self.fields["time_variable_quantity"]   = IntegerField(label="Report Date Range Unit", required=False)
+        self.fields["time_fixed_begin"]         = DateTimeField(label="Report Date Begin", required=False)
+        self.fields["time_fixed_end"]           = DateTimeField(label="Report Date End", required=False)
 
-    def is_valid(self):
-        view_valid = super(ViewForm, self).is_valid()
-        if self.time_variable_form.is_valid() == self.time_fixed_form.is_valid():
-            self.time_fixed_form.add_error(None, ValidationError(_('Specify only one of both!'), code='double time error',))
-            time_valid = False
-        elif not self.time_variable_form.is_valid() and not self.time_fixed_form.is_valid():
-            self.time_fixed_form.add_error(None, ValidationError(_('Specify at least one of both!'), code='double time error',))
-            time_valid = False
-        else:
-            time_valid = True
+        if self.instance.id:
+            for time_fixed in TimeFixed.objects.filter(foreign_key=self.instance.id):
+                self.fields["time_fixed_begin"].initial       = time_fixed.date_range_begin
+                self.fields["time_fixed_end"].initial         = time_fixed.date_range_end
 
-        return view_valid and time_valid
+            for time_variable in TimeVariable.objects.filter(foreign_key=self.instance.id):
+                self.fields["time_variable_unit"].initial     = time_variable.unit
+                self.fields["time_variable_quantity"].initial = time_variable.quantity
+
+
+    # def is_valid(self):
+    #     view_valid = super(ViewForm, self).is_valid()
+
+    #     if ("time_variable_unit" in self.cleaned_data and "time_variable_quantity" in self.cleaned_data) \
+    #      == ("time_fixed_begin" in self.cleaned_data and "time_fixed_end" in self.cleaned_data):
+    #         self.add_error(None, ValidationError(_('Specify only one of both time fields!'), code='double time error',))
+    #         time_valid = False
+
+    #     elif not (("time_variable_unit" in self.cleaned_data and "time_variable_quantity" in self.cleaned_data) \
+    #      or ("time_fixed_begin" in self.cleaned_data and "time_fixed_end" in self.cleaned_data)):
+    #         self.time_fixed_form.add_error(None, ValidationError(_('Specify at least one of both!'), code='double time error',))
+    #         time_valid = False
+    #     else:
+    #         time_valid = True
+
+    #     return view_valid and time_valid
 
     def save(self):
-
         view_instance = super(ViewForm, self).save()
         
-        if self.time_variable_form.is_valid():
-            view_time_variable_instance = self.time_variable_form.save(commit=False)
-            view_time_variable_instance.foreign_key = view_instance
-            if self.time_fixed_form.instance.id:
-                self.time_fixed_form.instance.delete()
-            view_time_variable_instance.save()
+        time_variable = TimeVariable.objects.filter(foreign_key=self.instance.id).first()
 
-        if self.time_fixed_form.is_valid():
-            view_time_fixed_instance = self.time_fixed_form.save(commit=False)
-            view_time_fixed_instance.foreign_key = view_instance
-            if self.time_variable_form.instance.id:
-                self.time_variable_form.instance.delete()
-            view_time_fixed_instance.save()
+        if self.cleaned_data["time_variable_unit"] and self.cleaned_data["time_variable_quantity"]:
+            # Create or update 
+            if not time_variable:
+                time_variable = TimeVariable(foreign_key=self.instance)
+            time_variable.unit          = self.cleaned_data["time_variable_unit"]
+            time_variable.quantity      = self.cleaned_data["time_variable_quantity"]
+            time_variable.save()
+        else:
+            # No data -> delete object if exists
+            if time_variable:
+                time_variable.delete()
+
+
+
+        time_fixed = TimeFixed.objects.filter(foreign_key=self.instance.id).first()
+        # Delete it if it was deleted in form 
+        if self.cleaned_data["time_fixed_begin"] and self.cleaned_data["time_fixed_end"]:
+            if not time_fixed:
+                time_fixed = TimeFixed(foreign_key=self.instance)
+            time_fixed.date_range_begin = self.cleaned_data["time_fixed_begin"]
+            time_fixed.date_range_end   = self.cleaned_data["time_fixed_end"]
+            time_fixed.save()
+
+        else:
+            if time_fixed:
+                time_fixed.delete()
 
         return view_instance
-
 
 
 class FilterSetForm(ModelForm):
@@ -119,7 +145,6 @@ class FilterSetForm(ModelForm):
                 self.fields['source_ip'].initial = source_ip_initial[0]
 
     def save(self, commit=True):
-        print self.instance.view_id
         instance = super(FilterSetForm, self).save()
 
         # Add new many-to-one filter fields to a filter set object

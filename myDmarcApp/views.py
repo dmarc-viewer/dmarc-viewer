@@ -25,24 +25,9 @@ def edit(request, view_id = None, clone = False):
     else:
         view_instance = None
 
-    # if we got a view assign it to the form
-    try:
-        view_time_variable_instance = view_instance.timevariable
-    except Exception, e:
-        view_time_variable_instance = None
-    try:
-        view_time_fixed_instance = view_instance.timefixed
-    except Exception, e:
-        view_time_fixed_instance = None
-
 
     # Create Forms and formsets
-    view_time_variable_form  = TimeVariableForm(data=data, instance=view_time_variable_instance)
-    view_time_fixed_form     = TimeFixedForm(data=data, instance=view_time_fixed_instance)
-    view_form                = ViewForm(data=data, instance=view_instance, 
-                                        time_variabe_form = view_time_variable_form, 
-                                        time_fixed_form = view_time_fixed_form)
-
+    view_form                = ViewForm(data=data, instance=view_instance)
     filter_set_formset      = FilterSetFormSet(data=data, instance = view_instance)
 
     if request.method == 'POST':
@@ -68,8 +53,6 @@ def edit(request, view_id = None, clone = False):
 
     return render(request, 'myDmarcApp/view-editor.html', {
             'view_form'               : view_form,
-            'view_time_variable_form' : view_time_variable_form,
-            'view_time_fixed_form'    : view_time_fixed_form,
             'filter_set_formset'      : filter_set_formset,
             'clone'                   : clone
         })

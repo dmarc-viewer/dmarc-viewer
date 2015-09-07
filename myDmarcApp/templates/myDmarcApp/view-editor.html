@@ -15,33 +15,6 @@
 
         {% bootstrap_form view_form %}
 
-        <div>
-            <h4>Time</h4>
-            {% bootstrap_form_errors view_time_fixed_form %}
-            <div class="row">
-                <div class="col-md-2">
-                    <input type="radio" name="time_switch" disabled>
-                </div>
-                <div class="col-md-4">
-                    {% bootstrap_field view_time_fixed_form.date_range_begin layout='inline' %}
-                </div>
-                <div class="col-md-4">
-                    {% bootstrap_field view_time_fixed_form.date_range_end layout='inline' %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <input type="radio" name="time_switch" disabled>
-                </div>
-                <div class="col-md-4">
-                    {% bootstrap_field view_time_variable_form.quantity layout='inline' %}
-                </div>
-                <div class="col-md-4">
-                    {% bootstrap_field view_time_variable_form.unit layout='inline' %}
-                </div>
-            </div>
-        </div>
-
         <div id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
             {{ filter_set_formset.management_form }}
 

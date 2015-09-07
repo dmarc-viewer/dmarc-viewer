@@ -2,6 +2,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.gis.db import models
+from polymorphic import PolymorphicModel
 import choices
 
 ############################
@@ -93,6 +94,9 @@ class View(models.Model):
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)
     report_type             = models.IntegerField(choices = choices.REPORT_TYPE)
+
+    def getData(self):
+        return [{"filter_set" : filter_set, "reports": filter_set.getReports()} for filter_set in self.filterset_set.all()]
     
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
@@ -100,23 +104,25 @@ class FilterSet(models.Model):
     color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
 
+    def getReports(self):
+        filter_fields = [filterfield for filterfield in self.filtersetfilterfield_set.all()] + \
+            [filterfield for filterfield in self.view.viewfilterfield_set.all()]
+        filters = [filter_field.getFilter() for filter_field in filter_fields]
+        filter_str = ".".join(filters)
+        return eval("Report.objects." + filter_str)
 
-class FilterField(models.Model):
+class FilterField(PolymorphicModel):
     class Meta:
         abstract = True
-    def filter(self):
-        key = self.report_field.replace('.', "__")
-        return "%s=%r" % (key, self.value)
 
 class FilterSetFilterField(FilterField):
     foreign_key             = models.ForeignKey('FilterSet')
-    class Meta:
-        abstract = True
+    def getFilter(self):
+        key = self.report_field.replace('.', "__").lower()
+        return "filter(%s=%r)" % (key, self.value)
 
 class ViewFilterField(FilterField):
-    foreign_key             = models.OneToOneField(View)
-    class Meta:
-        abstract = True
+    foreign_key             = models.ForeignKey('View')
 
 class TimeFixed(ViewFilterField):
     # max one per view
@@ -124,8 +130,8 @@ class TimeFixed(ViewFilterField):
     date_range_begin        = models.DateTimeField()
     date_range_end          = models.DateTimeField()
 
-    def filter(self):
-        return "date_range_begin__gte= %s, date_range_begin__lte= %s)" \
+    def getFilter(self):
+        return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
                 % (self.date_range_begin, self.date_range_end)
 
 class TimeVariable(ViewFilterField):
@@ -135,20 +141,20 @@ class TimeVariable(ViewFilterField):
     # either time fixed or time variable
     unit                    = models.IntegerField(choices = choices.TIME_UNIT)
     quantity                = models.IntegerField()
-    def filter(self):
+    def getFilter(self):
         end     = datetime.now()
-        if (unit == choices.TIME_UNIT_DAY):
+        if (self.unit == choices.TIME_UNIT_DAY):
             begin = end - relativedelta(days=self.quantity)
-        elif (unit == choices.TIME_UNIT_WEEK):
+        elif (self.unit == choices.TIME_UNIT_WEEK):
             begin = end - relativedelta(weeks=self.quantity)
-        elif (unit == choices.TIME_UNIT_MONTH):
+        elif (self.unit == choices.TIME_UNIT_MONTH):
             begin = end - relativedelta(months=self.quantity)
-        elif (unit == choices.TIME_UNIT_YEAR):
+        elif (self.unit == choices.TIME_UNIT_YEAR):
             begin = end - relativedelta(years=self.quantity)
         else:
             raise #Raise proper Exception
 
-        return "date_range_begin__gte= %s, date_range_begin__lte= %s)" \
+        return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
                 % (begin, end)
 
 class ReportSender(FilterSetFilterField):
