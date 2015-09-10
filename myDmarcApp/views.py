@@ -25,7 +25,6 @@ def edit(request, view_id = None, clone = False):
     else:
         view_instance = None
 
-
     # Create Forms and formsets
     view_form                = ViewForm(data=data, instance=view_instance)
     filter_set_formset      = FilterSetFormSet(data=data, instance = view_instance)
@@ -39,7 +38,6 @@ def edit(request, view_id = None, clone = False):
         if valid:
             view_instance = view_form.save()
             filter_set_formset.instance = view_instance
-            print "DA VIEW ID", filter_set_formset.instance.id
             filter_set_formset.save()
 
             messages.add_message(request, messages.SUCCESS, 'Successfully saved!')
@@ -70,9 +68,12 @@ def deep_analysis(request, view_id = None):
         view_id = View.objects.values('id')[0]['id']
     sidebar_views = View.objects.values('id', 'title')
     view =  View.objects.get(pk=view_id)
-
-    return render(request, 'myDmarcApp/deep-analysis.html', {'sidebar_views': sidebar_views, 'the_view': view})
+    view.getData()
+    return render(request, 'myDmarcApp/deep-analysis.html', {'sidebar_views': sidebar_views, 'the_view': view, 'filter_set_data_list': view.getData()})
 
 def view_management(request):
     return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
+
+def help(request):
+    return render(request, 'myDmarcApp/help.html', {})
 

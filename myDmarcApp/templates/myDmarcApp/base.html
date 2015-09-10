@@ -8,8 +8,9 @@
     <script src="{% static "jquery/jquery-1.11.3.min.js" %}"></script>
     <script src="{% static "jquery/jquery-migrate-1.2.1.min.js" %}"></script>
     <script src="{% static "selectize/js/standalone/selectize.min.js" %}"></script>
-    <script src="{% static "js/jquery.formset.js" %}"></script>
     <script src="{% static "bootstrap-colorpicker/js/bootstrap-colorpicker.js" %}"></script>
+    <script src="{% static "DataTables-1.10.9/js/jquery.dataTables.js" %}"></script>
+    <script src="{% static "js/jquery.formset.js" %}"></script>
     <script src="{% static "js/main.js" %}"></script>
 
     {% bootstrap_javascript %}
@@ -20,7 +21,8 @@
     <link href="{% static "selectize/css/selectize.bootstrap3.css" %}" rel="stylesheet">
     <link href="{% static "selectize/css/selectize.bootstrap3.css" %}" rel="stylesheet">
     <link href="{% static "bootstrap-colorpicker/css/bootstrap-colorpicker.css" %}" rel="stylesheet">
-
+    <link href="{% static "DataTables-1.10.9/css/jquery.dataTables.css" %}" rel="stylesheet">
+ 
 </head>
 
 <body>
@@ -38,9 +40,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/">Home</a></li>
+            <li><a href="/">Overview</a></li>
             <li><a href="/deep-analysis/">Deep Analysis</a></li>
             <li><a href="/view-management/">View Management</a></li>
+            <li><a href="/help/">Help</a></li>
           </ul>
         </div>
       </div>

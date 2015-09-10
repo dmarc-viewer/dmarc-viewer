@@ -152,6 +152,7 @@ class Command(BaseCommand):
                 response                 = geoip_reader.city(record.source_ip)
                 record.geometry          = Point(float(response.location.longitude), 
                                                     float(response.location.latitude))
+                record.country_iso_code   = response.country.iso_code
             except Exception, e:
                 msg  = "Unable to retrieve geometry for ip %s: %s" % (record.source_ip, e)
                 logger.error(msg)

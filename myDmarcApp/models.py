@@ -51,6 +51,7 @@ class Record(models.Model):
 
     # Row
     source_ip               = models.GenericIPAddressField()
+    country_iso_code        = models.CharField(max_length = 2)
     geometry                = models.PointField(srid=4326, null = True)
     objects                 = models.GeoManager()
 
@@ -109,6 +110,8 @@ class FilterSet(models.Model):
             [filterfield for filterfield in self.view.viewfilterfield_set.all()]
         filters = [filter_field.getFilter() for filter_field in filter_fields]
         filter_str = ".".join(filters)
+        # XXX LP: Eval is dangerous especially if there is user input involved
+        # Put some thought on this!!!!!!!!!!!!!!!
         return eval("Report.objects." + filter_str)
 
 class FilterField(PolymorphicModel):

@@ -11,15 +11,71 @@
     </ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-<h1>Deep Analysis</h1>
-<h2>Settings</h2>
-<div>
-    <p><strong>Title</strong> {{the_view.title}}</p> 
-    <p><strong>Description</strong> {{the_view.description}}</p> 
-    <p><strong>Enabled</strong> {{the_view.enabled}}</p> 
-    <p><strong>Report Type</strong> {{the_view.report_type}}</p>
-    <p><strong>Quantity</strong> {{the_view.timevariable.quantity}} <strong>Unit</strong> {{the_view.timevariable.unit}}</p>
-    <p><strong>From</strong> {{the_view.timefixed.date_range_begin}} <strong>To</strong> {{the_view.timefixed.date_range_end}}</p>
-</div>
+    <h1>Deep Analysis</h1>
+    <h2>{{the_view.title}}</h2>
+    <p>{{the_view.description}}</p>
+
+    <div class="view-type-table">
+        <table class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Reporter</th>
+                    <th>Mail sender</th>
+                    <th>IP</th>
+                    <th>Country</th>
+                    <th>Report Time</th>
+                    <th>Message #</th>
+                    <th>DKIM Domains</th>
+                    <th>DKIM Results</th>
+                    <th>aligned DKIM</th>
+                    <th>SPF Domains</th>
+                    <th>SPF Results</th>
+                    <th>aligned SPF</th>
+                    <th>Disposition</th>
+                </tr>
+            </thead>
+
+            {% for filter_set_data in filter_set_data_list  %}
+                {% for report in filter_set_data.reports %}
+                    {% for record in report.record_set.all %}
+                        <tr style="background-color:{{filter_set_data.filter_set.color}}">
+                            <td>{{report.reporter.org_name}}</td>
+                            <td>{{report.domain}}</td>
+                            <td>{{record.source_ip}}</td>
+                            <td>{{record.country_iso_code}}</td>
+                            <td>{{report.date_range_begin}} - {{report.date_range_end}}</td>
+                            <td>{{record.count}}</td>
+                            {% comment %}
+                                XXX LP: Think of ordering in nested table cells!!!
+                            {% endcomment %}
+                            <td>
+                                {% for dkim in record.authresultdkim_set.all%}
+                                    {{dkim.domain}}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for dkim in record.authresultdkim_set.all%}
+                                    {{dkim.get_result_display}}
+                                {% endfor %}
+                            </td>
+                            <td>{{record.get_dkim_display}}</td>
+                            <td>
+                                {% for spf in record.authresultspf_set.all%}
+                                    {{spf.domain}}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for spf in record.authresultspf_set.all%}
+                                    {{spf.get_result_display}}
+                                {% endfor %}
+                            </td>
+                            <td>{{record.get_spf_display}}</td>
+                            <td>{{record.get_disposition_display}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
 </div>
 {% endblock %}
