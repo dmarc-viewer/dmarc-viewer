@@ -98,7 +98,13 @@ class View(models.Model):
 
     def getData(self):
         return [{"filter_set" : filter_set, "reports": filter_set.getReports()} for filter_set in self.filterset_set.all()]
-    
+
+    def getLabels(self):
+        # There must be exactly one
+        time_range = self.viewfilterfield_set.first()
+        time_range_begin, time_range_end = time_range.getBeginEnd()
+        print
+
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
     label                   = models.CharField(max_length = 100)
@@ -133,9 +139,12 @@ class TimeFixed(ViewFilterField):
     date_range_begin        = models.DateTimeField()
     date_range_end          = models.DateTimeField()
 
+    def getBeginEnd(self):
+        return self.date_range_begin, self.date_range_end
+
     def getFilter(self):
         return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
-                % (self.date_range_begin, self.date_range_end)
+                % (self.getBeginEnd())
 
 class TimeVariable(ViewFilterField):
     # Creates period for last <quantity> <unit>
@@ -144,8 +153,9 @@ class TimeVariable(ViewFilterField):
     # either time fixed or time variable
     unit                    = models.IntegerField(choices = choices.TIME_UNIT)
     quantity                = models.IntegerField()
-    def getFilter(self):
-        end     = datetime.now()
+
+    def getBeginEnd(self):
+        end = datetime.now()
         if (self.unit == choices.TIME_UNIT_DAY):
             begin = end - relativedelta(days=self.quantity)
         elif (self.unit == choices.TIME_UNIT_WEEK):
@@ -156,9 +166,11 @@ class TimeVariable(ViewFilterField):
             begin = end - relativedelta(years=self.quantity)
         else:
             raise #Raise proper Exception
+        return begin, end
 
+    def getFilter(self):
         return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
-                % (begin, end)
+                % (self.getBeginEnd())
 
 class ReportSender(FilterSetFilterField):
     report_field            = "Reporter.email"

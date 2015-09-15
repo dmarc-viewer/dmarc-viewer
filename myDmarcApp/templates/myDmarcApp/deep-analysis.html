@@ -15,6 +15,25 @@
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
 
+    <div class="view-type-linechart">
+        <canvas width="200" height="100"></canvas>
+    </div>
+    <script type="text/javascript">
+        /*
+         * Initialize Line Chart
+         */
+        
+        $(document).ready(function(){
+            var ctx = $(".view-type-linechart > canvas").get(0).getContext("2d");
+            var data = {{ view_type_line_data | safe }};
+
+            var lineChart = new Chart(ctx).Line(data, {
+                responsive: true,
+                datasetFill : false
+            });
+        });
+    </script>
+
     <div class="view-type-table">
         <table class="display" cellspacing="0" width="100%">
             <thead>
@@ -77,5 +96,15 @@
             {% endfor %}
         </table>
     </div>
+    <script type="text/javascript">
+        /*
+         * Initialize DataTable 
+         */
+        $(document).ready(function(){
+            $('.view-type-table table').DataTable({
+                paging: true,
+            });
+        });
+    </script>
 </div>
 {% endblock %}
