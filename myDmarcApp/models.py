@@ -98,8 +98,11 @@ class View(models.Model):
     report_type             = models.IntegerField(choices = choices.REPORT_TYPE)
 
     def getTableData(self):
+        # XXX LP: I don't like this distinct here. 
+        # Do some data selection testing!!!! 
+        # Django's obrm joining magic is not so predictable 
         return [{'filter_set' : filter_set, 
-                 'reports': filter_set.getReports()} for filter_set in self.filterset_set.all()]
+                 'reports': filter_set.getReports().distinct()} for filter_set in self.filterset_set.all()]
 
     def getLineData(self):
         """Creates data for line chart as needed by Chart.js

@@ -74,10 +74,10 @@ def deep_analysis(request, view_id = None):
     view                 = View.objects.get(pk=view_id)
     begin = time.time()
     view_type_table_data = view.getTableData()
+
     print "Table Data:", time.time() - begin
     begin = time.time()
     view_type_line_data  = view.getLineData()
-    view_type_table_data = view.getTableData()
     print "Line Data:", time.time() - begin
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
