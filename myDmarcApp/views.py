@@ -6,6 +6,8 @@ from myDmarcApp.models import View, TimeFixed, TimeVariable
 from django.contrib import messages
 import json 
 
+import time
+
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
@@ -70,44 +72,18 @@ def deep_analysis(request, view_id = None):
 
     sidebar_views        = View.objects.values('id', 'title')
     view                 = View.objects.get(pk=view_id)
-    filter_set_data_list = view.getData()
-
-    """
-    View Type Line
-    x: time bins
-        with variable sizes. we define how many datapoints
-    y: message count per bin
-
-    labels :
-        date_range_begin - date_range_end | absolute_begin(time_variable) - absolute_end(time_variable)
-        given n wanted points on the x scale
-        we have to divide the x scale in n equal bins and find a name (one of day, week, month) for each bin
-
-    datasets:
-        for each data_set (by filter_set)
-            color:  hex to rgba
-            data:   sum(Record.count aggregated by bin)
-    """
-
-    view_type_line_data = json.dumps({ 
-        'labels'    : ["January", "February", "March", "April", "May", "June", "July"],
-        'datasets' : [
-                {
-                    'label'           : "My First dataset",
-                    'strokeColor': "rgba(220,220,220,1)",
-                    'pointColor': "rgba(220,220,220,1)",
-                    'pointStrokeColor': "#fff",
-                    'pointHighlightFill': "#fff",
-                    'pointHighlightStroke': "rgba(220,220,220,1)",
-                    'data'            :[65, 59, 80, 81, 56, 55, 40]
-                }
-        ]
-    }) 
+    begin = time.time()
+    view_type_table_data = view.getTableData()
+    print "Table Data:", time.time() - begin
+    begin = time.time()
+    view_type_line_data  = view.getLineData()
+    view_type_table_data = view.getTableData()
+    print "Line Data:", time.time() - begin
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view, 
-            'filter_set_data_list'  : filter_set_data_list,
+            'view_type_table_data'  : view_type_table_data,
             'view_type_line_data'   : view_type_line_data
         })
 

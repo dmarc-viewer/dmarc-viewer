@@ -54,7 +54,7 @@
                 </tr>
             </thead>
 
-            {% for filter_set_data in filter_set_data_list  %}
+            {% for filter_set_data in view_type_table_data  %}
                 {% for report in filter_set_data.reports %}
                     {% for record in report.record_set.all %}
                         <tr style="background-color:{{filter_set_data.filter_set.color}}">
@@ -62,7 +62,12 @@
                             <td>{{report.domain}}</td>
                             <td>{{record.source_ip}}</td>
                             <td>{{record.country_iso_code}}</td>
-                            <td>{{report.date_range_begin}} - {{report.date_range_end}}</td>
+                            {% comment %}
+                            XXX LP: Only display borth dates if it ranges over multiple days
+                            <td>{{report.date_range_begin | date:"Y/n/j"}} {{report.date_range_end | date:"Y/n/j"}}</td>
+                            {% endcomment %}
+                            <td>{{report.date_range_begin | date:"Y/n/j"}} </td>
+
                             <td>{{record.count}}</td>
                             {% comment %}
                                 XXX LP: Think of ordering in nested table cells!!!

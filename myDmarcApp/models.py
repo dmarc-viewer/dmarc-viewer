@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.gis.db import models
+from django.db.models import Sum
 from polymorphic import PolymorphicModel
 import choices
 
@@ -96,14 +97,78 @@ class View(models.Model):
     enabled                 = models.BooleanField(default = True)
     report_type             = models.IntegerField(choices = choices.REPORT_TYPE)
 
-    def getData(self):
-        return [{"filter_set" : filter_set, "reports": filter_set.getReports()} for filter_set in self.filterset_set.all()]
+    def getTableData(self):
+        return [{'filter_set' : filter_set, 
+                 'reports': filter_set.getReports()} for filter_set in self.filterset_set.all()]
 
-    def getLabels(self):
-        # There must be exactly one
+    def getLineData(self):
+        """Creates data for line chart as needed by Chart.js
+        y-axis: message count 
+        x-axis: time
+        Each day of the View time range is one x datapoint.
+        It would be better to aggregate this.
+        """
+
+        # There must be exactly one 
         time_range = self.viewfilterfield_set.first()
-        time_range_begin, time_range_end = time_range.getBeginEnd()
-        print
+
+        begin, end = time_range.getBeginEnd()
+        delta = end - begin
+        labels_raw = []
+        labels = []
+        for i in range(delta.days + 1):
+            labels.append((begin + timedelta(days=i)).strftime("%B %d, %Y"))
+            labels_raw.append((begin + timedelta(days=i)).date())
+
+        data_points_count = len(labels)
+        datasets = []
+        for filter_set in self.filterset_set.all():
+            message_count_per_day_list = filter_set.getMessageCountPerDay()
+
+            # Create ordered data array for each label entry, add 0 if no entry in queryset
+            data = []
+            j = 0
+            message_count_days = len(message_count_per_day_list)
+            for i in range(len(labels_raw) - 1):
+                if (message_count_days > j) and \
+                 (labels_raw[i] == message_count_per_day_list[j]['date']):
+                    data.append(message_count_per_day_list[j]['message_count'])
+                    j += 1
+                else:
+                    data.append(0)
+
+            # Let's try to aggregate the data to a reasonable amount of datapoints on the x axis
+            # LP XXX: maybe don't hardcode max_bins, but make it configurable
+            # max_bins = 15
+            # if data_points_count > max_bins:
+            #     data_aggregated = []
+
+            #     bin_size = data_points_count / max_bins
+            #     bin_size_last = data_points_count % max_bins
+
+            #     for i in range(0, data_points_count - 1, bin_size):
+            #         #Aggregate
+            #         if bin_size_last and i >= bin_size * max_bins:
+            #             bin = bin_size_last
+            #         else:
+            #             bin = bin_size
+
+            #         value_aggregated = 0
+            #         for j in range(i + bin - 1):
+            #            value_aggregated += data[j]
+
+            #         data_aggregated.append(value_aggregated)
+
+            #     data = data_aggregated
+
+
+
+            datasets.append({'label' : str(filter_set.label), 
+                             'strokeColor': str(filter_set.color), 
+                             'pointHighlightStroke': str(filter_set.color),
+                             'data': data})
+
+        return {'labels': labels, 'datasets': datasets}
 
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
@@ -114,11 +179,22 @@ class FilterSet(models.Model):
     def getReports(self):
         filter_fields = [filterfield for filterfield in self.filtersetfilterfield_set.all()] + \
             [filterfield for filterfield in self.view.viewfilterfield_set.all()]
+
         filters = [filter_field.getFilter() for filter_field in filter_fields]
         filter_str = ".".join(filters)
+
         # XXX LP: Eval is dangerous especially if there is user input involved
         # Put some thought on this!!!!!!!!!!!!!!!
         return eval("Report.objects." + filter_str)
+
+
+    def getMessageCountPerDay(self):
+        return self.getReports()\
+                .extra(select={'date': "date_range_begin::date"})\
+                .values('date')\
+                .annotate(message_count=Sum('record__count'))\
+                .values('date', 'message_count')\
+                .order_by('date')
 
 class FilterField(PolymorphicModel):
     class Meta:
