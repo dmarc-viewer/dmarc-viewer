@@ -108,7 +108,7 @@ class View(models.Model):
         """Creates data for line chart as needed by Chart.js
         y-axis: message count 
         x-axis: time
-        Each day of the View time range is one x datapoint.
+        Each day of the view time range is one x datapoint.
         It would be better to aggregate this.
         """
 
@@ -132,7 +132,7 @@ class View(models.Model):
             data = []
             j = 0
             message_count_days = len(message_count_per_day_list)
-            for i in range(len(labels_raw) - 1):
+            for i in range(len(labels_raw)):
                 if (message_count_days > j) and \
                  (labels_raw[i] == message_count_per_day_list[j]['date']):
                     data.append(message_count_per_day_list[j]['message_count'])
@@ -225,6 +225,9 @@ class TimeFixed(ViewFilterField):
         return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
                 % (self.getBeginEnd())
 
+    def __str__(self):
+        return "%s - %s" % (self.getBeginEnd())
+
 class TimeVariable(ViewFilterField):
     # Creates period for last <quantity> <unit>
     # needs method that clacs date_range_begin and date_range_end
@@ -250,6 +253,8 @@ class TimeVariable(ViewFilterField):
     def getFilter(self):
         return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
                 % (self.getBeginEnd())
+    def __str__(self):
+        return "%s - %s" % (self.getBeginEnd())
 
 class ReportSender(FilterSetFilterField):
     report_field            = "Reporter.email"

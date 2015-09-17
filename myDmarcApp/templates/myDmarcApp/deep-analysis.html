@@ -14,7 +14,19 @@
     <h1>Deep Analysis</h1>
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
+    <div class="view-filter-details">
+        <p>View Filter Details</p>
+        {% with the_view.viewfilterfield_set.all|first as timefilter %}
+            {{timefilter}}
+        {% endwith %}
+        {% for fs in the_view.filterset_set.all %}
+            {{fs.label}}:
+            {% for f in fs.filtersetfilterfield_set.all%}
+                {{f.report_field}}: {{f.value}}
+            {% endfor %}
 
+        {% endfor %}
+    </div>
     <div class="view-type-linechart">
         <canvas width="200" height="100"></canvas>
     </div>
@@ -26,7 +38,6 @@
         $(document).ready(function(){
             var ctx = $(".view-type-linechart > canvas").get(0).getContext("2d");
             var data = {{ view_type_line_data | safe }};
-
             var lineChart = new Chart(ctx).Line(data, {
                 responsive: true,
                 datasetFill : false
@@ -101,6 +112,8 @@
             {% endfor %}
         </table>
     </div>
+    <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
+
     <script type="text/javascript">
         /*
          * Initialize DataTable 
