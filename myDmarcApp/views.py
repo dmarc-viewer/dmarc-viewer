@@ -4,7 +4,6 @@ from django.contrib import messages
 from forms import *
 from myDmarcApp.models import View, TimeFixed, TimeVariable
 from django.contrib import messages
-import json 
 
 import time
 
@@ -75,10 +74,8 @@ def deep_analysis(request, view_id = None):
     begin = time.time()
     view_type_table_data = view.getTableData()
 
-    print "Table Data:", time.time() - begin
     begin = time.time()
     view_type_line_data  = view.getLineData()
-    print "Line Data:", time.time() - begin
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 

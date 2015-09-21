@@ -3,6 +3,7 @@
 {% block title %}MyDmarc - Deep Analysis{% endblock %}
 
 {% block content %}
+{% load staticfiles %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
     {% for view in sidebar_views %}
@@ -27,23 +28,170 @@
 
         {% endfor %}
     </div>
-    <div class="view-type-linechart">
-        <canvas width="200" height="100"></canvas>
-    </div>
+
+    <div class="view-type-linechart"></div>
     <script type="text/javascript">
-        /*
-         * Initialize Line Chart
-         */
-        
-        $(document).ready(function(){
-            var ctx = $(".view-type-linechart > canvas").get(0).getContext("2d");
-            var data = {{ view_type_line_data | safe }};
-            var lineChart = new Chart(ctx).Line(data, {
-                responsive: true,
-                datasetFill : false
+        var theData;
+        // Create margins, heights, widths for both plots
+        var margin = {top: 10, right: 10, bottom: 100, left: 40},
+            marginMini = {top: 430, right: 10, bottom: 20, left: 40},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom,
+            heightMini = 500 - marginMini.top - marginMini.bottom;
+
+        // Create date format praser
+        var parseDate = d3.time.format("%Y%m%d").parse;
+
+        // Ranges for both plots
+        var x = d3.time.scale().range([0, width]),
+            y = d3.scale.linear().range([height, 0]),
+            xMini = d3.time.scale().range([0, width]),
+            yMini = d3.scale.linear().range([heightMini, 0]);
+
+        //Axis for both plots
+        var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+            yAxis = d3.svg.axis().scale(y).orient("left"),
+            xAxisMini = d3.svg.axis().scale(xMini).orient("bottom");
+
+        //Moving a brush in mini chart changes chart domain
+        var brush = d3.svg.brush()
+            .x(xMini)
+            .on("brush", function() { 
+              x.domain(brush.empty() ? xMini.domain() : brush.extent());
+              focus.selectAll(".line").attr("d", line);
+              focus.select(".x.axis").call(xAxis);
             });
+
+        //Append svg to document
+        var svg = d3.select(".view-type-linechart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+
+        //Define a viewport, so that the line does not move over axis
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+          .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Append main chart to svg and place it
+        var focus = svg.append("g")
+            .attr("class", "focus")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Append overview chart to svg and place it 
+        var context = svg.append("g")
+            .attr("class", "context")
+            .attr("transform", "translate(" + marginMini.left + "," + marginMini.top + ")");
+
+        // Create main chart line generator
+        var line = d3.svg.line()
+            .x(function(d) { return x(d.day); })
+            .y(function(d) { return y(d.value); });
+
+        // Create overview chart line generator
+        var lineMini = d3.svg.line()
+            .x(function(d) { return xMini(d.day); })
+            .y(function(d) { return yMini(d.value); });
+
+        // Get the data
+        // XXX LP Maybe get this with ajax
+        var dataSets = {{ view_type_line_data | safe }};
+        
+        // Convert date strings to dates
+        dataSets.forEach(function(dataSet){
+          dataSet.data.forEach(function(obj){
+            obj.day = parseDate(obj.day);
+          })
+        })
+
+        // Get min and max date by traversing all datasets' data lists
+        x.domain(
+          d3.extent([].concat.apply([], 
+            dataSets.map(function(dataSet){return dataSet.data.map(
+              function(d){return d.day; })}))));
+
+        // Get max value by traversing all datasets' data lists
+        y.domain(
+          [0, d3.max([].concat.apply([], 
+            dataSets.map(function(dataSet){return dataSet.data.map(
+              function(d){return d.value; })})))]);
+
+        // Get the domains for x and y values for overview chart
+        xMini.domain(x.domain());
+        yMini.domain(y.domain());
+
+        // Create the actual lines and append to svg
+        dataSets.forEach(function(dataSet, idx) {
+          // for main chart
+          focus.append("path")
+              .datum(dataSet.data)
+              .attr("class", "line")
+              .attr("d", line)
+              .attr('stroke', dataSet.color);
+          // and for mini chart
+          context.append("path")
+              .datum(dataSet.data)
+              .attr("class", "line")
+              .attr("d", lineMini)
+              .attr('stroke', dataSet.color);
         });
+
+        // Append X Axis for main chart
+        focus.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Append Y Axis for main chart
+        focus.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+
+        // Append X Axis for mini chart
+        context.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + heightMini + ")")
+            .call(xAxisMini);
+
+        // Append the moving window for the mini chart
+        context.append("g")
+            .attr("class", "x brush")
+            .call(brush)
+          .selectAll("rect")
+            .attr("y", -6)
+            .attr("height", heightMini + 7);
+
+        // Create a legend
+        var legendRectSize = 18;
+        var legendMargin = 10;
+        var legendSpacing = 4;
+
+        var legend = svg.selectAll('.legend')
+          .data(dataSets)
+          .enter()
+          .append('g')
+          .attr('class', 'legend')
+          .attr('transform', function(d, i) {
+            var legendHeight = legendRectSize + legendSpacing;
+            var horz = margin.left + legendMargin;
+            var vert = margin.top + legendMargin + i * legendHeight;
+            return 'translate(' + horz + ',' + vert + ')';
+          });
+
+        legend.append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .style('fill', function(d){return d.color})
+          .style('stroke', function(d){return d.color});
+
+        legend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(dataSet) { return dataSet.label; });
+
     </script>
+
 
     <div class="view-type-table">
         <table class="display" cellspacing="0" width="100%">

@@ -66,3 +66,38 @@ body {
   display: none;
 }
 
+
+/*
+ d3 
+ */
+
+svg {
+  font: 10px sans-serif;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+path { 
+    stroke-width: 2;
+    fill: none;
+    clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.legend {
+  font-size: 12px;
+}
+rect {
+  stroke-width: 2;
+}

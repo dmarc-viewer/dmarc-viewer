@@ -117,61 +117,35 @@ class View(models.Model):
 
         begin, end = time_range.getBeginEnd()
         delta = end - begin
-        labels_raw = []
-        labels = []
+        days = []
         for i in range(delta.days + 1):
-            labels.append((begin + timedelta(days=i)).strftime("%B %d, %Y"))
-            labels_raw.append((begin + timedelta(days=i)).date())
+            days.append((begin + timedelta(days=i)).date())
 
-        data_points_count = len(labels)
+        days_count = len(days)
         datasets = []
+
         for filter_set in self.filterset_set.all():
             message_count_per_day_list = filter_set.getMessageCountPerDay()
 
-            # Create ordered data array for each label entry, add 0 if no entry in queryset
+            # Create object(day, value) for each day, add 0 as value if no entry in queryset
             data = []
             j = 0
             message_count_days = len(message_count_per_day_list)
-            for i in range(len(labels_raw)):
+            for i in range(days_count):
                 if (message_count_days > j) and \
-                 (labels_raw[i] == message_count_per_day_list[j]['date']):
-                    data.append(message_count_per_day_list[j]['message_count'])
+                 (days[i] == message_count_per_day_list[j]['date']):
+                    value = message_count_per_day_list[j]['message_count']
                     j += 1
-                else:
-                    data.append(0)
+                else: 
+                    value = 0
 
-            # Let's try to aggregate the data to a reasonable amount of datapoints on the x axis
-            # LP XXX: maybe don't hardcode max_bins, but make it configurable
-            # max_bins = 15
-            # if data_points_count > max_bins:
-            #     data_aggregated = []
-
-            #     bin_size = data_points_count / max_bins
-            #     bin_size_last = data_points_count % max_bins
-
-            #     for i in range(0, data_points_count - 1, bin_size):
-            #         #Aggregate
-            #         if bin_size_last and i >= bin_size * max_bins:
-            #             bin = bin_size_last
-            #         else:
-            #             bin = bin_size
-
-            #         value_aggregated = 0
-            #         for j in range(i + bin - 1):
-            #            value_aggregated += data[j]
-
-            #         data_aggregated.append(value_aggregated)
-
-            #     data = data_aggregated
-
-
+                data.append({'day' : days[i].strftime('%Y%m%d'), 'value' : value})
 
             datasets.append({'label' : str(filter_set.label), 
-                             'strokeColor': str(filter_set.color), 
-                             'pointHighlightStroke': str(filter_set.color),
+                             'color': str(filter_set.color), 
                              'data': data})
 
-        return {'labels': labels, 'datasets': datasets}
+        return datasets
 
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
