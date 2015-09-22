@@ -57,7 +57,6 @@ class ViewForm(ModelForm):
         view_instance = super(ViewForm, self).save()
         
         time_variable = TimeVariable.objects.filter(foreign_key=self.instance.id).first()
-
         if self.cleaned_data["time_variable_unit"] and self.cleaned_data["time_variable_quantity"]:
             # Create or update 
             if not time_variable:
@@ -70,8 +69,6 @@ class ViewForm(ModelForm):
             if time_variable:
                 time_variable.delete()
 
-
-
         time_fixed = TimeFixed.objects.filter(foreign_key=self.instance.id).first()
         # Delete it if it was deleted in form 
         if self.cleaned_data["time_fixed_begin"] and self.cleaned_data["time_fixed_end"]:
@@ -80,7 +77,6 @@ class ViewForm(ModelForm):
             time_fixed.date_range_begin = self.cleaned_data["time_fixed_begin"]
             time_fixed.date_range_end   = self.cleaned_data["time_fixed_end"]
             time_fixed.save()
-
         else:
             if time_fixed:
                 time_fixed.delete()

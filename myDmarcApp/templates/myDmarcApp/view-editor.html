@@ -19,20 +19,11 @@
             {{ filter_set_formset.management_form }}
 
             <h3>Filters</h3>
-
             <div data-formset-body>
                 <!-- New forms will be inserted in here -->
                 {% for filter_set_form in filter_set_formset%}
                     <div data-formset-form>
                         <h4>Filter</h4>
-                        {% comment %}
-                            We render the filterset_id 'manually' because
-                            if we clone a view and related filtersets
-                            we don't want the id the be set.
-                            XXX Is this nice?!
-                        {% endcomment %}
-                        <input id="id_filterset_set-{{forloop.counter0}}-id" name="filterset_set-{{forloop.counter0}}-id" 
-                                type="hidden" value="{% if view_form.instance.id and not clone %}{{filter_set_form.id.value }}{% endif %}">
                         {% bootstrap_field filter_set_form.id %}
                         {% bootstrap_field filter_set_form.label %}
                         {% bootstrap_field filter_set_form.color %}
@@ -49,6 +40,8 @@
                         
                         {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
                         <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
+                        <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
+
                     </div>
                 {% endfor %}
             </div>
@@ -76,6 +69,8 @@
 
                     {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
                     <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
+                    <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
+
                 </div>
                 {% endescapescript %}
             </script>

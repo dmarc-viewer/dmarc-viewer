@@ -88,6 +88,10 @@ class AuthResultSPF(models.Model):
 ############################
 """
 MYDMARC VIEW/FILTER MODEL
+
+Notes:
+- FilterFields that reference same Model Field are ORed
+- FilterFields that reference different Model Fields are ANDed
 """
 ############################
 

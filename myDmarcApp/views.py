@@ -10,7 +10,11 @@ import time
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
+
+
 def edit(request, view_id = None, clone = False):
+    """Check filterset_set-INITIAL_FORMS and filterset_set-N-id for cloning.
+    Both must be empty for cloning to work. But this should be possible on the server."""
     
     # Assign form data if posted
     if request.method == 'POST':
@@ -31,6 +35,8 @@ def edit(request, view_id = None, clone = False):
     view_form               = ViewForm(data=data, instance=view_instance)
     filter_set_formset      = FilterSetFormSet(data=data, instance = view_instance)
 
+
+
     if request.method == 'POST':
         valid = False
         if view_form.is_valid():
@@ -42,11 +48,11 @@ def edit(request, view_id = None, clone = False):
             filter_set_formset.instance = view_instance
             filter_set_formset.save()
 
-            messages.add_message(request, messages.SUCCESS, 'Successfully saved!')
+            messages.add_message(request, messages.SUCCESS, "Successfully saved!")
             return redirect("view_management")
 
         else:
-            messages.add_message(request, messages.ERROR, 'You are such a prick!')
+            messages.add_message(request, messages.ERROR, "You are such a prick!")
 
     if request.method == 'GET':
         pass
@@ -61,7 +67,7 @@ def delete_view(request, view_id):
     # XXX: Add try catch
     # XXX: Add ask confirm in Javascript
     View.objects.get(pk=view_id).delete()
-    messages.add_message(request, messages.SUCCESS, 'Successfully deleted view!')
+    messages.add_message(request, messages.SUCCESS, "Successfully deleted view!")
     return redirect("view_management")
 
 
