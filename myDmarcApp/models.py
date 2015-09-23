@@ -3,7 +3,6 @@ from dateutil.relativedelta import relativedelta
 
 from django.contrib.gis.db import models
 from django.db.models import Sum
-from polymorphic import PolymorphicModel
 import choices
 
 ############################
@@ -177,18 +176,22 @@ class FilterSet(models.Model):
                 .values('date', 'message_count')\
                 .order_by('date')
 
-class FilterField(PolymorphicModel):
-    class Meta:
-        abstract = True
 
-class FilterSetFilterField(FilterField):
+class FilterSetFilterField(models.Model):
+    id = models.BigIntegerField(primary_key = True)
     foreign_key             = models.ForeignKey('FilterSet')
     def getFilter(self):
         key = self.report_field.replace('.', "__").lower()
         return "filter(%s=%r)" % (key, self.value)
 
-class ViewFilterField(FilterField):
+    class Meta:
+        abstract = True
+
+class ViewFilterField(models.Model):
+    id = models.BigIntegerField(primary_key = True)
     foreign_key             = models.ForeignKey('View')
+    class Meta:
+        abstract = True
 
 class TimeFixed(ViewFilterField):
     # max one per view
