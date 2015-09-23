@@ -10,8 +10,6 @@ import time
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
-
-
 def edit(request, view_id = None, clone = False):
     """Check filterset_set-INITIAL_FORMS and filterset_set-N-id for cloning.
     Both must be empty for cloning to work. But this should be possible on the server."""
@@ -72,15 +70,17 @@ def delete_view(request, view_id):
 
 
 def deep_analysis(request, view_id = None):
-    if not view_id:
-        view_id = View.objects.values('id')[0]['id']
+    if view_id:
+        view = View.objects.get(pk=view_id)
+    else:
+        view = View.objects.first()
+    
+    if not view:
+        messages.add_message(request, messages.SUCCESS, "You should start creating views before you want to use them!")
+        return redirect("view_management")
 
     sidebar_views        = View.objects.values('id', 'title')
-    view                 = View.objects.get(pk=view_id)
-    begin = time.time()
     view_type_table_data = view.getTableData()
-
-    begin = time.time()
     view_type_line_data  = view.getLineData()
 
     return render(request, 'myDmarcApp/deep-analysis.html', {

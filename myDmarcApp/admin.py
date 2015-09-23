@@ -2,7 +2,7 @@ from django.contrib.gis import admin
 from super_inlines.admin import SuperInlineModelAdmin, SuperModelAdmin
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
-    TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
+    ReportType, TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
 
@@ -37,6 +37,8 @@ class ReportAdmin(SuperModelAdmin):
 
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Reporter, ReporterAdmin)
+admin.site.register(Record)
+
 
 
 class ReportSenderInline(SuperInlineModelAdmin, admin.StackedInline):
@@ -78,17 +80,18 @@ class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
          RawSpfDomainInline, RawSpfResultInline, AlignedDkimResultInline,\
          AlignedSpfResultInline, DispositionInline,)
 
+class ReportTypeInline(SuperInlineModelAdmin, admin.StackedInline):
+    model = ReportType
+    extra = 0
 class TimeFixedInline(SuperInlineModelAdmin, admin.StackedInline):
     model = TimeFixed
     extra = 1
-
 class TimeVariableInline(SuperInlineModelAdmin, admin.StackedInline):
     model = TimeVariable
     extra = 1
 
 class ViewAdmin(SuperModelAdmin):
-    inlines = (TimeVariableInline, FilterSetInline,)
-    inlines = (TimeFixedInline, TimeVariableInline, FilterSetInline,)
+    inlines = (ReportTypeInline, TimeFixedInline, TimeVariableInline, FilterSetInline,)
 
 admin.site.register(View, ViewAdmin)
 
@@ -96,4 +99,20 @@ class FilterSetAdmin(SuperModelAdmin):
     model = FilterSet 
 
 admin.site.register(FilterSet, FilterSetAdmin)
+admin.site.register(ReportType)
+admin.site.register(TimeFixed)
+admin.site.register(TimeVariable)
+admin.site.register(ReportSender)
+admin.site.register(ReportReceiverDomain)
+admin.site.register(SourceIP)
+admin.site.register(RawDkimDomain)
+admin.site.register(RawDkimResult)
+admin.site.register(RawSpfDomain)
+admin.site.register(RawSpfResult)
+admin.site.register(AlignedDkimResult)
+admin.site.register(AlignedSpfResult)
+admin.site.register(Disposition)
+
+
+
 

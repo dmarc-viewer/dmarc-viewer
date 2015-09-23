@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.gis.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum
 import choices
 
@@ -98,7 +100,12 @@ class View(models.Model):
     title                   = models.CharField(max_length = 100)
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)
-    report_type             = models.IntegerField(choices = choices.REPORT_TYPE)
+
+    def getViewFilterFieldObjects(self):
+        """See docstring Filterset.getFilterSetFilterFieldObjects()"""
+        return list(ReportType.objects.filter(foreign_key=self.id)) +\
+            list(TimeFixed.objects.filter(foreign_key=self.id)) +\
+            list(TimeVariable.objects.filter(foreign_key=self.id))
 
     def getTableData(self):
         # XXX LP: I don't like this distinct here. 
@@ -115,8 +122,13 @@ class View(models.Model):
         It would be better to aggregate this.
         """
 
-        # There must be exactly one 
-        time_range = self.viewfilterfield_set.first()
+        # There must only one of both exactly one 
+        fixed = TimeFixed.objects.filter(foreign_key=self.id).first()
+        variable = TimeVariable.objects.filter(foreign_key=self.id).first()
+        time_range = fixed or variable
+
+        if not time_range:
+            raise Exception("You have to specify a Timerange, you bastard!")
 
         begin, end = time_range.getBeginEnd()
         delta = end - begin
@@ -155,18 +167,38 @@ class FilterSet(models.Model):
     label                   = models.CharField(max_length = 100)
     color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
-
     def getReports(self):
-        filter_fields = [filterfield for filterfield in self.filtersetfilterfield_set.all()] + \
-            [filterfield for filterfield in self.view.viewfilterfield_set.all()]
+        filter_fields = [filterfield for filterfield in self.getFilterSetFilterFieldObjects()] + \
+            [filterfield for filterfield in self.view.getViewFilterFieldObjects()]
 
         filters = [filter_field.getFilter() for filter_field in filter_fields]
         filter_str = ".".join(filters)
 
         # XXX LP: Eval is dangerous especially if there is user input involved
         # Put some thought on this!!!!!!!!!!!!!!!
+        # 
+        print "Report.objects." + filter_str
         return eval("Report.objects." + filter_str)
 
+
+    def getFilterSetFilterFieldObjects(self):
+        """
+        XXX LP
+        This is really a pain in the ass, things like this should be done with polymorphism. But Django sucks at this
+        Alternatives might be:
+            The contenttypes framework (too complecated)
+            django_polymorphic (based on above, tried but did not work as expected)
+        """
+        return list(ReportSender.objects.filter(foreign_key=self.id))+\
+            list(ReportReceiverDomain.objects.filter(foreign_key=self.id))+\
+            list(SourceIP.objects.filter(foreign_key=self.id))+\
+            list(RawDkimDomain.objects.filter(foreign_key=self.id))+\
+            list(RawDkimResult.objects.filter(foreign_key=self.id))+\
+            list(RawSpfDomain.objects.filter(foreign_key=self.id))+\
+            list(RawSpfResult.objects.filter(foreign_key=self.id))+\
+            list(AlignedDkimResult.objects.filter(foreign_key=self.id))+\
+            list(AlignedSpfResult.objects.filter(foreign_key=self.id))+\
+            list(Disposition.objects.filter(foreign_key=self.id))
 
     def getMessageCountPerDay(self):
         return self.getReports()\
@@ -178,7 +210,6 @@ class FilterSet(models.Model):
 
 
 class FilterSetFilterField(models.Model):
-    id = models.BigIntegerField(primary_key = True)
     foreign_key             = models.ForeignKey('FilterSet')
     def getFilter(self):
         key = self.report_field.replace('.', "__").lower()
@@ -188,14 +219,18 @@ class FilterSetFilterField(models.Model):
         abstract = True
 
 class ViewFilterField(models.Model):
-    id = models.BigIntegerField(primary_key = True)
     foreign_key             = models.ForeignKey('View')
     class Meta:
         abstract = True
 
+class ReportType(ViewFilterField):
+    value             = models.IntegerField(choices = choices.REPORT_TYPE)
+    def getFilter(self):
+        return "filter(report_type=%r)" % (self.value)
+
+
 class TimeFixed(ViewFilterField):
-    # max one per view
-    # either time fixed or time variable
+    # max one per view either time fixed or time variable
     date_range_begin        = models.DateTimeField()
     date_range_end          = models.DateTimeField()
 
@@ -212,8 +247,7 @@ class TimeFixed(ViewFilterField):
 class TimeVariable(ViewFilterField):
     # Creates period for last <quantity> <unit>
     # needs method that clacs date_range_begin and date_range_end
-    # max one per view
-    # either time fixed or time variable
+    # max one per view either time fixed or time variable
     unit                    = models.IntegerField(choices = choices.TIME_UNIT)
     quantity                = models.IntegerField()
 

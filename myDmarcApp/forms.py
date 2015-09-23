@@ -1,13 +1,13 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
+from django.forms import ModelForm, ValidationError, ChoiceField, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import SplitDateTimeWidget
 
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
-    PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
-    TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
+    PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, ReportType, \
+    TimeFixed, TimeVariable, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
 from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget
@@ -17,12 +17,13 @@ class ViewForm(ModelForm):
 
     class Meta:
         model = View
-        fields = ['title', 'description', 'enabled', 'report_type']
+        fields = ['title', 'description', 'enabled']
 
     def __init__(self, *args, **kwargs):
         super(ViewForm, self).__init__(*args, **kwargs)
-        self.fields["time_variable_unit"]       = TypedChoiceField(label="Report Date Range Quantity", coerce=int, choices=choices.TIME_UNIT, required=False)
+        self.fields["report_type"]              = ChoiceField(label="Report Type", choices=choices.REPORT_TYPE, required=True)
         self.fields["time_variable_quantity"]   = IntegerField(label="Report Date Range Unit", required=False)
+        self.fields["time_variable_unit"]       = TypedChoiceField(label="Report Date Range Quantity", coerce=int, choices=choices.TIME_UNIT, required=False)
         self.fields["time_fixed_begin"]         = DateTimeField(label="Report Date Begin", required=False)
         self.fields["time_fixed_end"]           = DateTimeField(label="Report Date End", required=False)
 
@@ -34,6 +35,9 @@ class ViewForm(ModelForm):
             for time_variable in TimeVariable.objects.filter(foreign_key=self.instance.id):
                 self.fields["time_variable_unit"].initial     = time_variable.unit
                 self.fields["time_variable_quantity"].initial = time_variable.quantity
+
+            for report_type in ReportType.objects.filter(foreign_key=self.instance.id):
+                self.fields["report_type"].initial            = report_type.value
 
 
     # def is_valid(self):
@@ -56,6 +60,7 @@ class ViewForm(ModelForm):
     def save(self):
         view_instance = super(ViewForm, self).save()
         
+        # This is actually a one-to-one relationship but modeled with fk (m2o)
         time_variable = TimeVariable.objects.filter(foreign_key=self.instance.id).first()
         if self.cleaned_data["time_variable_unit"] and self.cleaned_data["time_variable_quantity"]:
             # Create or update 
@@ -69,6 +74,7 @@ class ViewForm(ModelForm):
             if time_variable:
                 time_variable.delete()
 
+        # This is actually a one-to-one relationship but modeled with fk (m2o)
         time_fixed = TimeFixed.objects.filter(foreign_key=self.instance.id).first()
         # Delete it if it was deleted in form 
         if self.cleaned_data["time_fixed_begin"] and self.cleaned_data["time_fixed_end"]:
@@ -80,6 +86,14 @@ class ViewForm(ModelForm):
         else:
             if time_fixed:
                 time_fixed.delete()
+
+        # This is actually a one-to-one relationship but modeled with fk (m2o)
+        report_type = ReportType.objects.filter(foreign_key=self.instance.id).first()
+        if self.cleaned_data["report_type"]:
+            if not report_type:
+                report_type = ReportType(foreign_key=self.instance)
+            report_type.value = self.cleaned_data["report_type"]
+            report_type.save()
 
         return view_instance
 

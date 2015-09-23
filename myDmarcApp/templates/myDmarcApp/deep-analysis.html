@@ -15,6 +15,9 @@
     <h1>Deep Analysis</h1>
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
+
+    {% comment %}
+        
     <div class="view-filter-details">
         <p>View Filter Details</p>
         {% with the_view.viewfilterfield_set.all|first as timefilter %}
@@ -28,6 +31,7 @@
 
         {% endfor %}
     </div>
+    {% endcomment %}
 
     <div class="view-type-linechart"></div>
     <script type="text/javascript">
@@ -210,6 +214,7 @@
                     <th>SPF Results</th>
                     <th>aligned SPF</th>
                     <th>Disposition</th>
+                    <th>Label</th>
                 </tr>
             </thead>
 
@@ -254,6 +259,8 @@
                             </td>
                             <td>{{record.get_spf_display}}</td>
                             <td>{{record.get_disposition_display}}</td>
+                            <td>{{filter_set_data.filter_set.label}}</td>
+
                         </tr>
                     {% endfor %}
                 {% endfor %}
