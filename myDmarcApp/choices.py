@@ -95,8 +95,16 @@ TIME_UNIT_WEEK = 2
 TIME_UNIT_MONTH = 3
 TIME_UNIT_YEAR = 4
 TIME_UNIT = (
+    (None, '-----'),
     (TIME_UNIT_DAY, 'day'),
     (TIME_UNIT_WEEK, 'week'),
     (TIME_UNIT_MONTH, 'month'),
     (TIME_UNIT_YEAR, 'year')
     ) 
+
+DATE_RANGE_TYPE_FIXED = 1
+DATE_RANGE_TYPE_VARIABLE = 2
+DATE_RANGE_TYPE = (
+    (DATE_RANGE_TYPE_FIXED, "fixed"),
+    (DATE_RANGE_TYPE_VARIABLE, "variable")
+    )

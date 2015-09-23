@@ -2,7 +2,7 @@ from django.contrib.gis import admin
 from super_inlines.admin import SuperInlineModelAdmin, SuperModelAdmin
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
-    ReportType, TimeFixed, TimeVariable, ViewFilterField, ReportSender, ReportReceiverDomain, \
+    ReportType, DateRange, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
 
@@ -83,15 +83,12 @@ class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
 class ReportTypeInline(SuperInlineModelAdmin, admin.StackedInline):
     model = ReportType
     extra = 0
-class TimeFixedInline(SuperInlineModelAdmin, admin.StackedInline):
-    model = TimeFixed
-    extra = 1
-class TimeVariableInline(SuperInlineModelAdmin, admin.StackedInline):
-    model = TimeVariable
+class DateRangeInline(SuperInlineModelAdmin, admin.StackedInline):
+    model = DateRange
     extra = 1
 
 class ViewAdmin(SuperModelAdmin):
-    inlines = (ReportTypeInline, TimeFixedInline, TimeVariableInline, FilterSetInline,)
+    inlines = (ReportTypeInline, DateRangeInline, FilterSetInline,)
 
 admin.site.register(View, ViewAdmin)
 
@@ -100,8 +97,7 @@ class FilterSetAdmin(SuperModelAdmin):
 
 admin.site.register(FilterSet, FilterSetAdmin)
 admin.site.register(ReportType)
-admin.site.register(TimeFixed)
-admin.site.register(TimeVariable)
+admin.site.register(DateRange)
 admin.site.register(ReportSender)
 admin.site.register(ReportReceiverDomain)
 admin.site.register(SourceIP)

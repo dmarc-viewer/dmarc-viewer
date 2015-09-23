@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from forms import *
-from myDmarcApp.models import View, TimeFixed, TimeVariable
+from myDmarcApp.models import View
 from django.contrib import messages
 
 import time

@@ -102,10 +102,10 @@ class View(models.Model):
     enabled                 = models.BooleanField(default = True)
 
     def getViewFilterFieldObjects(self):
-        """See docstring Filterset.getFilterSetFilterFieldObjects()"""
+        """Unhappy :( 
+        cf. docstring Filterset.getFilterSetFilterFieldObjects()"""
         return list(ReportType.objects.filter(foreign_key=self.id)) +\
-            list(TimeFixed.objects.filter(foreign_key=self.id)) +\
-            list(TimeVariable.objects.filter(foreign_key=self.id))
+            list(DateRange.objects.filter(foreign_key=self.id))
 
     def getTableData(self):
         # XXX LP: I don't like this distinct here. 
@@ -123,14 +123,12 @@ class View(models.Model):
         """
 
         # There must only one of both exactly one 
-        fixed = TimeFixed.objects.filter(foreign_key=self.id).first()
-        variable = TimeVariable.objects.filter(foreign_key=self.id).first()
-        time_range = fixed or variable
+        date_range = DateRange.objects.filter(foreign_key=self.id).first()
 
-        if not time_range:
-            raise Exception("You have to specify a Timerange, you bastard!")
+        if not date_range:
+            raise Exception("You have to specify a date range, you bastard!") # XXX LP Raise proper exception
 
-        begin, end = time_range.getBeginEnd()
+        begin, end = date_range.getBeginEnd()
         delta = end - begin
         days = []
         for i in range(delta.days + 1):
@@ -176,8 +174,6 @@ class FilterSet(models.Model):
 
         # XXX LP: Eval is dangerous especially if there is user input involved
         # Put some thought on this!!!!!!!!!!!!!!!
-        # 
-        print "Report.objects." + filter_str
         return eval("Report.objects." + filter_str)
 
 
@@ -228,48 +224,42 @@ class ReportType(ViewFilterField):
     def getFilter(self):
         return "filter(report_type=%r)" % (self.value)
 
-
-class TimeFixed(ViewFilterField):
-    # max one per view either time fixed or time variable
-    date_range_begin        = models.DateTimeField()
-    date_range_end          = models.DateTimeField()
-
-    def getBeginEnd(self):
-        return self.date_range_begin, self.date_range_end
-
-    def getFilter(self):
-        return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
-                % (self.getBeginEnd())
-
-    def __str__(self):
-        return "%s - %s" % (self.getBeginEnd())
-
-class TimeVariable(ViewFilterField):
-    # Creates period for last <quantity> <unit>
-    # needs method that clacs date_range_begin and date_range_end
-    # max one per view either time fixed or time variable
-    unit                    = models.IntegerField(choices = choices.TIME_UNIT)
-    quantity                = models.IntegerField()
+class DateRange(ViewFilterField):
+    """
+    Either DATE_RANGE_TYPE_FIXED or DATE_RANGE_TYPE_VARIABLE
+    """
+    dr_type      = models.IntegerField(choices = choices.DATE_RANGE_TYPE)
+    begin        = models.DateTimeField(null = True)
+    end          = models.DateTimeField(null = True)
+    unit         = models.IntegerField(choices = choices.TIME_UNIT, null = True)
+    quantity     = models.IntegerField(null = True)
 
     def getBeginEnd(self):
-        end = datetime.now()
-        if (self.unit == choices.TIME_UNIT_DAY):
-            begin = end - relativedelta(days=self.quantity)
-        elif (self.unit == choices.TIME_UNIT_WEEK):
-            begin = end - relativedelta(weeks=self.quantity)
-        elif (self.unit == choices.TIME_UNIT_MONTH):
-            begin = end - relativedelta(months=self.quantity)
-        elif (self.unit == choices.TIME_UNIT_YEAR):
-            begin = end - relativedelta(years=self.quantity)
+        if (self.dr_type == choices.DATE_RANGE_TYPE_FIXED):
+            return self.begin, self.end
+        elif (self.dr_type == choices.DATE_RANGE_TYPE_VARIABLE):
+            end = datetime.now()
+            if (self.unit == choices.TIME_UNIT_DAY):
+                begin = end - relativedelta(days=self.quantity)
+            elif (self.unit == choices.TIME_UNIT_WEEK):
+                begin = end - relativedelta(weeks=self.quantity)
+            elif (self.unit == choices.TIME_UNIT_MONTH):
+                begin = end - relativedelta(months=self.quantity)
+            elif (self.unit == choices.TIME_UNIT_YEAR):
+                begin = end - relativedelta(years=self.quantity)
+            else:
+                raise # XXX LP proper Exception
+            return begin, end        
         else:
-            raise #Raise proper Exception
-        return begin, end
+            raise # XXX LP proper Exception
 
     def getFilter(self):
         return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
                 % (self.getBeginEnd())
+
     def __str__(self):
         return "%s - %s" % (self.getBeginEnd())
+
 
 class ReportSender(FilterSetFilterField):
     report_field            = "Reporter.email"
