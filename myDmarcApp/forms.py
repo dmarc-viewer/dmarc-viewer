@@ -11,7 +11,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     DateRange, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition
-from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget
+from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget, DatePickerWidget
 import choices
 
 class ViewForm(ModelForm):
@@ -28,8 +28,8 @@ class ViewForm(ModelForm):
         self.fields["dr_type"]     = TypedChoiceField(label="Date Range Type", choices=choices.DATE_RANGE_TYPE, coerce=int, widget=RadioSelect())
         self.fields["quantity"]    = IntegerField(label="Report Date Range Quantity", required=False)
         self.fields["unit"]        = TypedChoiceField(label="Report Date Range Unit", coerce=int, choices=choices.TIME_UNIT, required=False)
-        self.fields["begin"]       = DateTimeField(label="Report Date Begin", required=False)
-        self.fields["end"]         = DateTimeField(label="Report Date End", required=False)
+        self.fields["begin"]       = DateTimeField(label="Report Date Begin", required=False, widget=DatePickerWidget())
+        self.fields["end"]         = DateTimeField(label="Report Date End", required=False, widget=DatePickerWidget())
 
         # Set default for date range type
         self.fields["dr_type"].initial = choices.DATE_RANGE_TYPE_FIXED
@@ -43,7 +43,6 @@ class ViewForm(ModelForm):
                 self.fields["quantity"].initial    = date_range.quantity
                 self.fields["begin"].initial       = date_range.begin
                 self.fields["end"].initial         = date_range.end
-
 
             for report_type in ReportType.objects.filter(foreign_key=self.instance.id):
                 self.fields["report_type"].initial  = report_type.value
