@@ -33,3 +33,23 @@ var copy = function(el) {
         //XXX Add support for other form elements (textarea, radio, checkbox,...)
         return $newForm;
 }
+
+/*
+ * Toggle Date Range Type
+ */
+var toggleDateRange = function(){
+    //Fixed
+    var dr_type = $("[name='dr_type']:checked").val();
+    if (dr_type == 1){
+        $("#id_quantity, #id_unit").prop('disabled', true).val(null)
+        $("#id_begin, #id_end").prop('disabled', false);
+    } else if (dr_type == 2) {
+        $("#id_begin, #id_end").prop('disabled', true).val(null)
+        $("#id_quantity, #id_unit").prop('disabled', false);
+    }
+}
+
+$(document).ready(toggleDateRange)
+$(document).on("click", "[name='dr_type']", toggleDateRange)
+
+

@@ -101,6 +101,12 @@ class View(models.Model):
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)
 
+    def clone(self):
+        """Make a deep copy of view with all filters and append "(copy)" to the title of the view
+        make sure the tite does not exceed its max_length. in case strip title."""
+
+        return clone
+
     def getViewFilterFieldObjects(self):
         """Unhappy :( 
         cf. docstring Filterset.getFilterSetFilterFieldObjects()"""

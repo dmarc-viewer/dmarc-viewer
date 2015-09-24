@@ -1,9 +1,10 @@
 from django.utils.translation import gettext as _
 
-from django.forms import ModelForm, ValidationError, ChoiceField, MultipleChoiceField, TypedMultipleChoiceField, CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
+from django.forms import ModelForm, ValidationError, ChoiceField, MultipleChoiceField, TypedMultipleChoiceField, \
+    CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
 from django.forms.models import inlineformset_factory, modelform_factory
 
-from django.forms.widgets import SplitDateTimeWidget, RadioSelect
+from django.forms.widgets import RadioSelect
 
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, ReportType, \
@@ -23,12 +24,17 @@ class ViewForm(ModelForm):
         super(ViewForm, self).__init__(*args, **kwargs)
         self.fields["report_type"] = ChoiceField(label="Report Type", choices=choices.REPORT_TYPE, required=True)
 
+        # Initialize all fields for date range
         self.fields["dr_type"]     = TypedChoiceField(label="Date Range Type", choices=choices.DATE_RANGE_TYPE, coerce=int, widget=RadioSelect())
         self.fields["quantity"]    = IntegerField(label="Report Date Range Quantity", required=False)
         self.fields["unit"]        = TypedChoiceField(label="Report Date Range Unit", coerce=int, choices=choices.TIME_UNIT, required=False)
         self.fields["begin"]       = DateTimeField(label="Report Date Begin", required=False)
         self.fields["end"]         = DateTimeField(label="Report Date End", required=False)
 
+        # Set default for date range type
+        self.fields["dr_type"].initial = choices.DATE_RANGE_TYPE_FIXED
+
+        # If this form is already bound to a view, add the data from the model
         if self.instance.id:
             for date_range in DateRange.objects.filter(foreign_key=self.instance.id):
                 self.fields["dr_type"].initial     = date_range.dr_type
@@ -42,16 +48,15 @@ class ViewForm(ModelForm):
             for report_type in ReportType.objects.filter(foreign_key=self.instance.id):
                 self.fields["report_type"].initial  = report_type.value
 
-
     def clean(self):
         cleaned_data    = super(ViewForm, self).clean()
         dr_type         = cleaned_data.get("dr_type")
         begin           = cleaned_data.get("begin")
         end             = cleaned_data.get("end")
         quantity        = cleaned_data.get("quantity")
-        unit            = cleaned_data.get("unit") or None
+        unit            = cleaned_data.get("unit")
 
-        # Only one of both pairs should ever be specified
+        # Only one of both pairs (fixed or variable) should ever be specified
         only_one_msg = _('Specify either fixed or variable time range!')
         if (((dr_type == choices.DATE_RANGE_TYPE_FIXED) and
             (unit or quantity)) or
@@ -70,7 +75,7 @@ class ViewForm(ModelForm):
             if not end:
                 self.add_error('end', ValidationError(required_msg, code='required'))
 
-        # if the user wants variable ranges unit and quantity must be specified
+        # Ff the user wants variable ranges unit and quantity must be specified
         if dr_type == choices.DATE_RANGE_TYPE_VARIABLE:
             if not unit:
                 self.add_error('unit', ValidationError(required_msg, code='required'))
