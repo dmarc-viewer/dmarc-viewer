@@ -152,6 +152,21 @@
             .attr("class", "y axis")
             .call(yAxis);
 
+        svg.append("text")
+            .attr("transform", "translate(" + (width / 2) + " ," + margin.top + ")")
+            .attr("class", "x label")
+            .style("text-anchor", "middle")
+            .text("Time");
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", margin.left / 2)
+            .attr("x", 0 - (height / 2))
+            .style("text-anchor", "middle")
+            .text("Message Count");
+
+
         // Append X Axis for mini chart
         context.append("g")
             .attr("class", "x axis")
