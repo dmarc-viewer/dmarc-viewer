@@ -3,9 +3,10 @@ from dateutil.relativedelta import relativedelta
 
 from django.contrib.gis.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
-from django.contrib.contenttypes.models import ContentType
+from django.db.models.fields.related import ForeignKey
 from django.db.models import Sum
 import choices
+import copy
 
 ############################
 """
@@ -101,17 +102,8 @@ class View(models.Model):
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)
 
-    def clone(self):
-        """Make a deep copy of view with all filters and append "(copy)" to the title of the view
-        make sure the tite does not exceed its max_length. in case strip title."""
-
-        return clone
-
     def getViewFilterFieldObjects(self):
-        """Unhappy :( 
-        cf. docstring Filterset.getFilterSetFilterFieldObjects()"""
-        return list(ReportType.objects.filter(foreign_key=self.id)) +\
-            list(DateRange.objects.filter(foreign_key=self.id))
+        return _get_related_objects(self, ViewFilterField)
 
     def getTableData(self):
         # XXX LP: I don't like this distinct here. 
@@ -157,7 +149,6 @@ class View(models.Model):
             datasets.append({'label' : str(filter_set.label), 
                              'color': str(filter_set.color), 
                              'data': data})
-
         return datasets
 
 class FilterSet(models.Model):
@@ -175,6 +166,7 @@ class FilterSet(models.Model):
         # XXX LP: Eval is dangerous especially if there is user input involved
         # Put some thought on this!!!!!!!!!!!!!!!
         return eval("Report.objects." + filter_str)
+
     def getRecords(self):
         filter_fields = [filterfield for filterfield in self.getFilterSetFilterFieldObjects()] + \
             [filterfield for filterfield in self.view.getViewFilterFieldObjects()]
@@ -186,25 +178,6 @@ class FilterSet(models.Model):
         # Put some thought on this!!!!!!!!!!!!!!!
         return eval("Record.objects." + filter_str)
 
-    def getFilterSetFilterFieldObjects(self):
-        """
-        XXX LP
-        This is really a pain in the ass, things like this should be done with polymorphism. But Django sucks at this
-        Alternatives might be:
-            The contenttypes framework (too complecated)
-            django_polymorphic (based on above, tried but did not work as expected)
-        """
-        return list(ReportSender.objects.filter(foreign_key=self.id))+\
-            list(ReportReceiverDomain.objects.filter(foreign_key=self.id))+\
-            list(SourceIP.objects.filter(foreign_key=self.id))+\
-            list(RawDkimDomain.objects.filter(foreign_key=self.id))+\
-            list(RawDkimResult.objects.filter(foreign_key=self.id))+\
-            list(RawSpfDomain.objects.filter(foreign_key=self.id))+\
-            list(RawSpfResult.objects.filter(foreign_key=self.id))+\
-            list(AlignedDkimResult.objects.filter(foreign_key=self.id))+\
-            list(AlignedSpfResult.objects.filter(foreign_key=self.id))+\
-            list(Disposition.objects.filter(foreign_key=self.id))
-
     def getMessageCountPerDay(self):
         return self.getReports()\
                 .extra(select={'date': "date_range_begin::date"})\
@@ -212,6 +185,9 @@ class FilterSet(models.Model):
                 .annotate(message_count=Sum('record__count'))\
                 .values('date', 'message_count')\
                 .order_by('date')
+
+    def getFilterSetFilterFieldObjects(self):
+        return _get_related_objects(self, FilterSetFilterField)
 
 
 class FilterSetFilterField(models.Model):
@@ -330,3 +306,55 @@ class Disposition(FilterSetFilterField):
     report_field            = "Record.disposition"
     record_field            = "disposition"
     value                   = models.IntegerField(choices = choices.DISPOSITION_TYPE)
+
+def _get_related_objects(obj, parent_class=False):
+    """Helper method to get an object's foreign key related objects.
+        Satisfying polymorphism workaround. Get related objects of a FilterSet.
+        Alternatives might be:
+            The contenttypes framework (too complecated)
+            django_polymorphic (based on above, tried but did not work as expected)
+
+    Params:
+        parent_class (default false)
+            related object's class must be (a subclass) of type parent_class
+    Returns:
+        list of related objects
+        
+    XXX LP maybe use chain from itertools for better performance
+
+    """
+    # XXX LP _get_fields is a rather internal django function,
+    # not sure if I should use it here
+    foreign_object_relations = obj._meta._get_fields(False)
+    foreign_managers = []
+
+    for rel in foreign_object_relations:
+        # Check for parent class if wanted
+        if parent_class and not issubclass(rel.related_model, parent_class):
+            continue
+        foreign_managers.append(getattr(obj, rel.get_accessor_name()))
+    
+    # Get objects
+    related_objects = []
+    for manager in foreign_managers:
+       related_objects += manager.all()
+
+    return related_objects
+
+def _clone(obj, parent_obj = False):
+    """recursivly clone an object and its related objects"""
+
+    related_objects = _get_related_objects(obj)
+    obj.pk = None
+
+    # If we got a parent_object, obj is already related
+    # lets assign parent_object's id as foreign key
+    if parent_obj:
+        for field in obj._meta.fields:
+            if isinstance(field, ForeignKey) and isinstance(parent_obj, field.related_model):
+                setattr(obj, field.name, parent_obj)
+    # saving without pk, will auomatically create new record
+    obj.save()
+
+    for related_object in related_objects:
+        _clone(related_object, obj)

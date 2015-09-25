@@ -91,7 +91,7 @@ class ViewForm(ModelForm):
         if not date_range:
             date_range = DateRange(foreign_key=self.instance)
         date_range.dr_type  = self.cleaned_data["dr_type"]
-        date_range.unit     = self.cleaned_data["unit"]
+        date_range.unit     = self.cleaned_data["unit"] or None
         date_range.quantity = self.cleaned_data["quantity"]
         date_range.begin    = self.cleaned_data["begin"]
         date_range.end      = self.cleaned_data["end"]

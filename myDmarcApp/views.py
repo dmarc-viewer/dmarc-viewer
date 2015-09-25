@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from forms import *
-from myDmarcApp.models import View
+from myDmarcApp.models import View, _clone
 from django.contrib import messages
 
 import time
@@ -13,14 +13,14 @@ def index(request):
 def clone(request, view_id = None):
     try:
         view = View.objects.get(pk=view_id)
-        view_clone = view.clone() 
+        _clone(view)
         messages.add_message(request, messages.SUCCESS, "Successfully cloned view.")
     except Exception, e:
         messages.add_message(request, messages.ERROR, "You are such a prick!")
         raise e
     return redirect(view_management)
 
-def edit(request, view_id = None, clone = False):
+def edit(request, view_id = None):
     """Check filterset_set-INITIAL_FORMS and filterset_set-N-id for cloning.
     Both must be empty for cloning to work. But this should be possible on the server.
     OR just make a deep copy
@@ -65,8 +65,7 @@ def edit(request, view_id = None, clone = False):
 
     return render(request, 'myDmarcApp/view-editor.html', {
             'view_form'               : view_form,
-            'filter_set_formset'      : filter_set_formset,
-            'clone'                   : clone
+            'filter_set_formset'      : filter_set_formset
         })
 
 def delete_view(request, view_id):

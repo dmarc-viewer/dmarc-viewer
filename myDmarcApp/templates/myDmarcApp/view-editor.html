@@ -7,7 +7,7 @@
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
     <h1>Editor</h1>
-    <form id="viewFilterForm" method='post' action="{% if view_form.instance.id and not clone %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
+    <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
         <h2>View</h2>
