@@ -4,6 +4,7 @@
 
 {% block content %}
 {% load staticfiles %}
+{% load my_filters %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
     {% for view in sidebar_views %}
@@ -35,7 +36,6 @@
 
     <div class="view-type-linechart"></div>
     <script type="text/javascript">
-        var theData;
         // Create margins, heights, widths for both plots
         var margin = {top: 40, right: 10, bottom: 100, left: 40},
             marginMini = {top: 430, right: 10, bottom: 20, left: 40},
@@ -94,36 +94,57 @@
 
         // Create main chart line generator
         var line = d3.svg.line()
-            .x(function(d) { return x(d.day); })
-            .y(function(d) { return y(d.value); });
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.cnt); });
 
         // Create overview chart line generator
         var lineMini = d3.svg.line()
-            .x(function(d) { return xMini(d.day); })
-            .y(function(d) { return yMini(d.value); });
+            .x(function(d) { return xMini(d.date); })
+            .y(function(d) { return yMini(d.cnt); });
 
         // Get the data
         // XXX LP Maybe get this with ajax
-        var dataSets = {{ view_type_line_data | safe }};
-        
+        var lineData = {{ view_type_line_data | to_json }};
+        var dataSets = lineData.data_sets;
+        var begin    = parseDate(lineData.begin);
+        var end      = parseDate(lineData.end);
+
         // Convert date strings to dates
         dataSets.forEach(function(dataSet){
           dataSet.data.forEach(function(obj){
-            obj.day = parseDate(obj.day);
+            obj.date = parseDate(obj.date);
           })
         })
 
+        //Create 0 data points for days of range that are not in the dataset
+        //data MUST be orderd by date
+        var days = d3.time.day.range(begin, end);
+        dataSets.forEach(function(dataSet){
+            data_len = dataSet.data.length;
+            data_tmp = [];
+            var j = 0;
+            for (var i = 0; i < days.length; i++) {
+                // + for number cast
+                if ((data_len > j) && (+days[i] == +dataSet.data[j].date)){
+                    cnt = dataSet.data[j].cnt; 
+                    j += 1;
+                } else {
+                    cnt = 0;
+                }
+                data_tmp.push({date: days[i], cnt: cnt});
+            }
+            dataSet.data = data_tmp
+        });
+
         // Get min and max date by traversing all datasets' data lists
-        x.domain(
-          d3.extent([].concat.apply([], 
-            dataSets.map(function(dataSet){return dataSet.data.map(
-              function(d){return d.day; })}))));
+        
+        x.domain([begin, end]);
 
         // Get max value by traversing all datasets' data lists
         y.domain(
           [0, d3.max([].concat.apply([], 
             dataSets.map(function(dataSet){return dataSet.data.map(
-              function(d){return d.value; })})))]);
+              function(d){return d.cnt; })})))]);
 
         // Get the domains for x and y values for overview chart
         xMini.domain(x.domain());

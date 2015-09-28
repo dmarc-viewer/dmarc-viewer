@@ -4,7 +4,7 @@ from django.contrib import messages
 from forms import *
 from myDmarcApp.models import View, _clone
 from django.contrib import messages
-
+import json
 import time
 
 def index(request):
@@ -89,10 +89,14 @@ def deep_analysis(request, view_id = None):
     sidebar_views        = View.objects.values('id', 'title')
     view_type_table_data = view.getTableData()
     view_type_line_data  = view.getLineData()
+    date_range           = DateRange.objects.filter(foreign_key=view.id).first()
+    begin, end           = date_range.getBeginEnd()
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view, 
+            'date_range_begin'      : str(begin),
+            'date_range_end'        : str(end),
             'view_type_table_data'  : view_type_table_data,
             'view_type_line_data'   : view_type_line_data
         })

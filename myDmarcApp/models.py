@@ -116,40 +116,16 @@ class View(models.Model):
     def getLineData(self):
         # There must only one of both exactly one 
         date_range = DateRange.objects.filter(foreign_key=self.id).first()
-
         if not date_range:
             raise Exception("You have to specify a date range, you bastard!") # XXX LP Raise proper exception
-
         begin, end = date_range.getBeginEnd()
-        delta = end - begin
-        days = []
-        for i in range(delta.days + 1):
-            days.append((begin + timedelta(days=i)).date())
 
-        days_count = len(days)
-        datasets = []
-
-        for filter_set in self.filterset_set.all():
-            message_count_per_day_list = filter_set.getMessageCountPerDay()
-
-            # Create object(day, value) for each day, add 0 as value if no entry in queryset
-            data = []
-            j = 0
-            message_count_days = len(message_count_per_day_list)
-            for i in range(days_count):
-                if (message_count_days > j) and \
-                 (days[i] == message_count_per_day_list[j]['date']):
-                    value = message_count_per_day_list[j]['message_count']
-                    j += 1
-                else: 
-                    value = 0
-
-                data.append({'day' : days[i].strftime('%Y%m%d'), 'value' : value})
-
-            datasets.append({'label' : str(filter_set.label), 
-                             'color': str(filter_set.color), 
-                             'data': data})
-        return datasets
+        return {'begin': begin.strftime('%Y%m%d'), 
+                'end': end.strftime('%Y%m%d'), 
+                'data_sets': [{'label': filter_set.label,
+                               'color': filter_set.color,
+                               'data': list(filter_set.getMessageCountPerDay())} \
+                                        for filter_set in self.filterset_set.all()]}
 
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
@@ -179,12 +155,14 @@ class FilterSet(models.Model):
         return eval("Record.objects." + filter_str)
 
     def getMessageCountPerDay(self):
+        # XXX LP: to_char is postgres specific, do we care for db flexibility?
         return self.getReports()\
-                .extra(select={'date': "date_range_begin::date"})\
+                .extra(select={'date': "to_char(date_range_begin, 'YYYYMMDD')"})\
                 .values('date')\
-                .annotate(message_count=Sum('record__count'))\
-                .values('date', 'message_count')\
+                .annotate(cnt=Sum('record__count'))\
+                .values('date', 'cnt')\
                 .order_by('date')
+                
 
     def getFilterSetFilterFieldObjects(self):
         return _get_related_objects(self, FilterSetFilterField)
