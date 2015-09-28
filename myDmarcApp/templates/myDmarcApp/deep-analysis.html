@@ -37,7 +37,7 @@
     <script type="text/javascript">
         var theData;
         // Create margins, heights, widths for both plots
-        var margin = {top: 10, right: 10, bottom: 100, left: 40},
+        var margin = {top: 40, right: 10, bottom: 100, left: 40},
             marginMini = {top: 430, right: 10, bottom: 20, left: 40},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom,
@@ -57,6 +57,9 @@
             yAxis = d3.svg.axis().scale(y).orient("left"),
             xAxisMini = d3.svg.axis().scale(xMini).orient("bottom");
 
+        var xGridLines = d3.svg.axis().scale(x).orient("bottom").tickSize(-height, 0, 0).tickFormat(""),
+            yGridLines = d3.svg.axis().scale(y).orient("left").tickSize(-width, 0, 0).tickFormat("");
+
         //Moving a brush in mini chart changes chart domain
         var brush = d3.svg.brush()
             .x(xMini)
@@ -64,6 +67,7 @@
               x.domain(brush.empty() ? xMini.domain() : brush.extent());
               focus.selectAll(".line").attr("d", line);
               focus.select(".x.axis").call(xAxis);
+              focus.select(".x.grid").call(xGridLines);
             });
 
         //Append svg to document
@@ -152,8 +156,17 @@
             .attr("class", "y axis")
             .call(yAxis);
 
+        // prepend gridlines, so they are under the lines 
+        focus.insert("g", ":first-child")
+            .attr("class", "x grid")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xGridLines);
+        focus.insert("g", ":first-child")
+            .attr("class", "y grid")
+            .call(yGridLines);
+
         svg.append("text")
-            .attr("transform", "translate(" + (width / 2) + " ," + margin.top + ")")
+            .attr("transform", "translate(" + (width / 2) + " ," + margin.top / 2 + ")")
             .attr("class", "x label")
             .style("text-anchor", "middle")
             .text("Time");
@@ -165,7 +178,6 @@
             .attr("x", 0 - (height / 2))
             .style("text-anchor", "middle")
             .text("Message Count");
-
 
         // Append X Axis for mini chart
         context.append("g")
@@ -182,32 +194,44 @@
             .attr("height", heightMini + 7);
 
         // Create a legend
-        var legendRectSize = 18;
-        var legendMargin = 10;
-        var legendSpacing = 4;
+        var legendItemRectSize = 18,
+            legendSpacing = 4;
+            
+        var legend = svg.append('g')
+            .attr('transform', 
+                'translate(' + (margin.left + 10) + ',' + (margin.top + 10) + ')')
+            .attr('class', 'legend')
 
-        var legend = svg.selectAll('.legend')
+        var legendItem = legend.selectAll('.legend-item')
           .data(dataSets)
           .enter()
           .append('g')
-          .attr('class', 'legend')
+          .attr('class', 'legend-item')
           .attr('transform', function(d, i) {
-            var legendHeight = legendRectSize + legendSpacing;
-            var horz = margin.left + legendMargin;
-            var vert = margin.top + legendMargin + i * legendHeight;
+            var itemHeight = legendItemRectSize + legendSpacing;
+            var horz = legendSpacing;
+            var vert = legendSpacing + i * itemHeight;
             return 'translate(' + horz + ',' + vert + ')';
           });
 
-        legend.append('rect')
-          .attr('width', legendRectSize)
-          .attr('height', legendRectSize)
+        legendItem.append('rect')
+          .attr('width', legendItemRectSize)
+          .attr('height', legendItemRectSize)
           .style('fill', function(d){return d.color})
           .style('stroke', function(d){return d.color});
 
-        legend.append('text')
-          .attr('x', legendRectSize + legendSpacing)
-          .attr('y', legendRectSize - legendSpacing)
+        legendItem.append('text')
+          .attr('x', legendItemRectSize + legendSpacing)
+          .attr('y', legendItemRectSize - legendSpacing)
           .text(function(dataSet) { return dataSet.label; });
+
+        legendBBox = $('.legend')[0].getBBox();
+        legend.insert('rect', ':first-child')
+            .attr('class', 'legend-box')
+            .attr('width', legendBBox.width + 2 * legendSpacing)
+            .attr('height', legendBBox.height + 2 * legendSpacing)
+            .style('fill', 'white')
+            .style('stroke', 'black');
 
     </script>
 

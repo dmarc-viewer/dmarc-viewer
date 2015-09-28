@@ -95,6 +95,14 @@ path {
     shape-rendering: crispEdges;
 }
 
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
+}
+
 .legend {
   font-size: 12px;
 }
