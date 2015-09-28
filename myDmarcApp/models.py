@@ -127,6 +127,12 @@ class View(models.Model):
                                'data': list(filter_set.getMessageCountPerDay())} \
                                         for filter_set in self.filterset_set.all()]}
 
+    def getMapData(self):
+        return [{'label': filter_set.label,
+                 'color': filter_set.color,
+                 'data' : list(filter_set.getMessageCountPerCountry())} \
+                                     for filter_set in self.filterset_set.all()]
+
 class FilterSet(models.Model):
     view                    = models.ForeignKey('View')
     label                   = models.CharField(max_length = 100)
@@ -162,7 +168,12 @@ class FilterSet(models.Model):
                 .annotate(cnt=Sum('record__count'))\
                 .values('date', 'cnt')\
                 .order_by('date')
-                
+    
+    def getMessageCountPerCountry(self):
+        return self.getRecords()\
+                .values('country_iso_code')\
+                .annotate(cnt=Sum('count'))\
+                .values('country_iso_code', 'cnt')
 
     def getFilterSetFilterFieldObjects(self):
         return _get_related_objects(self, FilterSetFilterField)

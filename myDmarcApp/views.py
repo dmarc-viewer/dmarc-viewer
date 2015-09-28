@@ -89,16 +89,14 @@ def deep_analysis(request, view_id = None):
     sidebar_views        = View.objects.values('id', 'title')
     view_type_table_data = view.getTableData()
     view_type_line_data  = view.getLineData()
-    date_range           = DateRange.objects.filter(foreign_key=view.id).first()
-    begin, end           = date_range.getBeginEnd()
+    view_type_map_data   = view.getMapData()
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view, 
-            'date_range_begin'      : str(begin),
-            'date_range_end'        : str(end),
             'view_type_table_data'  : view_type_table_data,
-            'view_type_line_data'   : view_type_line_data
+            'view_type_line_data'   : view_type_line_data,
+            'view_type_map_data'    : view_type_map_data
         })
 
 def view_management(request):

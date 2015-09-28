@@ -71,41 +71,54 @@ body {
  d3 
  */
 
-svg {
+/*
+ * Line chart
+ */
+.view-type-linechart svg {
   font: 10px sans-serif;
 }
 
-.brush .extent {
+.view-type-linechart .brush .extent {
   stroke: #fff;
   fill-opacity: .125;
   shape-rendering: crispEdges;
 }
 
-path { 
+.view-type-linechart path { 
     stroke-width: 2;
     fill: none;
     clip-path: url(#clip);
 }
 
-.axis path,
-.axis line {
+.view-type-linechart .axis path,
+.view-type-linechart .axis line {
     fill: none;
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
 }
 
-.grid .tick {
+.view-type-linechart .grid .tick {
     stroke: lightgrey;
     opacity: 0.7;
 }
-.grid path {
+.view-type-linechart .grid path {
       stroke-width: 0;
 }
 
-.legend {
+.view-type-linechart .legend {
   font-size: 12px;
 }
-rect {
+.view-type-linechart rect {
   stroke-width: 2;
+}
+
+/*
+ * Chloropleth
+ */
+
+.view-type-map {
+  position: relative; 
+  width: 750px; 
+  height: 500px;
 }
