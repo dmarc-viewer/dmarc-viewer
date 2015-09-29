@@ -101,6 +101,10 @@ class View(models.Model):
     title                   = models.CharField(max_length = 100)
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)
+    type_map                = models.BooleanField(default = True)
+    type_table              = models.BooleanField(default = True)
+    type_line               = models.BooleanField(default = True)
+
 
     def getViewFilterFieldObjects(self):
         return _get_related_objects(self, ViewFilterField)

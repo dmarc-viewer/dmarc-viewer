@@ -18,7 +18,7 @@ class ViewForm(ModelForm):
 
     class Meta:
         model = View
-        fields = ['title', 'description', 'enabled']
+        fields = ['title', 'description', 'enabled', 'type_map', 'type_table', 'type_line']
 
     def __init__(self, *args, **kwargs):
         super(ViewForm, self).__init__(*args, **kwargs)

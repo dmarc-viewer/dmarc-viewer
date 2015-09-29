@@ -87,9 +87,10 @@ def deep_analysis(request, view_id = None):
         return redirect("view_management")
 
     sidebar_views        = View.objects.values('id', 'title')
-    view_type_table_data = view.getTableData()
-    view_type_line_data  = view.getLineData()
-    view_type_map_data   = view.getMapData()
+    # Only fetch querysets if they are displayed
+    view_type_table_data = view.getTableData() if view.type_table else []
+    view_type_line_data  = view.getLineData() if view.type_line else []
+    view_type_map_data   = view.getMapData() if view.type_map else []
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 

@@ -34,6 +34,7 @@
     </div>
     {% endcomment %}
 
+    {% if the_view.type_line %}
     <div class="view-type-linechart"></div>
     <script type="text/javascript">
         // Create margins, heights, widths for both plots
@@ -255,8 +256,11 @@
             .style('stroke', 'black');
 
     </script>
+    {% endif %}
 
 
+    {% if the_view.type_table %}
+        
     <div class="view-type-table">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>
@@ -336,6 +340,10 @@
             });
         });
     </script>
+    {% endif %}
+
+    {% if the_view.type_map %}
+
     {% for i in view_type_map_data  %}
         <div class="view-type-map"></div>
     {% endfor %}
@@ -370,9 +378,8 @@
                 }
             })
         });
-
-
-
     </script>
+    {% endif %}
+
 </div>
 {% endblock %}
