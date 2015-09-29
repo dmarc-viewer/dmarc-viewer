@@ -118,7 +118,19 @@ body {
  */
 
 .view-type-map {
-  position: relative; 
-  width: 750px; 
-  height: 500px;
+  width: 90%;
+}
+
+.datamaps-legend {
+  bottom: 0;
+}
+
+.datamaps-legend dt {
+  float: left;
+  width: 50%;
+}
+.datamaps-legend dd {
+  float: left;
+  width: 50%;
+  border: 1px solid black;
 }
