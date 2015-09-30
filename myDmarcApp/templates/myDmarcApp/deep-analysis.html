@@ -33,7 +33,164 @@
         {% endfor %}
     </div>
     {% endcomment %}
+    {% if the_view.type_map %}
 
+    <div class="view-type-map">
+        <div class="btn-group"></div>
+        <div class="svg-container"></div>
+    </div>
+    <script type="text/javascript">
+        // XXX LP: Only temp, don't worry. Also incomplete :)
+        var countryCodeMapping = {"AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH", "BW": "BWA", "BR": "BRA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "24": ",CD", "24": ",CG", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GA": "GAB", "22": ",GM", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GR": "GRC", "GD": "GRD", "GT": "GTM", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MR": "MRT", "MU": "MUS", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PL": "POL", "PT": "PRT", "QA": "QAT", "RO": "ROU", "RU": "RUS", "RW": "RWA", "KN": "KNA", "LC": "LCA", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VA": "VAT", "VE": "VEN", "VN": "VNM", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE", "GE": "GEO", "TW": "TWN", "AZ": "AZE", "CY": "CYP", "MD": "MDA", "SO": "SOM", "GE": "GEO", "AU": "AUS", "CX": "CXR", "CC": "CCK", "AU": "AUS", "HM": "HMD", "NF": "NFK", "NC": "NCL", "PF": "PYF", "YT": "MYT", "GP": "GLP", "GP": "GLP", "PM": "SPM", "WF": "WLF", "TF": "ATF", "PF": "PYF", "BV": "BVT", "CK": "COK", "NU": "NIU", "TK": "TKL", "GG": "GGY", "IM": "IMN", "JE": "JEY", "AI": "AIA", "BM": "BMU", "IO": "IOT", "VG": "VGB", "KY": "CYM", "FK": "FLK", "GI": "GIB", "MS": "MSR", "PN": "PCN", "SH": "SHN", "GS": "SGS", "TC": "TCA", "MP": "MNP", "PR": "PRI", "AS": "ASM", "UM": "UMI", "GU": "GUM", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "VI": "VIR", "UM": "UMI", "HK": "HKG", "MO": "MAC", "FO": "FRO", "GL": "GRL", "GF": "GUF", "GP": "GLP", "MQ": "MTQ", "RE": "REU", "AX": "ALA", "AW": "ABW", "AN": "ANT", "SJ": "SJM", "AC": "ASC", "TA": "TAA", "AQ": "ATA", "AQ": "ATA"};
+
+        /*
+         * Creates an array of `n` colors around the baseColor,
+         * ranging the HSL lightness value from 0.2 to 0.8
+         * 
+         * -> cf. "Color Use Guidelines for Mapping and Visualization",
+         *  Brewer (sequential scheme, one hue)
+         */
+        function createColorRange(baseColor, n) {
+            var colorHsl = d3.hsl(baseColor),
+                minL = 0.2,
+                maxL = 0.8;
+            var stepSize = (maxL - minL) / n;
+            var colors = [];
+            for (var i = 0; i < n; i++ ){
+                colorHsl.l = maxL - (i*stepSize)
+                colors.push(colorHsl.toString());
+                }
+            return colors;
+        }
+
+        // Get the data from the server
+        var mapDataSets = {{ view_type_map_data | to_json }};
+        var mapDataSetsTransformed = [];
+
+        // Some defaults
+        var defaultFill             = "white";
+        var defaultBorderColor      = "darkgrey";
+        var defaultBorderWidth      = 0.5;
+        var defaultBorderHoverWidth = 1;
+        var defaultFillName         = "0";
+
+        // Transform serverdata
+        mapDataSets.forEach(function(mapDataSet, idx){
+            // Get max
+            var max = d3.max(mapDataSet.data.map(function(obj) {
+                return obj.cnt;
+            }));
+
+            // Define color range with 5 colors
+            var colors = createColorRange(mapDataSet.color, 4)
+            var paletteScale = d3.scale.quantize()
+                .domain([1, max])
+                .range(colors);
+
+            // Create dataset
+            // {"iso_code" : {"fillKey": <key>, "count": <cnt>}, ..}
+            var data = {}
+
+
+            mapDataSet.data.forEach(function(obj){
+                // XXX LP: colorin some cases paletteScale returns undifend 
+                var color = paletteScale(obj.cnt) || colors[colors.length - 1]
+                data[countryCodeMapping[obj.country_iso_code]] = { count: obj.cnt, fillKey: color };
+            }); 
+
+            // Create fills and legendLabels
+            var fills        = {defaultFill: defaultFill};
+            var legendLabels    = {};
+            colors.forEach(function(color){
+                fills[color]     = color;
+                var extents = paletteScale.invertExtent(color);
+                legendLabels[color] = Math.round(extents[0]) + " - " + Math.round(extents[1]);
+            });
+
+            // Store
+            mapDataSetsTransformed.push({ 
+                fills:     fills,
+                labels:    legendLabels,
+                data:      data
+            });
+
+            //Create and append button for each dataset
+            var $mapDataSetBtn = $("<button>", {class: "btn btn-default", value: idx, text: mapDataSet.label});
+            $(".view-type-map .btn-group").append($mapDataSetBtn);
+        })
+
+        // Init the map with no data
+        var map = new Datamap({
+            element: $(".view-type-map .svg-container").get(0),
+            projection: 'mercator',
+            responsive: true,
+            legend: true,
+            geographyConfig: {
+                borderColor: defaultBorderColor,
+                borderWidth: defaultBorderWidth,
+                highlightFillColor: defaultFill,
+                highlightBorderColor: defaultBorderColor,
+                highlightBorderWidth: defaultBorderHoverWidth,
+                popupTemplate: function(geo, data) {
+                                text = geo.properties.name + ": " + 
+                                        (data ? data.count : "no") +
+                                        " messages"
+                                $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
+                                return $hoverInfo.prop('outerHTML');
+                            }
+            },
+            done: function(datamap) {
+                datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
+                function redraw() {
+                    var prefix = '-webkit-transform' in document.body.style ? 
+                                    '-webkit-' : '-moz-transform' in document.body.style ? 
+                                                '-moz-' : '-ms-transform' in document.body.style ? 
+                                                        '-ms-' : '';
+
+                    var x = d3.event.translate[0];
+                    var y = d3.event.translate[1];
+
+                    datamap.svg.selectAll("g")
+                        .style(prefix + 'transform', 
+                            'translate(' + x +'px, ' + y + 'px) scale(' + (d3.event.scale) + ')');
+                }
+            },
+            fills: {defaultFill},
+        });
+
+        //Adding some responsiveness
+        $(window).on('resize', function() {
+            map.resize();
+        });
+
+        // Update the map and legend with data on button click
+        $(".view-type-map .btn-group button").on('click', function(e){
+            // Toggle button active
+            $(this).siblings().removeClass('active')
+            $(this).addClass('active');
+
+            // Get data at button val index
+            var data = mapDataSetsTransformed[$(this).val()];
+
+            // Reset fills and info directly on svg
+            $(".view-type-map .datamaps-subunits path[data-info]")
+                .css({fill: defaultFill})
+                .attr("data-info", null);
+
+            // Set new fills on map object
+            map.options.fills = data.fills;
+
+            // Update Choropleth
+            map.updateChoropleth(data.data);
+
+            // Remove old and add new legend
+            $(".view-type-map .datamaps-legend").remove();
+            map.legend({legendTitle: "Message Count", defaultFillName: defaultFillName, labels: data.labels});
+        });
+        // Trigger first button to be clicked
+        $(".view-type-map .btn-group button:first-child").click();
+        </script>
+    {% endif %}
     {% if the_view.type_line %}
     <div class="view-type-linechart">
         <div class="svg-container"></div>
@@ -330,8 +487,6 @@
             {% endfor %}
         </table>
     </div>
-    <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
-
     <script type="text/javascript">
         /*
          * Initialize DataTable 
@@ -344,151 +499,10 @@
     </script>
     {% endif %}
 
-    {% if the_view.type_map %}
+    <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
 
-    <div class="view-type-map">
-        <div class="btn-group"></div>
-        <div class="svg-container"></div>
-    </div>
-    <script type="text/javascript">
-        // XXX LP: Only temp, don't worry. Also incomplete :)
-        var countryCodeMapping = {"AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH", "BW": "BWA", "BR": "BRA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "24": ",CD", "24": ",CG", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GA": "GAB", "22": ",GM", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GR": "GRC", "GD": "GRD", "GT": "GTM", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MR": "MRT", "MU": "MUS", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PL": "POL", "PT": "PRT", "QA": "QAT", "RO": "ROU", "RU": "RUS", "RW": "RWA", "KN": "KNA", "LC": "LCA", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VA": "VAT", "VE": "VEN", "VN": "VNM", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE", "GE": "GEO", "TW": "TWN", "AZ": "AZE", "CY": "CYP", "MD": "MDA", "SO": "SOM", "GE": "GEO", "AU": "AUS", "CX": "CXR", "CC": "CCK", "AU": "AUS", "HM": "HMD", "NF": "NFK", "NC": "NCL", "PF": "PYF", "YT": "MYT", "GP": "GLP", "GP": "GLP", "PM": "SPM", "WF": "WLF", "TF": "ATF", "PF": "PYF", "BV": "BVT", "CK": "COK", "NU": "NIU", "TK": "TKL", "GG": "GGY", "IM": "IMN", "JE": "JEY", "AI": "AIA", "BM": "BMU", "IO": "IOT", "VG": "VGB", "KY": "CYM", "FK": "FLK", "GI": "GIB", "MS": "MSR", "PN": "PCN", "SH": "SHN", "GS": "SGS", "TC": "TCA", "MP": "MNP", "PR": "PRI", "AS": "ASM", "UM": "UMI", "GU": "GUM", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "VI": "VIR", "UM": "UMI", "HK": "HKG", "MO": "MAC", "FO": "FRO", "GL": "GRL", "GF": "GUF", "GP": "GLP", "MQ": "MTQ", "RE": "REU", "AX": "ALA", "AW": "ABW", "AN": "ANT", "SJ": "SJM", "AC": "ASC", "TA": "TAA", "AQ": "ATA", "AQ": "ATA"};
 
-        /*
-         * Creates an array of `n` colors around the baseColor,
-         * ranging the HSL lightness value from 0.2 to 0.8
-         * 
-         * -> cf. "Color Use Guidelines for Mapping and Visualization",
-         *  Brewer (sequential scheme, one hue)
-         */
-        function createColorRange(baseColor, n) {
-            var colorHsl = d3.hsl(baseColor),
-                minL = 0.2,
-                maxL = 0.8;
-            var stepSize = (maxL - minL) / n;
-            var colors = [];
-            for (var i = 0; i < n; i++ ){
-                colorHsl.l = maxL - (i*stepSize)
-                colors.push(colorHsl.toString());
-                }
-            return colors;
-        }
-
-        // Get the data from the server
-        var mapDataSets = {{ view_type_map_data | to_json }};
-        var mapDataSetsTransformed = [];
-
-        // Some defaults
-        var defaultFill             = "white";
-        var defaultBorderColor      = "darkgrey";
-        var defaultBorderWidth      = 0.5;
-        var defaultBorderHoverWidth = 1;
-        var defaultFillName         = "0";
-
-        // Transform serverdata
-        mapDataSets.forEach(function(mapDataSet, idx){
-            // Get max
-            var max = d3.max(mapDataSet.data.map(function(obj) {
-                return obj.cnt;
-            }));
-
-            // Define color range with 5 colors
-            var colors = createColorRange(mapDataSet.color, 5)
-            var paletteScale = d3.scale.quantize()
-                .domain([1, max])
-                .range(colors);
-
-            // Create dataset
-            // {"iso_code" : {"fillKey": <key>, "count": <cnt>}, ..}
-            var data = {}
-            mapDataSet.data.forEach(function(obj){ //
-                data[countryCodeMapping[obj.country_iso_code]] = { count: obj.cnt, fillKey: paletteScale(obj.cnt) };
-            }); 
-
-            // Create fills and legendLabels
-            var fills        = {defaultFill: defaultFill};
-            var legendLabels    = {};
-            colors.forEach(function(color){
-                fills[color]     = color;
-                var extents = paletteScale.invertExtent(color);
-                legendLabels[color] = Math.round(extents[0]) + " - " + Math.round(extents[1]);
-            });
-
-            // Store
-            mapDataSetsTransformed.push({ 
-                fills:     fills,
-                labels:    legendLabels,
-                data:      data
-            });
-
-            //Create and append button for each dataset
-            var $mapDataSetBtn = $("<button>", {class: "btn btn-default", value: idx, text: mapDataSet.label});
-            $(".view-type-map .btn-group").append($mapDataSetBtn);
-        })
-
-        // Init the map with no data
-        var map = new Datamap({
-            element: $(".view-type-map .svg-container").get(0),
-            projection: 'mercator',
-            responsive: true,
-            legend: true,
-            geographyConfig: {
-                borderColor: defaultBorderColor,
-                borderWidth: defaultBorderWidth,
-                highlightFillColor: defaultFill,
-                highlightBorderColor: defaultBorderColor,
-                highlightBorderWidth: defaultBorderHoverWidth,
-                popupTemplate: function(geo, data) {
-                                text = geo.properties.name + ": " + 
-                                        (data ? data.count : "no") +
-                                        " messages"
-                                $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
-                                return $hoverInfo.prop('outerHTML');
-                            }
-            },
-            done: function(datamap) {
-                datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
-                function redraw() {
-                    datamap.svg.selectAll("g")
-                        .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                }
-            },
-            fills: {defaultFill},
-        });
-
-        //Adding some responsiveness
-        $(window).on('resize', function() {
-            map.resize();
-        });
-
-        // Update the map and legend with data on button click
-        $(".view-type-map .btn-group button").on('click', function(e){
-            // Toggle button active
-            $(this).siblings().removeClass('active')
-            $(this).addClass('active');
-
-            // Get data at button val index
-            var data = mapDataSetsTransformed[$(this).val()];
-
-            // Reset fills and info directly on svg
-            $(".view-type-map .datamaps-subunits path[data-info]")
-                .css({fill: defaultFill})
-                .attr("data-info", null);
-
-            // Set new fills on map object
-            map.options.fills = data.fills;
-
-            // Update Choropleth
-            map.updateChoropleth(data.data);
-
-            // Remove old and add new legend
-            $(".view-type-map .datamaps-legend").remove();
-            map.legend({legendTitle: "Message Count", defaultFillName: defaultFillName, labels: data.labels});
-        });
-        // Trigger first button to be clicked
-        $(".view-type-map .btn-group button:first-child").click();
-        </script>
-    {% endif %}
+    
 
 </div>
 {% endblock %}
