@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.gis.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db.models.fields.related import ForeignKey
-from django.db.models import Sum
+from django.db.models import Sum, Count
 import choices
 import copy
 
@@ -114,7 +114,6 @@ class View(models.Model):
         # Do some data selection testing!!!! 
         # Django's obrm joining magic is not so predictable 
         return [{'filter_set' : filter_set, 
-                 'reports': filter_set.getReports().distinct(),
                  'records':  filter_set.getRecords().distinct()} for filter_set in self.filterset_set.all()]
 
     def getLineData(self):
@@ -142,16 +141,6 @@ class FilterSet(models.Model):
     label                   = models.CharField(max_length = 100)
     color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
-    def getReports(self):
-        filter_fields = [filterfield for filterfield in self.getFilterSetFilterFieldObjects()] + \
-            [filterfield for filterfield in self.view.getViewFilterFieldObjects()]
-
-        filters = [filter_field.getReportFilter() for filter_field in filter_fields]
-        filter_str = ".".join(filters)
-
-        # XXX LP: Eval is dangerous especially if there is user input involved
-        # Put some thought on this!!!!!!!!!!!!!!!
-        return eval("Report.objects." + filter_str)
 
     def getRecords(self):
         filter_fields = [filterfield for filterfield in self.getFilterSetFilterFieldObjects()] + \
@@ -166,10 +155,11 @@ class FilterSet(models.Model):
 
     def getMessageCountPerDay(self):
         # XXX LP: to_char is postgres specific, do we care for db flexibility?
-        return self.getReports()\
-                .extra(select={'date': "to_char(date_range_begin, 'YYYYMMDD')"})\
+        # XXX L: I don't like to hardcode APP Label
+        return self.getRecords()\
+                .extra(select={'date': "to_char(\"myDmarcApp_report\".\"date_range_begin\", 'YYYYMMDD')"})\
                 .values('date')\
-                .annotate(cnt=Sum('record__count'))\
+                .annotate(cnt=Sum('count'))\
                 .values('date', 'cnt')\
                 .order_by('date')
     
@@ -186,9 +176,6 @@ class FilterSet(models.Model):
 class FilterSetFilterField(models.Model):
     foreign_key             = models.ForeignKey('FilterSet')
 
-    def getReportFilter(self):
-        key = self.report_field.replace('.', "__").lower()
-        return "filter(%s=%r)" % (key, self.value)
     def getRecordFilter(self):
         key = self.record_field.replace('.', "__").lower()
         return "filter(%s=%r)" % (key, self.value)
@@ -203,8 +190,6 @@ class ViewFilterField(models.Model):
 
 class ReportType(ViewFilterField):
     value             = models.IntegerField(choices = choices.REPORT_TYPE)
-    def getReportFilter(self):
-        return "filter(report_type=%r)" % (self.value)
     def getRecordFilter(self):
         return "filter(report__report_type=%r)" % (self.value)
 
@@ -237,9 +222,6 @@ class DateRange(ViewFilterField):
         else:
             raise # XXX LP proper Exception
 
-    def getReportFilter(self):
-        return "filter(date_range_begin__gte='%s', date_range_begin__lte='%s')" \
-                % (self.getBeginEnd())
     def getRecordFilter(self):
         return "filter(report__date_range_begin__gte='%s', report__date_range_begin__lte='%s')" \
                 % (self.getBeginEnd())
@@ -249,56 +231,47 @@ class DateRange(ViewFilterField):
 
 
 class ReportSender(FilterSetFilterField):
-    report_field            = "Reporter.email"
     record_field            = "Record.Reporter.email"
     value                   = models.CharField(max_length = 100)
 
 class ReportReceiverDomain(FilterSetFilterField):
-    report_field            = "domain"
     record_field            = "Report.domain"
     value                   = models.CharField(max_length = 100)
 
 class SourceIP(FilterSetFilterField):
     """let's start with simple IP address filtering 
     and maybe consider CIDR notation later"""
-    report_field            = "Record.source_ip"
     record_field            = "source_ip"
     value                   = models.GenericIPAddressField()
 
 class RawDkimDomain(FilterSetFilterField):
-    report_field            = "Record.AuthResultDKIM.domain"
     record_field            = "AuthResultDKIM.domain"
     value                   = models.CharField(max_length = 100)
 
 class RawDkimResult(FilterSetFilterField):
-    report_field            = "Record.AuthResultDKIM.result"
     record_field            = "AuthResultDKIM.result"
     value                   = models.IntegerField(choices = choices.DKIM_RESULT)
 
 class RawSpfDomain(FilterSetFilterField):
-    report_field            = "Record.AuthResultSPF.domain"
     record_field            = "AuthResultSPF.domain"
     value                   = models.CharField(max_length = 100)
 
 class RawSpfResult(FilterSetFilterField):
-    report_field            = "Record.AuthResultSPF.result"
     record_field            = "AuthResultSPF.result"
     value                   = models.IntegerField(choices = choices.SPF_RESULT)
 
 class AlignedDkimResult(FilterSetFilterField):
-    report_field            = "Record.dkim"
     record_field            = "dkim"
     value                   = models.IntegerField(choices = choices.DMARC_RESULT)
 
 class AlignedSpfResult(FilterSetFilterField):
-    report_field            = "Record.spf"
     record_field            = "spf"
     value                   = models.IntegerField(choices = choices.DMARC_RESULT)
 
 class Disposition(FilterSetFilterField):
-    report_field            = "Record.disposition"
     record_field            = "disposition"
     value                   = models.IntegerField(choices = choices.DISPOSITION_TYPE)
+
 
 def _get_related_objects(obj, parent_class=False):
     """Helper method to get an object's foreign key related objects.
