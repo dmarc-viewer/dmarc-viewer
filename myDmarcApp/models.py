@@ -70,6 +70,9 @@ class Record(models.Model):
     envelope_from           = models.CharField(max_length = 100, null = True)
     header_from             = models.CharField(max_length = 100, null = True)
 
+    # Custom field for filter convenience (needs one join less)
+    auth_result_dkim_count  = models.IntegerField(default=0)
+
 class PolicyOverrideReason(models.Model):
     record                  = models.ForeignKey('Record')
     reason_type             = models.IntegerField(choices = choices.POLICY_REASON_TYPE, null = True)
@@ -251,6 +254,11 @@ class RawDkimDomain(FilterSetFilterField):
 class RawDkimResult(FilterSetFilterField):
     record_field            = "AuthResultDKIM.result"
     value                   = models.IntegerField(choices = choices.DKIM_RESULT)
+
+class MultipleDkim(FilterSetFilterField):
+    value                   = models.BooleanField(default = False)
+    def getRecordFilter(self):
+        return "filter(auth_result_dkim_count__gt=1)"
 
 class RawSpfDomain(FilterSetFilterField):
     record_field            = "AuthResultSPF.domain"

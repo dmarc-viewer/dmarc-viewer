@@ -4,7 +4,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
     ReportType, DateRange, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
-    AlignedDkimResult, AlignedSpfResult, Disposition
+    AlignedDkimResult, AlignedSpfResult, Disposition, MultipleDkim
 
 class PolicyOverrideReasonInline(admin.StackedInline):
     model = PolicyOverrideReason
@@ -71,6 +71,9 @@ class AlignedSpfResultInline(SuperInlineModelAdmin, admin.StackedInline):
 class DispositionInline(SuperInlineModelAdmin, admin.StackedInline):
     extra = 0
     model = Disposition
+class MultipleDkimInline(SuperInlineModelAdmin, admin.StackedInline):
+    extra = 0
+    model = MultipleDkim
 
 class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
     model = FilterSet
@@ -78,7 +81,7 @@ class FilterSetInline(SuperInlineModelAdmin, admin.StackedInline):
     inlines = (ReportSenderInline, ReportReceiverDomainInline,\
         SourceIPInline, RawDkimDomainInline, RawDkimResultInline,\
          RawSpfDomainInline, RawSpfResultInline, AlignedDkimResultInline,\
-         AlignedSpfResultInline, DispositionInline,)
+         AlignedSpfResultInline, DispositionInline, MultipleDkimInline)
 
 class ReportTypeInline(SuperInlineModelAdmin, admin.StackedInline):
     model = ReportType
@@ -108,6 +111,7 @@ admin.site.register(RawSpfResult)
 admin.site.register(AlignedDkimResult)
 admin.site.register(AlignedSpfResult)
 admin.site.register(Disposition)
+admin.site.register(MultipleDkim)
 
 
 

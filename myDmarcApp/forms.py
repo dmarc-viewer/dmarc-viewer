@@ -1,7 +1,7 @@
 from django.utils.translation import gettext as _
 
 from django.forms import ModelForm, ValidationError, ChoiceField, MultipleChoiceField, TypedMultipleChoiceField, \
-    CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField
+    CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField, BooleanField
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import RadioSelect
@@ -10,7 +10,7 @@ from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, ReportType, \
     DateRange, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
-    AlignedDkimResult, AlignedSpfResult, Disposition
+    AlignedDkimResult, AlignedSpfResult, Disposition, MultipleDkim
 from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget, DatePickerWidget
 import choices
 
@@ -157,12 +157,17 @@ class FilterSetForm(ModelForm):
             if self.instance.id:
                 self.fields[field_name].initial = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
 
-         # This is extra because its one-to-one ergo no MultipleChoiceField
-        self.fields["source_ip"] =  GenericIPAddressField(required=False, label='Source IP')
+         # These are extra because they are one-to-one ergo no MultipleChoiceField
+        self.fields["source_ip"]     =  GenericIPAddressField(required=False, label='Source IP')
+        self.fields["multiple_dkim"] =  BooleanField(required=False, label='Multiple DKIM only')
+
         if self.instance.id:
-            source_ip_initial = SourceIP.objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
+            source_ip_initial     = SourceIP.objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
             if len(source_ip_initial):
                 self.fields['source_ip'].initial = source_ip_initial[0]
+            multiple_dkim_initial = MultipleDkim.objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
+            if len(multiple_dkim_initial):
+                self.fields["multiple_dkim"].initial = multiple_dkim_initial[0]
 
     def save(self, commit=True):
         instance = super(FilterSetForm, self).save()
@@ -182,7 +187,7 @@ class FilterSetForm(ModelForm):
                 if filter_value in existing_filters and filter_value not in self.cleaned_data[field_name]:
                     field_dict["class"].objects.filter(foreign_key=self.instance.id, value=filter_value).delete()
 
-        # get or create source_ip
+        #  update, create or delete source_ip
         source_ip       = SourceIP.objects.filter(foreign_key=self.instance.id).first()
         source_ip_value = self.cleaned_data["source_ip"]
         if source_ip and not source_ip_value:
@@ -195,6 +200,16 @@ class FilterSetForm(ModelForm):
         if source_ip and source_ip_value:
             source_ip.value = source_ip_value
             source_ip.save()
+
+        # delete or create multiple dkim only 
+        # we don't have to update because we keep only true valued instances
+        multiple_dkim       = MultipleDkim.objects.filter(foreign_key=self.instance.id).first()
+        multiple_dkim_value = self.cleaned_data["multiple_dkim"]
+        if multiple_dkim and not multiple_dkim_value:
+            multiple_dkim.delete()
+        if not multiple_dkim and multiple_dkim_value:
+            multiple_dkim = MultipleDkim(foreign_key=self.instance, value=multiple_dkim_value)
+            multiple_dkim.save()
 
         return instance
 

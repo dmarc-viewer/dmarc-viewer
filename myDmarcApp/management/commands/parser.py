@@ -194,6 +194,7 @@ class Command(BaseCommand):
                     raise CommandError(msg)
 
             node_auth_results = node_record.find('auth_results')
+            dkim_count = 0
             for node_dkim_result in node_auth_results.findall('dkim'):
                 result_dkim                 = AuthResultDKIM()
                 result_dkim.record          = record
@@ -204,6 +205,7 @@ class Command(BaseCommand):
                 result_dkim.human_result    = node_dkim_result.findtext('human_result')
                 try:
                     result_dkim.save()
+                    dkim_count += 1
                 except Exception, e:
                     msg = "Unable to save DKIM auth_result for %s: %s" % (report.report_id, e)
                     logger.error(msg)
@@ -223,3 +225,11 @@ class Command(BaseCommand):
                     msg = "Unable to save SPF auth_result for %s: %s" % (report.report_id, e)
                     logger.error(msg)
                     raise CommandError(msg)
+
+            try:
+                record.auth_result_dkim_count = dkim_count
+                record.save()
+            except Exception, e:
+                msg = "Unable to save the DMARC record for %s: %s" % (report.report_id, e)
+                logger.error(msg)
+                raise CommandError(msg)
