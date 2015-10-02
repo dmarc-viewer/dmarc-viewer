@@ -9,13 +9,20 @@
     {% bootstrap_messages %}
 
     <table class="table table-condensed">
-      <tr>
-        <th>Title</th>
-        <th>Description</th> 
-        <th>Actions</th>
-      </tr>
-      {% for view in views %}
+      <thead>
         <tr>
+          <th></th>
+          <th>Show in sidebar</th>
+          <th>Title</th>
+          <th>Description</th> 
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="sortableViews">
+      {% for view in views %}
+        <tr class="view-row" data-id="{{view.id}}">
+            <td class="sort-handle">Hendl</td>
+            <td>{{view.enabled}}</td>
             <td>{{view.title}}</td>
             <td>{{view.description}}</td> 
             <td>
@@ -26,7 +33,23 @@
             </td>
         </tr>
       {% endfor %}
+      </tbody>
     </table>
-    <a class="btn btn-info" role="button" href="/add-view/">Add View</a>
+    <script type="text/javascript">
+    $(document).ready(function(){
+      var sortContainer = $("#sortableViews").get(0)
+      var sortable = Sortable.create(sortContainer,{
+        animation: 150,
+        handle: ".sort-handle",
+        onUpdate: function (evt){
+          $("#sortableViews .view-row").each(function(){
+            console.log($(this).data("id"));
+          });
+        }
+      });
+    })
+    </script>
+        <a class="btn btn-info" role="button" href="/add-view/">Add View</a>
+
 </div>
 {% endblock %}

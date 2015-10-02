@@ -19,6 +19,9 @@ class ViewForm(ModelForm):
     class Meta:
         model = View
         fields = ['title', 'description', 'enabled', 'type_map', 'type_table', 'type_line']
+        labels = {
+            "enabled": _("Show in sidebar"),
+        }
 
     def __init__(self, *args, **kwargs):
         super(ViewForm, self).__init__(*args, **kwargs)
