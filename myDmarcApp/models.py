@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.gis.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db.models.fields.related import ForeignKey
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max
 import choices
 import copy
 
@@ -99,8 +99,34 @@ Notes:
 - FilterFields that reference different Model Fields are ANDed
 """
 ############################
+#
+class OrderedModel(models.Model):
+    position                   = models.PositiveIntegerField(default = 0)
 
-class View(models.Model):
+    def save(self):
+        """If new assign order number (max(order of all objects) or 0)
+        If exists save normal."""
+
+        if not self.id:
+            try:
+                self.position = self.__class__.all().aggregate(Max("position")).value("price__max") + 1
+            except Exception, e:
+                self.position = 0 # Defaut anyways, do this for more explicitness
+        super(OrderedModel, self).save()
+
+    @staticmethod
+    def order(orderedObjects):
+        """Assign index as order and save to each object of ordered object list"""
+        for idx, obj in enumerate(orderedObjects):
+            obj.position = idx
+            obj.save()
+
+    class Meta:
+        ordering = ["position"]
+        abstract = True
+
+
+class View(OrderedModel):
     title                   = models.CharField(max_length = 100)
     description             = models.TextField(null = True)
     enabled                 = models.BooleanField(default = True)

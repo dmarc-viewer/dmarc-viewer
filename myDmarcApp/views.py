@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from forms import *
-from myDmarcApp.models import View, _clone
+from myDmarcApp.models import View, OrderedModel, _clone
 from django.contrib import messages
 import json
 import time
@@ -10,6 +10,10 @@ import time
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
 
+
+"""
+VIEW VIEWS BEGIN
+"""
 def clone(request, view_id = None):
     try:
         view = View.objects.get(pk=view_id)
@@ -68,14 +72,44 @@ def edit(request, view_id = None):
             'filter_set_formset'      : filter_set_formset
         })
 
-def delete_view(request, view_id):
+def delete(request, view_id):
     # XXX: Add try catch
     # XXX: Add ask confirm in Javascript
     View.objects.get(pk=view_id).delete()
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view.")
     return redirect("view_management")
 
+def view_management(request):
+    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 
+def order(request):
+    """Gets an orderd list of view ids. Calls OrderedModel static order method
+    to save the order to view model. """
+    
+    try:
+        view_ids = json.loads(request.body)
+        print "view ids", view_ids
+        views = []
+        for view_id in view_ids:
+            print view_id
+            views.append(View.objects.get(pk=view_id))
+        print "view objects", views
+        OrderedModel.order(views)
+        response = {"message" : "Successfully ordered views."}
+        #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
+    except Exception, e:
+        response = {"message" : "Could not order views."}
+
+        #messages.add_message(request, messages.ERROR, "Ordering did not work.")
+        raise e
+
+    # XXX LP: Make nice ajax messages like in normal templates
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+"""
+VIEW VIEWS END
+"""
 def deep_analysis(request, view_id = None):
     if view_id:
         view = View.objects.get(pk=view_id)
@@ -99,9 +133,6 @@ def deep_analysis(request, view_id = None):
             'view_type_line_data'   : view_type_line_data,
             'view_type_map_data'    : view_type_map_data
         })
-
-def view_management(request):
-    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 
 def help(request):
     return render(request, 'myDmarcApp/help.html', {})

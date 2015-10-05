@@ -11,7 +11,7 @@
     <table class="table table-condensed">
       <thead>
         <tr>
-          <th></th>
+          <th>Sort in sidebar</th>
           <th>Show in sidebar</th>
           <th>Title</th>
           <th>Description</th> 
@@ -21,7 +21,7 @@
       <tbody id="sortableViews">
       {% for view in views %}
         <tr class="view-row" data-id="{{view.id}}">
-            <td class="sort-handle">Hendl</td>
+            <td class="sort-handle"><span class="glyphicon glyphicon-resize-vertical"></span></td>
             <td>{{view.enabled}}</td>
             <td>{{view.title}}</td>
             <td>{{view.description}}</td> 
@@ -38,12 +38,22 @@
     <script type="text/javascript">
     $(document).ready(function(){
       var sortContainer = $("#sortableViews").get(0)
-      var sortable = Sortable.create(sortContainer,{
+      var sortable = Sortable.create(sortContainer, {
         animation: 150,
         handle: ".sort-handle",
         onUpdate: function (evt){
+          //Create ordered Ids Array
+          var view_id_list = [];
           $("#sortableViews .view-row").each(function(){
-            console.log($(this).data("id"));
+            view_id_list.push( $(this).data("id") );
+          });
+
+          $.ajax({
+              type: "POST",
+              url: /order-views/,
+              data:  JSON.stringify(view_id_list),
+              contentType: "application/json",
+              success: function(response){console.log(response.message)},
           });
         }
       });
