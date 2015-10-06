@@ -1,11 +1,17 @@
+import json
+import time
+import StringIO
+from svglib.svglib import SvgRenderer
+from reportlab.graphics import renderPDF
+
+import xml.dom.minidom
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
-from django.contrib import messages
-import json
-import time
+
 
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
@@ -79,8 +85,29 @@ def delete(request, view_id):
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view.")
     return redirect("view_management")
 
-def view_management(request):
-    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
+"""
+def export(request, view_id):
+
+    # Get data from client side via POST variables
+    svg_data = request.POST.get("svg")
+
+    document = xml.dom.minidom.parseString(svg_data)
+    svg = document.documentElement
+
+    # create svg
+    svg_renderer = SvgRenderer()
+    svg_renderer.render(svg)
+    svg_rendered = svg_renderer.finish()
+    pdf = renderPDF.drawToString(svg_rendered)
+
+    # Response is file-like we can write pdf to it
+    # XXX LP: Think of a proper filename like view title stripped + date
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = "attachment; filename='somefilename.pdf'"
+    response.write(pdf)     
+
+    return response
+"""
 
 def order(request):
     """Gets an orderd list of view ids. Calls OrderedModel static order method
@@ -106,10 +133,12 @@ def order(request):
     # XXX LP: Make nice ajax messages like in normal templates
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-
 """
 VIEW VIEWS END
 """
+def view_management(request):
+    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
+
 def deep_analysis(request, view_id = None):
     if view_id:
         view = View.objects.get(pk=view_id)

@@ -35,9 +35,14 @@
     {% endcomment %}
     {% if the_view.type_map %}
 
-    <div class="view-type-map">
+    <div class="view-type-map view-type">
         <div class="btn-group"></div>
         <div class="svg-container"></div>
+        {% comment %}
+        <div class="export"> 
+            <button class="btn btn-info" role="button">Export as PDF</button>
+        </div>
+        {% endcomment %}
     </div>
     <script type="text/javascript">
         // XXX LP: Only temp, don't worry. Also incomplete :)
@@ -124,7 +129,6 @@
             element: $(".view-type-map .svg-container").get(0),
             projection: 'mercator',
             responsive: true,
-            legend: true,
             geographyConfig: {
                 borderColor: defaultBorderColor,
                 borderWidth: defaultBorderWidth,
@@ -158,6 +162,48 @@
             fills: {defaultFill},
         });
 
+        /*
+         * The default legend appends an extra div to the container
+         * but we want it to be part of the svg, for export
+         * XXX LP:  doing it not the d3 way
+         */
+
+        // map.addPlugin('svgLegend', function(layer, data, options){
+        //     data = data || {};
+        //     if ( !this.options.fills ) {
+        //       return;
+        //     }
+
+        //     var legend = "<g class='legend'>";
+        //     var label = '';
+        //     if ( data.legendTitle ) {
+        //       legend += "<text class='legend-title'>" + data.legendTitle + "</text>";
+        //     }
+        //     for ( var fillKey in this.options.fills ) {
+        //       if ( fillKey === "defaultFill") {
+        //         if (! data.defaultFillName ) {
+        //           continue;
+        //         }
+        //         label = data.defaultFillName;
+        //       } else {
+        //         if (data.labels && data.labels[fillKey]) {
+        //           label = data.labels[fillKey];
+        //         } else {
+        //           label= fillKey + ': ';
+        //         }
+        //       }
+        //       legend += "<g class='legend-item'>";
+        //       legend += "<rect width=18 height=18 " +
+        //                 "style='fill: "+ this.options.fills[fillKey] + "; " +
+        //                 "stroke: rgb(238, 87, 204);'></rect>";
+        //       legend += "<text>" + label + "</text>";
+        //       legend += "</g>"
+        //     }
+        //     legend += "</g>";
+
+        //     $(this.svg[0]).append(legend);
+        // });
+
         //Adding some responsiveness
         $(window).on('resize', function() {
             map.resize();
@@ -185,15 +231,23 @@
 
             // Remove old and add new legend
             $(".view-type-map .datamaps-legend").remove();
+            
             map.legend({legendTitle: "Message Count", defaultFillName: defaultFillName, labels: data.labels});
         });
+
         // Trigger first button to be clicked
         $(".view-type-map .btn-group button:first-child").click();
         </script>
     {% endif %}
     {% if the_view.type_line %}
-    <div class="view-type-linechart">
+    <div class="view-type-linechart view-type">
         <div class="svg-container"></div>
+        {% comment %}
+        <div class="export"> 
+            <button class="btn btn-info" role="button">Export as PDF</button>
+        </div>
+        {% endcomment %}
+
     </div>
     <script type="text/javascript">
         // Create margins, heights, widths for both plots
@@ -501,8 +555,28 @@
 
     <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
 
+    {% comment %}
+        
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".export .btn").on("click", function(){
+                var svg_node = $(this).closest(".view-type").find(".svg-container svg").get(0);
 
-    
+                $('<form>', {
+                    'action': "/export-view/{{the_view.id}}/",
+                    'target': "_blank",
+                    'method': "POST"
+                }).append($('<textarea>', {
+                    'name': "svg",
+                    'value': (new XMLSerializer).serializeToString(svg_node),
+                })).append("{% csrf_token %}").submit();
+                // One should know that input field text is limited to 512KB length
+            });
+        })
+    </script>
+
+    {% endcomment %}
+
 
 </div>
 {% endblock %}
