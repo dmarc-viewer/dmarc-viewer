@@ -85,7 +85,6 @@ def delete(request, view_id):
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view.")
     return redirect("view_management")
 
-"""
 def export(request, view_id):
 
     # Get data from client side via POST variables
@@ -107,7 +106,6 @@ def export(request, view_id):
     response.write(pdf)     
 
     return response
-"""
 
 def order(request):
     """Gets an orderd list of view ids. Calls OrderedModel static order method

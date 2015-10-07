@@ -35,19 +35,15 @@
     {% endcomment %}
     {% if the_view.type_map %}
 
-    <div class="view-type-map view-type">
+    <div class="view-type-map view-type" style="width:100%">
         <div class="btn-group"></div>
         <div class="svg-container"></div>
-        {% comment %}
         <div class="export"> 
             <button class="btn btn-info" role="button">Export as PDF</button>
         </div>
-        {% endcomment %}
     </div>
     <script type="text/javascript">
-        // XXX LP: Only temp, don't worry. Also incomplete :)
-        var countryCodeMapping = {"AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH", "BW": "BWA", "BR": "BRA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "24": ",CD", "24": ",CG", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GA": "GAB", "22": ",GM", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GR": "GRC", "GD": "GRD", "GT": "GTM", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MR": "MRT", "MU": "MUS", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PL": "POL", "PT": "PRT", "QA": "QAT", "RO": "ROU", "RU": "RUS", "RW": "RWA", "KN": "KNA", "LC": "LCA", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VA": "VAT", "VE": "VEN", "VN": "VNM", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE", "GE": "GEO", "TW": "TWN", "AZ": "AZE", "CY": "CYP", "MD": "MDA", "SO": "SOM", "GE": "GEO", "AU": "AUS", "CX": "CXR", "CC": "CCK", "AU": "AUS", "HM": "HMD", "NF": "NFK", "NC": "NCL", "PF": "PYF", "YT": "MYT", "GP": "GLP", "GP": "GLP", "PM": "SPM", "WF": "WLF", "TF": "ATF", "PF": "PYF", "BV": "BVT", "CK": "COK", "NU": "NIU", "TK": "TKL", "GG": "GGY", "IM": "IMN", "JE": "JEY", "AI": "AIA", "BM": "BMU", "IO": "IOT", "VG": "VGB", "KY": "CYM", "FK": "FLK", "GI": "GIB", "MS": "MSR", "PN": "PCN", "SH": "SHN", "GS": "SGS", "TC": "TCA", "MP": "MNP", "PR": "PRI", "AS": "ASM", "UM": "UMI", "GU": "GUM", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "VI": "VIR", "UM": "UMI", "HK": "HKG", "MO": "MAC", "FO": "FRO", "GL": "GRL", "GF": "GUF", "GP": "GLP", "MQ": "MTQ", "RE": "REU", "AX": "ALA", "AW": "ABW", "AN": "ANT", "SJ": "SJM", "AC": "ASC", "TA": "TAA", "AQ": "ATA", "AQ": "ATA"};
-
+        var clientWidth = $(".view-type").width();
         /*
          * Creates an array of `n` colors around the baseColor,
          * ranging the HSL lightness value from 0.2 to 0.8
@@ -96,7 +92,6 @@
             // {"iso_code" : {"fillKey": <key>, "count": <cnt>}, ..}
             var data = {}
 
-
             mapDataSet.data.forEach(function(obj){
                 // XXX LP: colorin some cases paletteScale returns undifend 
                 var color = paletteScale(obj.cnt) || colors[colors.length - 1]
@@ -104,12 +99,15 @@
             }); 
 
             // Create fills and legendLabels
-            var fills        = {defaultFill: defaultFill};
-            var legendLabels    = {};
+            var fills           = {defaultFill: defaultFill};
+            var legendLabels    = [];
             colors.forEach(function(color){
                 fills[color]     = color;
                 var extents = paletteScale.invertExtent(color);
-                legendLabels[color] = Math.round(extents[0]) + " - " + Math.round(extents[1]);
+                legendLabels.push( {
+                    color : color,
+                    name  : Math.round(extents[0]) + " - " + Math.round(extents[1])
+                } );
             });
 
             // Store
@@ -128,7 +126,9 @@
         var map = new Datamap({
             element: $(".view-type-map .svg-container").get(0),
             projection: 'mercator',
-            responsive: true,
+            width: clientWidth,
+            height: clientWidth/5 * 3, // keep a 5:3 ratio
+            // responsive: true,
             geographyConfig: {
                 borderColor: defaultBorderColor,
                 borderWidth: defaultBorderWidth,
@@ -143,71 +143,33 @@
                                 return $hoverInfo.prop('outerHTML');
                             }
             },
-            done: function(datamap) {
-                datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
-                function redraw() {
-                    var prefix = '-webkit-transform' in document.body.style ? 
-                                    '-webkit-' : '-moz-transform' in document.body.style ? 
-                                                '-moz-' : '-ms-transform' in document.body.style ? 
-                                                        '-ms-' : '';
+            // resize: function(map){
+            //     var newWidth = this.element.clientWidth,
+            //         oldWidth = map.svg.attr("data-width");
+            //     //Don't select no-resize classed elements (like legend)
+            //     map.svg.selectAll("g:not(.no-resize)")
+            //             .attr("transform", "scale(" + (newWidth / oldWidth) + ")");
 
-                    var x = d3.event.translate[0];
-                    var y = d3.event.translate[1];
+            //     map.svg.clientWidth = this.element.clientWidth;
+            //     map.svg.clientHeight = this.element.clientHeight;
 
-                    datamap.svg.selectAll("g")
-                        .style(prefix + 'transform', 
-                            'translate(' + x +'px, ' + y + 'px) scale(' + (d3.event.scale) + ')');
-                }
+            // },
+            done: function(map) {
+                //Enable zooming and panning
+                map.svg.call(d3.behavior.zoom().on("zoom", function(){
+                    //Don't select no-resize classed elements (like legend)
+                    map.svg.selectAll("g:not(.no-resize)")
+                        .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }));
             },
             fills: {defaultFill},
         });
 
-        /*
-         * The default legend appends an extra div to the container
-         * but we want it to be part of the svg, for export
-         * XXX LP:  doing it not the d3 way
-         */
-
-        // map.addPlugin('svgLegend', function(layer, data, options){
-        //     data = data || {};
-        //     if ( !this.options.fills ) {
-        //       return;
-        //     }
-
-        //     var legend = "<g class='legend'>";
-        //     var label = '';
-        //     if ( data.legendTitle ) {
-        //       legend += "<text class='legend-title'>" + data.legendTitle + "</text>";
-        //     }
-        //     for ( var fillKey in this.options.fills ) {
-        //       if ( fillKey === "defaultFill") {
-        //         if (! data.defaultFillName ) {
-        //           continue;
-        //         }
-        //         label = data.defaultFillName;
-        //       } else {
-        //         if (data.labels && data.labels[fillKey]) {
-        //           label = data.labels[fillKey];
-        //         } else {
-        //           label= fillKey + ': ';
-        //         }
-        //       }
-        //       legend += "<g class='legend-item'>";
-        //       legend += "<rect width=18 height=18 " +
-        //                 "style='fill: "+ this.options.fills[fillKey] + "; " +
-        //                 "stroke: rgb(238, 87, 204);'></rect>";
-        //       legend += "<text>" + label + "</text>";
-        //       legend += "</g>"
-        //     }
-        //     legend += "</g>";
-
-        //     $(this.svg[0]).append(legend);
-        // });
-
         //Adding some responsiveness
-        $(window).on('resize', function() {
-            map.resize();
-        });
+        // $(window).on('resize', function() {
+        //     //Use the custom resize instead
+        //     map.options.resize(map);
+        // });
 
         // Update the map and legend with data on button click
         $(".view-type-map .btn-group button").on('click', function(e){
@@ -229,10 +191,23 @@
             // Update Choropleth
             map.updateChoropleth(data.data);
 
-            // Remove old and add new legend
-            $(".view-type-map .datamaps-legend").remove();
-            
-            map.legend({legendTitle: "Message Count", defaultFillName: defaultFillName, labels: data.labels});
+            // Update legend
+            // use custom legend plugin
+            // because we want legend to be part of svg
+            var mapLegendOptions = {
+                legendItems : data.labels
+            }
+            map.svg.selectAll("g.legend").remove();
+            //Mark legend and legend children as not-responsive
+            var mapLegend = map.svg.append("g")
+              .attr("class","legend no-resize")
+              .attr("transform","translate(20,20)")
+              .style("font-size","12px")
+              .call(d3.legend, mapLegendOptions)
+              .selectAll("g")
+                .attr("class", "no-resize");
+
+            //map.legend({legendTitle: "Message Count", defaultFillName: defaultFillName, labels: data.labels});
         });
 
         // Trigger first button to be clicked
@@ -240,22 +215,21 @@
         </script>
     {% endif %}
     {% if the_view.type_line %}
-    <div class="view-type-linechart view-type">
+    <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container"></div>
-        {% comment %}
         <div class="export"> 
             <button class="btn btn-info" role="button">Export as PDF</button>
         </div>
-        {% endcomment %}
-
     </div>
     <script type="text/javascript">
+        var clientWidth = $(".view-type").width();
+            clientHeight = 500;
         // Create margins, heights, widths for both plots
         var margin = {top: 40, right: 10, bottom: 100, left: 40},
             marginMini = {top: 430, right: 10, bottom: 20, left: 40},
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom,
-            heightMini = 500 - marginMini.top - marginMini.bottom;
+            width = clientWidth - margin.left - margin.right,
+            height = clientHeight - margin.top - margin.bottom,
+            heightMini = clientHeight - marginMini.top - marginMini.bottom;
 
         // Create date format praser
         var parseDate = d3.time.format("%Y%m%d").parse;
@@ -278,10 +252,14 @@
         var brush = d3.svg.brush()
             .x(xMini)
             .on("brush", function() { 
-              x.domain(brush.empty() ? xMini.domain() : brush.extent());
-              focus.selectAll(".line").attr("d", line);
-              focus.select(".x.axis").call(xAxis);
-              focus.select(".x.grid").call(xGridLines);
+                x.domain(brush.empty() ? xMini.domain() : brush.extent());
+                focus.selectAll(".line").attr("d", line);
+                focus.select(".x.axis").call(xAxis);
+                focus.select(".x.grid").call(xGridLines);
+                // XXX LP: This is not very dry - rethink d3 styling in general!!
+                svg.selectAll(".grid .tick")
+                    .style("stroke", "lightgrey")
+                    .style("opacity", 0.7);
             });
 
         //Append svg to document
@@ -290,11 +268,12 @@
             .attr("height", height + margin.top + margin.bottom);
 
         //Define a viewport, so that the line does not move over axis
+        //This does not work when exported
         svg.append("defs").append("clipPath")
             .attr("id", "clip")
           .append("rect")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", clientHeight);
 
         // Append main chart to svg and place it
         var focus = svg.append("g")
@@ -371,13 +350,13 @@
               .datum(dataSet.data)
               .attr("class", "line")
               .attr("d", line)
-              .attr('stroke', dataSet.color);
+              .attr("stroke", dataSet.color);
           // and for mini chart
           context.append("path")
               .datum(dataSet.data)
               .attr("class", "line")
               .attr("d", lineMini)
-              .attr('stroke', dataSet.color);
+              .attr("stroke", dataSet.color);
         });
 
         // Append X Axis for main chart
@@ -403,7 +382,6 @@
         svg.append("text")
             .attr("transform", "translate(" + (width / 2) + " ," + margin.top / 2 + ")")
             .attr("class", "x label")
-            .style("text-anchor", "middle")
             .text("Time");
 
         svg.append("text")
@@ -411,7 +389,6 @@
             .attr("transform", "rotate(-90)")
             .attr("y", margin.left / 2)
             .attr("x", 0 - (height / 2))
-            .style("text-anchor", "middle")
             .text("Message Count");
 
         // Append X Axis for mini chart
@@ -428,45 +405,40 @@
             .attr("y", -6)
             .attr("height", heightMini + 7);
 
-        // Create a legend
-        var legendItemRectSize = 18,
-            legendSpacing = 4;
-            
-        var legend = svg.append('g')
-            .attr('transform', 
-                'translate(' + (margin.left + 10) + ',' + (margin.top + 10) + ')')
-            .attr('class', 'legend')
+        var lineLegendOptions = {
+            legendItems : dataSets.map(function(d){return {color: d.color, name: d.label} })
+        }
+        var lineLegend = focus.append("g")
+          .attr("class", "legend")
+          .attr("transform", "translate(20,20)")
+          .style("font-size", "12px")
+          .call(d3.legend, lineLegendOptions); 
 
-        var legendItem = legend.selectAll('.legend-item')
-          .data(dataSets)
-          .enter()
-          .append('g')
-          .attr('class', 'legend-item')
-          .attr('transform', function(d, i) {
-            var itemHeight = legendItemRectSize + legendSpacing;
-            var horz = legendSpacing;
-            var vert = legendSpacing + i * itemHeight;
-            return 'translate(' + horz + ',' + vert + ')';
-          });
+        //CSS Part
+        svg.style("font", "10px sans-serif")
+        svg.selectAll(".brush .extent")
+            .style("stroke", "#fff")
+            .style("fill-opacity", .125)
+            .style("shape-rendering", "crispEdges");
+        svg.selectAll(".label")
+            .style("text-anchor", "middle");
+        svg.selectAll("path")
+            .style("stroke-width", 2)
+            .style("fill", "none")
+            .style("clip-path", "url(#clip)");
+        svg.selectAll("rect")
+            .style("stroke-width", 2)
+        svg.selectAll(".axis path, .axis line")
+            .style("fill", "none")
+            .style("stroke", "grey")
+            .style("stroke-width", 1)
+            .style("shape-rendering", "crispEdges");
+        svg.selectAll(".grid .tick")
+            .style("stroke", "lightgrey")
+            .style("opacity", 0.7);
+        svg.selectAll(".grid path")
+            .style("stroke-width", 0);
 
-        legendItem.append('rect')
-          .attr('width', legendItemRectSize)
-          .attr('height', legendItemRectSize)
-          .style('fill', function(d){return d.color})
-          .style('stroke', function(d){return d.color});
-
-        legendItem.append('text')
-          .attr('x', legendItemRectSize + legendSpacing)
-          .attr('y', legendItemRectSize - legendSpacing)
-          .text(function(dataSet) { return dataSet.label; });
-
-        legendBBox = $('.legend')[0].getBBox();
-        legend.insert('rect', ':first-child')
-            .attr('class', 'legend-box')
-            .attr('width', legendBBox.width + 2 * legendSpacing)
-            .attr('height', legendBBox.height + 2 * legendSpacing)
-            .style('fill', 'white')
-            .style('stroke', 'black');
 
     </script>
     {% endif %}
@@ -554,14 +526,13 @@
     {% endif %}
 
     <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
-
-    {% comment %}
         
     <script type="text/javascript">
         $(document).ready(function(){
             $(".export .btn").on("click", function(){
-                var svg_node = $(this).closest(".view-type").find(".svg-container svg").get(0);
+                var svg_node = $(this).closest(".view-type").find(".svg-container svg").get(0)
 
+                console.log(svg_node);
                 $('<form>', {
                     'action': "/export-view/{{the_view.id}}/",
                     'target': "_blank",
@@ -574,9 +545,6 @@
             });
         })
     </script>
-
-    {% endcomment %}
-
 
 </div>
 {% endblock %}
