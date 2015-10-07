@@ -38,7 +38,7 @@
     <div class="view-type-map view-type" style="width:100%">
         <div class="btn-group"></div>
         <div class="svg-container"></div>
-        <div class="export"> 
+        <div class="export-svg"> 
             <button class="btn btn-info" role="button">Export as PDF</button>
         </div>
     </div>
@@ -217,7 +217,7 @@
     {% if the_view.type_line %}
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container"></div>
-        <div class="export"> 
+        <div class="export-svg"> 
             <button class="btn btn-info" role="button">Export as PDF</button>
         </div>
     </div>
@@ -512,6 +512,9 @@
                 {% endfor %}
             {% endfor %}
         </table>
+        <div class="export-csv"> 
+            <button class="btn btn-info" role="button">Export as PDF</button>
+        </div>
     </div>
     <script type="text/javascript">
         /*
@@ -529,12 +532,11 @@
         
     <script type="text/javascript">
         $(document).ready(function(){
-            $(".export .btn").on("click", function(){
+            $(".export-svg .btn").on("click", function(){
                 var svg_node = $(this).closest(".view-type").find(".svg-container svg").get(0)
 
-                console.log(svg_node);
                 $('<form>', {
-                    'action': "/export-view/{{the_view.id}}/",
+                    'action': "/export-svg/{{the_view.id}}/",
                     'target': "_blank",
                     'method': "POST"
                 }).append($('<textarea>', {
@@ -542,6 +544,13 @@
                     'value': (new XMLSerializer).serializeToString(svg_node),
                 })).append("{% csrf_token %}").submit();
                 // One should know that input field text is limited to 512KB length
+            });
+            $(".export-csv .btn").on("click", function(){
+                $('<form>', {
+                    'action': "/export-csv/{{the_view.id}}/",
+                    'target': "_blank",
+                    'method': "POST"
+                }).append("{% csrf_token %}").submit();     
             });
         })
     </script>

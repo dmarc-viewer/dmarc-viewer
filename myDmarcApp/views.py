@@ -1,21 +1,27 @@
 import json
 import time
-import StringIO
+import csv
 from svglib.svglib import SvgRenderer
 from reportlab.graphics import renderPDF
 
 import xml.dom.minidom
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.contrib import messages
 from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
 
+class Echo(object):
+    """An object that implements just the write method of the file-like
+    interface. Needed for CSV streaming
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
 def index(request):
     return render(request, 'myDmarcApp/overview.html',{})
-
 
 """
 VIEW VIEWS BEGIN
@@ -85,7 +91,7 @@ def delete(request, view_id):
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view.")
     return redirect("view_management")
 
-def export(request, view_id):
+def export_svg(request, view_id):
 
     # Get data from client side via POST variables
     svg_data = request.POST.get("svg")
@@ -105,6 +111,17 @@ def export(request, view_id):
     response['Content-Disposition'] = "attachment; filename='somefilename.pdf'"
     response.write(pdf)     
 
+    return response
+
+def export_csv(request, view_id):
+    view = View.objects.get(pk=view_id)
+
+    csv_data = view.getCsvData()
+    pseudo_buffer = Echo()
+    writer = csv.writer(pseudo_buffer)
+    response = StreamingHttpResponse((writer.writerow(row) for row in csv_data),
+                                     content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
     return response
 
 def order(request):
