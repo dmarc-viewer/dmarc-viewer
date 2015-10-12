@@ -45,6 +45,30 @@ class Report(models.Model):
     pct                     = models.IntegerField(null = True)
     fo                      = models.CharField(max_length = 8, null = True)
 
+    @staticmethod
+    def getOldestReportDate(report_type = choices.INCOMING):
+        date_qs = Report.objects.order_by("date_range_begin")\
+                    .filter(report_type=report_type)\
+                    .values("date_range_begin").first()
+        if date_qs:
+            return date_qs["date_range_begin"]
+        else:
+            return None
+
+    @staticmethod
+    def getOverviewSummary(report_type = choices.INCOMING):
+        summary = {
+            "domain_cnt":       Report.objects.filter(report_type=report_type).distinct("domain").count(),
+            "report_cnt":       Report.objects.filter(report_type=report_type).count(),
+            "message_cnt":      Record.objects.filter(report__report_type=report_type).aggregate(cnt=Sum("count"))['cnt'],
+        }
+
+        # "dkim_fail_cnt":    AuthResultDKIM.objects.filter(report_type=report_type).count(),
+        # "spf_fail_cnt":     AuthResultSPF.objects.filter(report_type=report_type).count(),
+        # "dmarc_fail_cnt":   
+        # "reject_cnt":       
+        return summary
+
 class ReportError(models.Model):
     report                  = models.ForeignKey('Report')
     error                   = models.CharField(max_length = 200)

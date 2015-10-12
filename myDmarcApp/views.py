@@ -21,7 +21,16 @@ class Echo(object):
         return value
 
 def index(request):
-    return render(request, 'myDmarcApp/overview.html',{})
+    context = {"incoming" : {
+                "oldest_date" : Report.getOldestReportDate(choices.INCOMING),
+                "data"      : Report.getOverviewSummary()
+                },
+              "outgoing" : {
+                "oldest_date" : Report.getOldestReportDate(choices.OUTGOING),
+                "data"      : False
+             }
+    }
+    return render(request, 'myDmarcApp/overview.html', context)
 
 """
 VIEW VIEWS BEGIN
