@@ -12,22 +12,14 @@ from django.contrib import messages
 from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
 
-class Echo(object):
-    """An object that implements just the write method of the file-like
-    interface. Needed for CSV streaming
-    """
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
-
 def index(request):
     context = {"incoming" : {
                 "oldest_date" : Report.getOldestReportDate(choices.INCOMING),
-                "data"      : Report.getOverviewSummary()
+                "data"        : Report.getOverviewSummary(choices.INCOMING)
                 },
               "outgoing" : {
                 "oldest_date" : Report.getOldestReportDate(choices.OUTGOING),
-                "data"      : False
+                "data"        : Report.getOverviewSummary(choices.OUTGOING)
              }
     }
     return render(request, 'myDmarcApp/overview.html', context)
@@ -121,6 +113,14 @@ def export_svg(request, view_id):
     response.write(pdf)     
 
     return response
+
+class Echo(object):
+    """An object that implements just the write method of the file-like
+    interface. Needed for CSV streaming
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
 def export_csv(request, view_id):
     view = View.objects.get(pk=view_id)

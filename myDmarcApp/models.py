@@ -57,17 +57,19 @@ class Report(models.Model):
 
     @staticmethod
     def getOverviewSummary(report_type = choices.INCOMING):
-        summary = {
-            "domain_cnt":       Report.objects.filter(report_type=report_type).distinct("domain").count(),
-            "report_cnt":       Report.objects.filter(report_type=report_type).count(),
-            "message_cnt":      Record.objects.filter(report__report_type=report_type).aggregate(cnt=Sum("count"))['cnt'],
+        return {
+            "domain_cnt"  : Report.objects.filter(report_type=report_type).distinct("domain").count(),
+            "report_cnt"  : Report.objects.filter(report_type=report_type).count(),
+            "message_cnt" : Record.objects.filter(report__report_type=report_type).aggregate(cnt=Sum("count"))['cnt'],
+            # Query per result aggregated message count for dkim, spf and dispostion
+            # Transform result number to display name
+            "dkim"        : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["dkim"])}
+                              for res in Record.objects.filter(report__report_type=report_type).values("dkim").annotate(cnt=Sum("count"))],
+            "spf"         : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["spf"])}
+                              for res in Record.objects.filter(report__report_type=report_type).values("spf").annotate(cnt=Sum("count"))],
+            "disposition" : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["disposition"])}
+                              for res in Record.objects.filter(report__report_type=report_type).values("disposition").annotate(cnt=Sum("count"))],
         }
-
-        # "dkim_fail_cnt":    AuthResultDKIM.objects.filter(report_type=report_type).count(),
-        # "spf_fail_cnt":     AuthResultSPF.objects.filter(report_type=report_type).count(),
-        # "dmarc_fail_cnt":   
-        # "reject_cnt":       
-        return summary
 
 class ReportError(models.Model):
     report                  = models.ForeignKey('Report')
