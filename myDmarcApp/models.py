@@ -310,10 +310,11 @@ class DateRange(ViewFilterField):
 
 
 class ReportSender(FilterSetFilterField):
-    record_field            = "Record.Reporter.email"
+    record_field            = "Report.Reporter.email"
     value                   = models.CharField(max_length = 100)
 
 class ReportReceiverDomain(FilterSetFilterField):
+    label                   = "Report Sender Domain"
     record_field            = "Report.domain"
     value                   = models.CharField(max_length = 100)
 

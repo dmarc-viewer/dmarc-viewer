@@ -12,3 +12,4 @@ def to_json(obj):
     """
     # separators is passed to remove whitespace in output
     return  mark_safe('JSON.parse("%s")' % escapejs(json.dumps(obj, separators=(',', ':'))))
+

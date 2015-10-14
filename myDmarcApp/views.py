@@ -139,12 +139,9 @@ def order(request):
     
     try:
         view_ids = json.loads(request.body)
-        print "view ids", view_ids
         views = []
         for view_id in view_ids:
-            print view_id
             views.append(View.objects.get(pk=view_id))
-        print "view objects", views
         OrderedModel.order(views)
         response = {"message" : "Successfully ordered views."}
         #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")

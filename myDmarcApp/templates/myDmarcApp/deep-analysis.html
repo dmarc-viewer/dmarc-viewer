@@ -5,6 +5,8 @@
 {% block content %}
 {% load staticfiles %}
 {% load my_filters %}
+{% load my_tags %}
+
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
     {% for view in sidebar_views %}
@@ -16,23 +18,28 @@
     <h1>Deep Analysis</h1>
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
-
-    {% comment %}
         
     <div class="view-filter-details">
-        <p>View Filter Details</p>
-        {% with the_view.viewfilterfield_set.all|first as timefilter %}
-            {{timefilter}}
-        {% endwith %}
+        <h3>Filter Details</h3>
+        <p>Date Range: {% with date=the_view.daterange_set.first.getBeginEnd %} {{date.0}} - {{date.1}} {% endwith %}</p>
+        <p>Report Type: {{ the_view.reporttype_set.first.get_value_display }}</p>
         {% for fs in the_view.filterset_set.all %}
-            {{fs.label}}:
-            {% for f in fs.filtersetfilterfield_set.all%}
-                {{f.report_field}}: {{f.value}}
-            {% endfor %}
-
+        <div>
+            <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
+            <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
+            <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
+            <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
+            <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
+            <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
+            <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+        </div>
         {% endfor %}
     </div>
-    {% endcomment %}
     {% if the_view.type_map %}
 
     <div class="view-type-map view-type" style="width:100%">
