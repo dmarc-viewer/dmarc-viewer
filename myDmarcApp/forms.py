@@ -40,13 +40,14 @@ class ViewForm(ModelForm):
         # If this form is already bound to a view, add the data from the model
         if self.instance.id:
             for date_range in DateRange.objects.filter(foreign_key=self.instance.id):
-                print "whatup", date_range
                 self.fields["dr_type"].initial     = date_range.dr_type
 
                 self.fields["unit"].initial        = date_range.unit
                 self.fields["quantity"].initial    = date_range.quantity
-                self.fields["begin"].initial       = date_range.begin.strftime('%Y-%m-%d')
-                self.fields["end"].initial         = date_range.end.strftime('%Y-%m-%d')
+                if date_range.begin:
+                    self.fields["begin"].initial   = date_range.begin.strftime('%Y-%m-%d')
+                if date_range.end:
+                    self.fields["end"].initial     = date_range.end.strftime('%Y-%m-%d')
 
             for report_type in ReportType.objects.filter(foreign_key=self.instance.id):
                 self.fields["report_type"].initial  = report_type.value

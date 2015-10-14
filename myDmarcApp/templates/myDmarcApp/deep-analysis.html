@@ -461,7 +461,8 @@
                     <th>Mail sender</th>
                     <th>IP</th>
                     <th>Country</th>
-                    <th>Report Time</th>
+                    <th>Report Time Begin</th>
+                    <th>Report Time End</th>
                     <th>Message #</th>
                     <th>DKIM Domains</th>
                     <th>DKIM Results</th>
@@ -473,54 +474,9 @@
                     <th>Label</th>
                 </tr>
             </thead>
-
-            {% for filter_set_data in view_type_table_data  %}
-                {% for record in filter_set_data.records %}
-                    <tr style="background-color:{{filter_set_data.filter_set.color}}">
-                        <td>{{record.report.reporter.org_name}}</td>
-                        <td>{{record.report.domain}}</td>
-                        <td>{{record.source_ip}}</td>
-                        <td>{{record.country_iso_code}}</td>
-                        {% comment %}
-                        XXX LP: Only display borth dates if it ranges over multiple days
-                        <td>{{report.date_range_begin | date:"Y/n/j"}} {{report.date_range_end | date:"Y/n/j"}}</td>
-                        {% endcomment %}
-                        <td>{{record.report.date_range_begin | date:"Y/n/j"}} </td>
-
-                        <td>{{record.count}}</td>
-                        {% comment %}
-                            XXX LP: Think of ordering in nested table cells!!!
-                        {% endcomment %}
-                        <td>
-                            {% for dkim in record.authresultdkim_set.all%}
-                                {{dkim.domain}}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for dkim in record.authresultdkim_set.all%}
-                                {{dkim.get_result_display}}
-                            {% endfor %}
-                        </td>
-                        <td>{{record.get_dkim_display}}</td>
-                        <td>
-                            {% for spf in record.authresultspf_set.all%}
-                                {{spf.domain}}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for spf in record.authresultspf_set.all%}
-                                {{spf.get_result_display}}
-                            {% endfor %}
-                        </td>
-                        <td>{{record.get_spf_display}}</td>
-                        <td>{{record.get_disposition_display}}</td>
-                        <td>{{filter_set_data.filter_set.label}}</td>
-                    </tr>
-                {% endfor %}
-            {% endfor %}
         </table>
         <div class="export-csv"> 
-            <button class="btn btn-info" role="button">Export as PDF</button>
+            <button class="btn btn-info" role="button">Export as CSV</button>
         </div>
     </div>
     <script type="text/javascript">
@@ -529,7 +485,8 @@
          */
         $(document).ready(function(){
             $('.view-type-table table').DataTable({
-                paging: true,
+                "ajax"  : "/get-table/{{the_view.id}}/",
+                "paging": true,
             });
         });
     </script>
@@ -538,6 +495,9 @@
     <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
         
     <script type="text/javascript">
+        /*
+         * Exporting SVG and CSV
+         */
         $(document).ready(function(){
             $(".export-svg .btn").on("click", function(){
                 var svg_node = $(this).closest(".view-type").find(".svg-container svg").get(0)

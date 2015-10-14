@@ -8,7 +8,7 @@ import xml.dom.minidom
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
-from django.contrib import messages
+from django.core.paginator import Paginator
 from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
 
@@ -172,17 +172,36 @@ def deep_analysis(request, view_id = None):
 
     sidebar_views        = View.objects.filter(enabled='true').values('id', 'title')
     # Only fetch querysets if they are displayed
-    view_type_table_data = view.getTableData() if view.type_table else []
     view_type_line_data  = view.getLineData() if view.type_line else []
     view_type_map_data   = view.getMapData() if view.type_map else []
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view, 
-            'view_type_table_data'  : view_type_table_data,
             'view_type_line_data'   : view_type_line_data,
             'view_type_map_data'    : view_type_map_data
         })
+
+def get_table(request, view_id = None):
+    # XXX LP: DRY!
+    if view_id:
+        view = View.objects.get(pk=view_id)
+    else:
+        view = View.objects.first()
+
+    if not view:
+        messages.add_message(request, messages.WARNING, "You should start creating views before you want to use them.")
+        return redirect("view_management")
+    # XXX LP: DRY! end
+    # x = time.time()
+    data =  view.getTableData()
+    # y = time.time()
+    # print "oida"
+    print y - x
+    #paginator = Paginator(data, 30)
+
+    return HttpResponse(json.dumps({"data" : data}), content_type="application/json")
+
 
 def help(request):
     return render(request, 'myDmarcApp/help.html', {})

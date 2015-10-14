@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'edit-view/(?P<view_id>[0-9]+)/$', views.edit, name='edit_view'),
     url(r'clone-view/(?P<view_id>[0-9]+)/$', views.clone, name='clone_view'),
     url(r'delete-view/(?P<view_id>[0-9]+)/$', views.delete, name='delete_view'),
+    url(r'get-table/(?P<view_id>[0-9]+)/$', views.get_table, name='get_table'),
     url(r'export-svg/(?P<view_id>[0-9]+)/$', views.export_svg, name='export_svg'),
     url(r'export-csv/(?P<view_id>[0-9]+)/$', views.export_csv, name='export_csv'),
     url(r'order-views/$', views.order, name='order_views'),

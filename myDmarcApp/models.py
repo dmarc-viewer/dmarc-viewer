@@ -165,21 +165,8 @@ class View(OrderedModel):
         return _get_related_objects(self, ViewFilterField)
 
     def getTableData(self):
-        # XXX LP: I don't like this distinct here. 
-        # Do some data selection testing!!!! 
-        # Django's obrm joining magic is not so predictable 
-        return [{'filter_set' : filter_set, 
-                 'records':  filter_set.getRecords().distinct()} for filter_set in self.filterset_set.all()]
-    def getCsvData(self):
-
-        csv_head = ["reporter", "domain", "ip", "country", 
-                "date_range_begin", "date_range_end", 
-                "count", "dkim domains", "dkim results", 
-                "aligned dkim", "spf domains", "spf results",
-                "aligned spf", "disposition", "label"]
-
         # lovely lovely list comprehension :)
-        return [csv_head] + [[r.report.reporter.org_name,
+        return [[r.report.reporter.org_name,
                 r.report.domain,
                 r.source_ip,
                 r.country_iso_code,
@@ -193,7 +180,16 @@ class View(OrderedModel):
                 ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
                 r.get_spf_display(),
                 r.get_disposition_display(),
-                fs['filter_set'].label] for fs in self.getTableData() for r in fs['records']]
+                fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+
+    def getCsvData(self):
+        csv_head = ["reporter", "domain", "ip", "country", 
+                "date_range_begin", "date_range_end", 
+                "count", "dkim domains", "dkim results", 
+                "aligned dkim", "spf domains", "spf results",
+                "aligned spf", "disposition", "label"]
+
+        return [csv_head] + self.getTableData()
 
     def getLineData(self):
         # There must only one of both exactly one 

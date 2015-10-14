@@ -40,9 +40,8 @@
                         {% bootstrap_field filter_set_form.disposition %}
                         
                         {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
-                        <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
-                        <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
-
+                            <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
+                            <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
                     </div>
                 {% endfor %}
             </div>
@@ -70,9 +69,8 @@
                     {% bootstrap_field filter_set_formset.empty_form.disposition %}
 
                     {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
-                    <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
-                    <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
-
+                        <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
+                        <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
                 </div>
                 {% endescapescript %}
             </script>
