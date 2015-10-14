@@ -79,7 +79,7 @@ class Record(models.Model):
     report                  = models.ForeignKey('Report')
 
     # Row
-    source_ip               = models.GenericIPAddressField()
+    source_ip               = models.GenericIPAddressField(null = True)
     country_iso_code        = models.CharField(max_length = 2)
     geometry                = models.PointField(srid=4326, null = True)
     objects                 = models.GeoManager()

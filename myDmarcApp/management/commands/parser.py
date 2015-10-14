@@ -103,7 +103,7 @@ class Command(BaseCommand):
             except Exception, e:
                 msg = "Unable to create DMARC reporter for %s: %s" % (org_name, e)
                 logger.error(msg)
-                raise CommandError(msg)
+                #raise CommandError(msg)
         report.reporter                     = reporter
 
         # Add policy published data to report object 
@@ -127,7 +127,7 @@ class Command(BaseCommand):
         except Exception, e:
             msg = "Unable to create DMARC report for %s: %s" % (report.report_id, e)
             logger.error(msg)
-            raise CommandError(msg)
+            #raise CommandError(msg)
 
         # Save report errors
         for node_error in node_metadata.findall('error'):
@@ -139,7 +139,7 @@ class Command(BaseCommand):
             except Exception, e:
                 msg  = "Unable to save error for %s: %s" % (report.report_id, e)
                 logger.error(msg)
-                raise CommandError(msg)
+                #raise CommandError(msg)
 
 
         for node_record in root.findall('record'):
@@ -147,15 +147,21 @@ class Command(BaseCommand):
             record.report            = report
 
             node_row                 = node_record.find('row')
-            record.source_ip         = node_row.findtext('source_ip')
-            try:
-                response                 = geoip_reader.city(record.source_ip)
-                record.geometry          = Point(float(response.location.longitude), 
-                                                    float(response.location.latitude))
-                record.country_iso_code   = response.country.iso_code
-            except Exception, e:
-                msg  = "Unable to retrieve geometry for ip %s: %s" % (record.source_ip, e)
-                logger.error(msg)
+
+            ip_element               = node_row.find('source_ip')
+            # Univie special case for anonymised IP addresses
+            if (ip_element.attrib.get('anonymised_ip', '0') == '1'):
+                record.country_iso_code = ip_element.attrib.get('geoip', '')
+            else: 
+                record.source_ip         = ip_element.text
+                try:
+                    response                 = geoip_reader.city(record.source_ip)
+                    record.geometry          = Point(float(response.location.longitude), 
+                                                        float(response.location.latitude))
+                    record.country_iso_code   = response.country.iso_code
+                except Exception, e:
+                    msg  = "Unable to retrieve geometry for ip %s: %s" % (record.source_ip, e)
+                    logger.error(msg)
 
             
             record.count             = int(node_row.findtext('count'))
@@ -169,16 +175,17 @@ class Command(BaseCommand):
                                          node_policy_evaluated.findtext('spf'))
 
             node_identifiers         = node_record.find('identifiers')
-            record.envelope_to       = node_identifiers.findtext('envelope_to')
-            record.envelope_from     = node_identifiers.findtext('envelope_from')
-            record.header_from       = node_identifiers.findtext('header_from')
+            if node_identifiers is not None:
+                record.envelope_to       = node_identifiers.findtext('envelope_to')
+                record.envelope_from     = node_identifiers.findtext('envelope_from')
+                record.header_from       = node_identifiers.findtext('header_from')
 
             try:
                 record.save()
             except Exception, e:
                 msg = "Unable to save the DMARC record for %s: %s" % (report.report_id, e)
                 logger.error(msg)
-                raise CommandError(msg)
+                #raise CommandError(msg)
 
             for node_reason in node_policy_evaluated.findall('reason'):
                 reason          = PolicyOverrideReason()
@@ -191,7 +198,7 @@ class Command(BaseCommand):
                 except Exception, e:
                     msg = "Unable to save reason for %s: %s" % (report.report_id, e)
                     logger.error(msg)
-                    raise CommandError(msg)
+                    #raise CommandError(msg)
 
             node_auth_results = node_record.find('auth_results')
             dkim_count = 0
@@ -209,7 +216,7 @@ class Command(BaseCommand):
                 except Exception, e:
                     msg = "Unable to save DKIM auth_result for %s: %s" % (report.report_id, e)
                     logger.error(msg)
-                    raise CommandError(msg)
+                    #raise CommandError(msg)
 
             for node_spf_result in node_auth_results.findall('spf'):
                 result_spf          = AuthResultSPF()
@@ -224,7 +231,7 @@ class Command(BaseCommand):
                 except Exception, e:
                     msg = "Unable to save SPF auth_result for %s: %s" % (report.report_id, e)
                     logger.error(msg)
-                    raise CommandError(msg)
+                    #raise CommandError(msg)
 
             try:
                 record.auth_result_dkim_count = dkim_count
@@ -232,4 +239,4 @@ class Command(BaseCommand):
             except Exception, e:
                 msg = "Unable to save the DMARC record for %s: %s" % (report.report_id, e)
                 logger.error(msg)
-                raise CommandError(msg)
+                #raise CommandError(msg)
