@@ -196,10 +196,8 @@ def get_table(request, view_id = None):
     # x = time.time()
     data =  view.getTableData()
     # y = time.time()
-    # print "oida"
-    print y - x
+    #print y - x
     #paginator = Paginator(data, 30)
-
     return HttpResponse(json.dumps({"data" : data}), content_type="application/json")
 
 

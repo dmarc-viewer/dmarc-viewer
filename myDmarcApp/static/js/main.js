@@ -52,6 +52,11 @@ var copy = function(el) {
             var value = $inputsOld[idx].value;
             if (value)
                 $(this).val(value);
+
+            //Checkboxes
+            if ($(this).attr("type") == "checkbox")
+                $(this).attr('checked', $inputsOld[idx].checked)
+
         });
 
         //XXX Add support for other form elements (textarea, radio, checkbox,...)

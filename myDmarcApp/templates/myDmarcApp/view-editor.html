@@ -1,6 +1,8 @@
 {% extends 'myDmarcApp/base.html' %}
 {# Load the tag library #}
 {% load bootstrap3 %}
+{% load my_tags %}
+
 
 {% block title %}MyDmarc - View Editor{% endblock %}
 
@@ -22,27 +24,7 @@
             <div data-formset-body>
                 <!-- New forms will be inserted in here -->
                 {% for filter_set_form in filter_set_formset%}
-                    <div data-formset-form>
-                        <h4>Filter</h4>
-                        {% bootstrap_field filter_set_form.id %}
-                        {% bootstrap_field filter_set_form.label %}
-                        {% bootstrap_field filter_set_form.color %}
-                        {% bootstrap_field filter_set_form.source_ip %}
-                        {% bootstrap_field filter_set_form.report_sender %}
-                        {% bootstrap_field filter_set_form.report_receiver_domain %}
-                        {% bootstrap_field filter_set_form.raw_dkim_domain %}
-                        {% bootstrap_field filter_set_form.raw_spf_domain %}
-                        {% bootstrap_field filter_set_form.raw_dkim_result %}
-                        {% bootstrap_field filter_set_form.multiple_dkim %}
-                        {% bootstrap_field filter_set_form.raw_spf_result %}
-                        {% bootstrap_field filter_set_form.aligned_dkim_result %}
-                        {% bootstrap_field filter_set_form.aligned_spf_result %}
-                        {% bootstrap_field filter_set_form.disposition %}
-                        
-                        {% bootstrap_field filter_set_form.DELETE form_group_class="hidden" %}
-                            <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
-                            <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
-                    </div>
+                    {% show_filter_set filter_set_form %}
                 {% endfor %}
             </div>
 
@@ -51,27 +33,7 @@
             any scripts -->
             <script type="form-template" data-formset-empty-form>
                 {% escapescript %}
-                <div data-formset-form>
-                    <h4>Filter</h4>
-                    {% bootstrap_field filter_set_formset.empty_form.id %}
-                    {% bootstrap_field filter_set_formset.empty_form.label %}
-                    {% bootstrap_field filter_set_formset.empty_form.color %}
-                    {% bootstrap_field filter_set_formset.empty_form.source_ip %}
-                    {% bootstrap_field filter_set_formset.empty_form.report_sender %}
-                    {% bootstrap_field filter_set_formset.empty_form.report_receiver_domain %}
-                    {% bootstrap_field filter_set_formset.empty_form.raw_dkim_domain %}
-                    {% bootstrap_field filter_set_formset.empty_form.raw_spf_domain %}
-                    {% bootstrap_field filter_set_formset.empty_form.raw_dkim_result %}
-                    {% bootstrap_field filter_set_formset.empty_form.multiple_dkim %}
-                    {% bootstrap_field filter_set_formset.empty_form.raw_spf_result %}
-                    {% bootstrap_field filter_set_formset.empty_form.aligned_dkim_result %}
-                    {% bootstrap_field filter_set_formset.empty_form.aligned_spf_result %}
-                    {% bootstrap_field filter_set_formset.empty_form.disposition %}
-
-                    {% bootstrap_field filter_set_formset.empty_form.DELETE form_group_class="hidden" %}
-                        <button type="button" class="form-control btn btn-warning" data-formset-delete-button>Delete set of filters</button>
-                        <button type="button" class="form-control btn btn-primary" onclick="copy(this)">Copy set of filters</button>
-                </div>
+                    {% show_filter_set filter_set_formset.empty_form %}
                 {% endescapescript %}
             </script>
 
