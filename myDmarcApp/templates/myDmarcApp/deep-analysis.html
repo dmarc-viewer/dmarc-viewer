@@ -18,28 +18,40 @@
     <h1>Deep Analysis</h1>
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
-        
-    <div class="view-filter-details">
-        <h3>Filter Details</h3>
-        <p>Date Range: {% with date=the_view.daterange_set.first.getBeginEnd %} {{date.0}} - {{date.1}} {% endwith %}</p>
-        <p>Report Type: {{ the_view.reporttype_set.first.get_value_display }}</p>
-        {% for fs in the_view.filterset_set.all %}
-        <div>
-            <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
-            <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
-            <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
-            <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
-            <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
-            <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
-            <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+
+    <div class="panel-group" id="view-filter-details" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" >
+          <h4 class="panel-title">
+            Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
+            on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports</p>
+            <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false">(Click for filter details)
+            </a>
+          </h4>
         </div>
-        {% endfor %}
+        <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
+          <div class="panel-body">
+            {% for fs in the_view.filterset_set.all %}
+            <div>
+                <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
+                <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
+                <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
+                <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
+                <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
+                <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
+                <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
+
     {% if the_view.type_map %}
 
     <div class="view-type-map view-type" style="width:100%">

@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpRespons
 from django.core.paginator import Paginator
 from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
+from myDmarcApp.help import help_topics
 
 def index(request):
     context = {"incoming" : {
@@ -202,5 +203,5 @@ def get_table(request, view_id = None):
 
 
 def help(request):
-    return render(request, 'myDmarcApp/help.html', {})
+    return render(request, 'myDmarcApp/help.html', {"topics": help_topics})
 
