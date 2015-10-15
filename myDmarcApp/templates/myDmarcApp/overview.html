@@ -78,9 +78,9 @@
     {% if incoming.oldest_date %}
 
     <strong>{{ incoming.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
-    <strong>{{incoming.data.domain_cnt}}</strong> my domains,
-    <strong>{{incoming.data.report_cnt}}</strong> reports,
-    <strong>{{incoming.data.message_cnt}}</strong> messages
+    my domains: <strong>{{incoming.data.domain_cnt}}</strong>,
+    reports: <strong>{{incoming.data.report_cnt}}</strong>,
+    messages: <strong>{{incoming.data.message_cnt}}</strong>
     <div class="charts-container"></div>
     <script type="text/javascript">
         var incomingData = {{ incoming.data | to_json }};
@@ -95,9 +95,9 @@
     {% if outgoing.oldest_date %}
     <strong>{{ outgoing.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
     
-    <strong>{{outgoing.data.domain_cnt}}</strong> foreign domains, 
-    <strong>{{outgoing.data.report_cnt}}</strong> reports,
-    <strong>{{outgoing.data.message_cnt}}</strong> messages
+    foreign domains: <strong>{{outgoing.data.domain_cnt}}</strong>, 
+    reports: <strong>{{outgoing.data.report_cnt}}</strong>,
+    messages: <strong>{{outgoing.data.message_cnt}}</strong>
     
     <div class="charts-container"></div>
     <script type="text/javascript">

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 
 from django.contrib.gis.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -161,8 +162,8 @@ class View(OrderedModel):
     type_line               = models.BooleanField(default = True)
 
 
-    def getViewFilterFieldObjects(self):
-        return _get_related_objects(self, ViewFilterField)
+    def getViewFilterFieldManagers(self):
+        return _get_related_managers(self, ViewFilterField)
 
     def getTableData(self):
         # lovely lovely list comprehension :)
@@ -218,15 +219,22 @@ class FilterSet(models.Model):
     multiple_dkim           = models.NullBooleanField()
 
     def getRecords(self):
-        filter_fields = [filterfield for filterfield in self.getFilterSetFilterFieldObjects()] + \
-            [filterfield for filterfield in self.view.getViewFilterFieldObjects()]
+        # Get a list of object managers, each of which contains according filter field objects of one class
+        filter_field_managers = [manager for manager in self.getFilterSetFilterFieldManagers()] + \
+            [manager for manager in self.view.getViewFilterFieldManagers()]
 
-        filters = [filter_field.getRecordFilter() for filter_field in filter_fields]
-        filter_str = ".".join(filters)
+        
+        #All filter fields of same class are ORed
+        or_queries = []
+        for manager in filter_field_managers:
+            filter_fields = manager.all()
+            if filter_fields:
+                or_queries.append(reduce(lambda x, y: x | y, [filter_field.getRecordFilter() for filter_field in filter_fields]))
 
-        # XXX LP: Eval is dangerous especially if there is user input involved
-        # Put some thought on this!!!!!!!!!!!!!!!
-        return eval("Record.objects." + filter_str)
+        # All filter fields of different classes are ANDed
+        query = reduce(lambda x, y: x & y, [or_query for or_query in or_queries])
+
+        return Record.objects.filter(query)
 
     def getMessageCountPerDay(self):
         # XXX LP: to_char is postgres specific, do we care for db flexibility?
@@ -244,8 +252,8 @@ class FilterSet(models.Model):
                 .annotate(cnt=Sum('count'))\
                 .values('country_iso_code', 'cnt')
 
-    def getFilterSetFilterFieldObjects(self):
-        return _get_related_objects(self, FilterSetFilterField)
+    def getFilterSetFilterFieldManagers(self):
+        return _get_related_managers(self, FilterSetFilterField)
 
 
 class FilterSetFilterField(models.Model):
@@ -253,7 +261,7 @@ class FilterSetFilterField(models.Model):
 
     def getRecordFilter(self):
         key = self.record_field.replace('.', "__").lower()
-        return "filter(%s=%r)" % (key, self.value)
+        return Q(**{key: self.value})
 
     class Meta:
         abstract = True
@@ -266,7 +274,7 @@ class ViewFilterField(models.Model):
 class ReportType(ViewFilterField):
     value             = models.IntegerField(choices = choices.REPORT_TYPE)
     def getRecordFilter(self):
-        return "filter(report__report_type=%r)" % (self.value)
+        return Q(**{"report__report_type": self.value})
 
 class DateRange(ViewFilterField):
     """
@@ -298,8 +306,8 @@ class DateRange(ViewFilterField):
             raise # XXX LP proper Exception
 
     def getRecordFilter(self):
-        return "filter(report__date_range_begin__gte='%s', report__date_range_begin__lte='%s')" \
-                % (self.getBeginEnd())
+        begin, end = self.getBeginEnd()
+        return Q(**{"report__date_range_begin__gte" : begin}) & Q(**{"report__date_range_begin__lte": end})
 
     def __str__(self):
         return "%s - %s" % (self.getBeginEnd())
@@ -331,7 +339,7 @@ class RawDkimResult(FilterSetFilterField):
 class MultipleDkim(FilterSetFilterField):
     value                   = models.BooleanField(default = False)
     def getRecordFilter(self):
-        return "filter(auth_result_dkim_count__gt=1)"
+        return Q(**{"auth_result_dkim_count__gt" : 1})
 
 class RawSpfDomain(FilterSetFilterField):
     record_field            = "AuthResultSPF.domain"
@@ -354,11 +362,24 @@ class Disposition(FilterSetFilterField):
     value                   = models.IntegerField(choices = choices.DISPOSITION_TYPE)
 
 
+def _get_related_managers(obj, parent_class=False):
+    # XXX LP _get_fields is a rather internal django function,
+    # not sure if I should use it here
+    foreign_object_relations = obj._meta._get_fields(False)
+    foreign_managers = []
+
+    for rel in foreign_object_relations:
+        # Check for parent class if wanted
+        if parent_class and not issubclass(rel.related_model, parent_class):
+            continue
+        foreign_managers.append(getattr(obj, rel.get_accessor_name()))
+    return foreign_managers
+
 def _get_related_objects(obj, parent_class=False):
     """Helper method to get an object's foreign key related objects.
         Satisfying polymorphism workaround. Get related objects of a FilterSet.
         Alternatives might be:
-            The contenttypes framework (too complecated)
+            The contenttypes framework (too complicated)
             django_polymorphic (based on above, tried but did not work as expected)
 
     Params:
@@ -370,17 +391,7 @@ def _get_related_objects(obj, parent_class=False):
     XXX LP maybe use chain from itertools for better performance
 
     """
-    # XXX LP _get_fields is a rather internal django function,
-    # not sure if I should use it here
-    foreign_object_relations = obj._meta._get_fields(False)
-    foreign_managers = []
-
-    for rel in foreign_object_relations:
-        # Check for parent class if wanted
-        if parent_class and not issubclass(rel.related_model, parent_class):
-            continue
-        foreign_managers.append(getattr(obj, rel.get_accessor_name()))
-    
+    foreign_managers = _get_related_managers(obj, parent_class)
     # Get objects
     related_objects = []
     for manager in foreign_managers:
