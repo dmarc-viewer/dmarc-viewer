@@ -10,20 +10,20 @@
     var appendPies = function(data, targetSelector) {
 
         ["dkim", "spf", "disposition"].forEach(function(type){
-
                 var width = 200,
                     height = 200,
+                    margin = {top: 50, left: 50},
                     radius = Math.min(width, height) / 2;
 
                 var color;
                 if (type == "disposition"){
                 color = d3.scale.ordinal()
-                    .domain(["reject", "quarantine", "pass"])
-                    .range(["#FF0000", "#FFFF00", "#00FF00"]);
+                    .domain(["reject", "quarantine", "none"])
+                    .range(["#CC0000", "#CCCC00", "#00CC00"]);
                 } else {
                 color = d3.scale.ordinal()
                     .domain(["fail", "pass"])
-                    .range(["#FF0000", "#00FF00"]);
+                    .range(["#CC0000", "#00CC00"]);
                 }
 
                 var arc = d3.svg.arc()
@@ -36,10 +36,10 @@
 
                 var svg = d3.select(targetSelector).append("svg")
                     .attr("class", type)
-                    .attr("width", width)
-                    .attr("height", height)
-                  .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                    .attr("width", width + margin.left)
+                    .attr("height", height + margin.top)
+                    .append("g")
+                    .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
 
                 var g = svg.selectAll(".arc")
                     .data(pie(data[type]))
@@ -55,13 +55,17 @@
                     .attr("dy", ".35em")
                     .style("text-anchor", "middle")
                     .text(function(d) {return d.data.label; });
-                
+
+                g.append("text")
+                    .attr("transform", "translate(0, -120)")
+                    .text(type.toUpperCase());
+                    
                 var lineLegendOptions = {
                     legendItems : data[type].map(function(d){return {color: color(d.label), name: (d.cnt + " " + d.label)} })
                 }
                 g.append("g")
                   .attr("class", "legend")
-                  .attr("transform", "translate(-80, -80)")
+                  .attr("transform", "translate(-120, -120)")
                   .style("font-size", "12px")
                   .call(d3.legend, lineLegendOptions); 
             });
@@ -73,12 +77,10 @@
     <h2>Incoming reports</h2>
     {% if incoming.oldest_date %}
 
-    based on incoming reports from <strong>{{ incoming.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
-    <table>
-    <tr><td>My domains count</td><td>{{incoming.data.domain_cnt}}</td></tr>
-    <tr><td>Report count</td><td>{{incoming.data.report_cnt}}</td></tr>
-    <tr><td>Message count</td><td>{{incoming.data.message_cnt}}</td></tr>
-    </table>
+    <strong>{{ incoming.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
+    <strong>{{incoming.data.domain_cnt}}</strong> my domains,
+    <strong>{{incoming.data.report_cnt}}</strong> reports,
+    <strong>{{incoming.data.message_cnt}}</strong> messages
     <div class="charts-container"></div>
     <script type="text/javascript">
         var incomingData = {{ incoming.data | to_json }};
@@ -91,12 +93,12 @@
 <div id="outgoing">
     <h2>Outgoing reports</h2>
     {% if outgoing.oldest_date %}
-    based on outgoing reports from <strong>{{ outgoing.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
-    <table>
-    <tr><td>Foreign domains count</td><td>{{outgoing.data.domain_cnt}}</td></tr>
-    <tr><td>Report count</td><td>{{outgoing.data.report_cnt}}</td></tr>
-    <tr><td>Message count</td><td>{{outgoing.data.message_cnt}}</td></tr>
-    </table>
+    <strong>{{ outgoing.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
+    
+    <strong>{{outgoing.data.domain_cnt}}</strong> foreign domains, 
+    <strong>{{outgoing.data.report_cnt}}</strong> reports,
+    <strong>{{outgoing.data.message_cnt}}</strong> messages
+    
     <div class="charts-container"></div>
     <script type="text/javascript">
         var outgoingData = {{ outgoing.data | to_json }};

@@ -67,7 +67,7 @@ class Report(models.Model):
                               for res in Record.objects.filter(report__report_type=report_type).values("dkim").annotate(cnt=Sum("count"))],
             "spf"         : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["spf"])}
                               for res in Record.objects.filter(report__report_type=report_type).values("spf").annotate(cnt=Sum("count"))],
-            "disposition" : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["disposition"])}
+            "disposition" : [{"cnt": res["cnt"], "label": dict(choices.DISPOSITION_TYPE).get(res["disposition"])}
                               for res in Record.objects.filter(report__report_type=report_type).values("disposition").annotate(cnt=Sum("count"))],
         }
 
