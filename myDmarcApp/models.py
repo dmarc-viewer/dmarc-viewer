@@ -166,6 +166,13 @@ class View(OrderedModel):
         return _get_related_managers(self, ViewFilterField)
 
     def getTableData(self):
+        # Combine all Filtersets
+        # query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
+        # # Only retrieve records of a page
+        # records = Record.objects.filter(query).distinct().order_by('report__date_range_begin') #[page_start:page_end]
+        # use this for list comprehension
+        # PROBLEM: can't assign filterset label or color if it is all combined
+
         # lovely lovely list comprehension :)
         return [[r.report.reporter.org_name,
                 r.report.domain,
@@ -182,13 +189,14 @@ class View(OrderedModel):
                 r.get_spf_display(),
                 r.get_disposition_display(),
                 fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+                # 'no label'] for r in records]
 
     def getCsvData(self):
         csv_head = ["reporter", "domain", "ip", "country", 
                 "date_range_begin", "date_range_end", 
                 "count", "dkim domains", "dkim results", 
                 "aligned dkim", "spf domains", "spf results",
-                "aligned spf", "disposition", "label"]
+                "aligned spf", "disposition"]
 
         return [csv_head] + self.getTableData()
 
@@ -218,12 +226,11 @@ class FilterSet(models.Model):
     color                   = models.CharField(max_length = 7)
     multiple_dkim           = models.NullBooleanField()
 
-    def getRecords(self):
+    def getQuery(self):
         # Get a list of object managers, each of which contains according filter field objects of one class
         filter_field_managers = [manager for manager in self.getFilterSetFilterFieldManagers()] + \
             [manager for manager in self.view.getViewFilterFieldManagers()]
 
-        
         #All filter fields of same class are ORed
         or_queries = []
         for manager in filter_field_managers:
@@ -232,8 +239,13 @@ class FilterSet(models.Model):
                 or_queries.append(reduce(lambda x, y: x | y, [filter_field.getRecordFilter() for filter_field in filter_fields]))
 
         # All filter fields of different classes are ANDed
-        query = reduce(lambda x, y: x & y, [or_query for or_query in or_queries])
+        if or_queries:
+            return reduce(lambda x, y: x & y, [or_query for or_query in or_queries])
+        else:
+            return Q()
 
+    def getRecords(self):
+        query = self.getQuery()
         return Record.objects.filter(query)
 
     def getMessageCountPerDay(self):
