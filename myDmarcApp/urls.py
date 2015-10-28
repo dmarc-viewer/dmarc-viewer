@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.views.generic import RedirectView
 
 import views
 
@@ -15,5 +16,6 @@ urlpatterns = [
     url(r'deep-analysis/(?P<view_id>[0-9]+)/$', views.deep_analysis, name='deep_analysis'),
     url(r'view-management/$', views.view_management, name='view_management'),
     url(r'help/$', views.help, name='help'),
-    url(r'^$', views.index, name='index')
+    url(r'overview/$', views.overview, name='overview'),
+    url(r'^$', RedirectView.as_view(pattern_name='overview'))
 ]

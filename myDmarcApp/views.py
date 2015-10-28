@@ -13,7 +13,7 @@ from forms import *
 from myDmarcApp.models import View, OrderedModel, _clone
 from myDmarcApp.help import help_topics
 
-def index(request):
+def overview(request):
     context = {"incoming" : {
                 "oldest_date" : Report.getOldestReportDate(choices.INCOMING),
                 "data"        : Report.getOverviewSummary(choices.INCOMING)

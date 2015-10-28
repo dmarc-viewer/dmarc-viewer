@@ -52,10 +52,11 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/">Overview</a></li>
-            <li><a href="/deep-analysis/">Deep Analysis</a></li>
-            <li><a href="/view-management/">View Management</a></li>
-            <li><a href="/help/">Help</a></li>
+            <li class="{% if 'overview' in request.path %} active {% endif %}"><a href="/overview/">Overview</a></li>
+            <li class="{% if 'deep-analysis' in request.path %} active {% endif %}"><a href="/deep-analysis/">Deep Analysis</a></li>
+            <li class="{% if 'view-management' in request.path or 'edit-view' in request.path or 'add-view' in request.path %} 
+                active {% endif %}"><a href="/view-management/">View Management</a></li>
+            <li class="{% if 'help' in request.path %} active {% endif %}"><a href="/help/">Help</a></li>
           </ul>
         </div>
       </div>

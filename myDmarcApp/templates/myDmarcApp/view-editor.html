@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
-    <h1>View Editor</h1>
+    <h1 class="page-header">View Editor</h1>
     <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
