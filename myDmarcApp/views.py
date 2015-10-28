@@ -192,12 +192,44 @@ def get_table(request, view_id = None):
         view = View.objects.get(pk=view_id)
     else:
         view = View.objects.first()
-    
-    records = view.getTableRecords()
-    paginator = Paginator(records, 1000) 
 
-    data = view.getTableData(paginator.page(1))
-    return HttpResponse(json.dumps({"data" : data}), content_type="application/json")
+    """
+    extra filtering
+        #XXX LP: It would be nice to not save it in the db
+        tmp_view = self._clone
+        tmp_view
+          change date filter
+        get query
+        tmp_view.delete
+
+    for now I need extra filters for time (on line chart select)
+                                and country (on map select)
+    clone aspect somehow sucks, I don't want to interfere with the model
+    can't do this for countries anyway, there is no country filter, maybe make country filter field?
+    """
+    
+    #
+    ## PAGINATION
+    #
+    page_num = int(request.GET.get("draw", 1))
+    page_length = int(request.GET.get("length", 10))
+
+    records = view.getTableRecords()
+    paginator = Paginator(records, page_length)
+
+    if page_num > paginator.num_pages:
+        page_num = paginator.num_pages
+    if page_num < 1:
+        page_num = 1
+
+    data = view.getTableData(paginator.page(page_num))
+    resp = {
+        "draw"             : page_num,
+        "recordsTotal"     : paginator.count,
+        "recordsFiltered"  : paginator.count,
+        "data"             : data
+    }
+    return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
 def help(request):

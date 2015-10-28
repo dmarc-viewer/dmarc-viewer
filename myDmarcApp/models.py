@@ -166,12 +166,6 @@ class View(OrderedModel):
         return _get_related_managers(self, ViewFilterField)
 
     def getTableRecords(self):
-        # extra filter date
-        # #XXX LP: It would be nice to not save it in the db
-        # tmp_view = self._clone
-        # tmp_view.change date filter
-        # get query
-        # tmp_view.delete
 
         # Combine all Filtersets
         query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
@@ -200,6 +194,7 @@ class View(OrderedModel):
                 r.get_spf_display(),
                 r.get_disposition_display(),
                 # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+                r.report.report_id
                 ] for r in records or self.getTableRecords()]
 
     def getCsvData(self):
