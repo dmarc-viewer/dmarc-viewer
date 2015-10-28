@@ -174,11 +174,11 @@ class View(OrderedModel):
         #use this for list comprehension
         # PROBLEM: can't assign filterset label or color if it is all combined
 
-    def getTableCount(self):
-        return self.getTableRecords().count()
 
     def getTableData(self, records=None):
-        # lovely lovely list comprehension :)
+        """If records list or querymanager is specified, use it instead of
+        records for this view. this can be useful for pagination"""
+
         return [[r.report.reporter.org_name,
                 r.report.domain,
                 r.source_ip,

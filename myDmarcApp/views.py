@@ -1,5 +1,6 @@
 import json
 import time
+import datetime
 import csv
 from svglib.svglib import SvgRenderer
 from reportlab.graphics import renderPDF
@@ -10,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.core.paginator import Paginator
 from forms import *
-from myDmarcApp.models import View, OrderedModel, _clone
+from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
 
 def overview(request):
@@ -207,26 +208,44 @@ def get_table(request, view_id = None):
     clone aspect somehow sucks, I don't want to interfere with the model
     can't do this for countries anyway, there is no country filter, maybe make country filter field?
     """
-    
+
+
+
     #
     ## PAGINATION
     #
-    page_num = int(request.GET.get("draw", 1))
-    page_length = int(request.GET.get("length", 10))
+    #
+    draw_counter = int(request.GET.get("draw"))
+    page_length  = int(request.GET.get("length", 10))
+    record_idx   = int(request.GET.get("start"))
 
-    records = view.getTableRecords()
+    records          = view.getTableRecords()
+    records_total    = records.count()
+    records_filtered = records.count()    
+
+    filtered = True
+    if filtered:
+        date_range_tmp = DateRange()
+        date_range_tmp.dr_type  = choices.DATE_RANGE_TYPE_FIXED
+        date_range_tmp.begin    = datetime.date(2014, 7, 1)
+        date_range_tmp.end      = datetime.date(2014, 7, 2)
+        date_range_filter = date_range_tmp.getRecordFilter()
+        records = records.filter(date_range_filter)
+        records_filtered = records.count()
+
+    ordered = True
+    if ordered:
+        records = records.order_by("country_iso_code")
+
     paginator = Paginator(records, page_length)
 
-    if page_num > paginator.num_pages:
-        page_num = paginator.num_pages
-    if page_num < 1:
-        page_num = 1
+    page_num = record_idx / page_length + 1
 
     data = view.getTableData(paginator.page(page_num))
     resp = {
-        "draw"             : page_num,
-        "recordsTotal"     : paginator.count,
-        "recordsFiltered"  : paginator.count,
+        "draw"             : draw_counter,
+        "recordsTotal"     : records_total,
+        "recordsFiltered"  : records_filtered,
         "data"             : data
     }
     return HttpResponse(json.dumps(resp), content_type="application/json")
