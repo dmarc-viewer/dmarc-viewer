@@ -165,14 +165,25 @@ class View(OrderedModel):
     def getViewFilterFieldManagers(self):
         return _get_related_managers(self, ViewFilterField)
 
-    def getTableData(self):
+    def getTableRecords(self):
+        # extra filter date
+        # #XXX LP: It would be nice to not save it in the db
+        # tmp_view = self._clone
+        # tmp_view.change date filter
+        # get query
+        # tmp_view.delete
+
         # Combine all Filtersets
-        # query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
-        # # Only retrieve records of a page
-        # records = Record.objects.filter(query).distinct().order_by('report__date_range_begin') #[page_start:page_end]
-        # use this for list comprehension
+        query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
+        # Only retrieve records of a page
+        return Record.objects.filter(query).distinct().order_by('report__date_range_begin') #[page_start:page_end]
+        #use this for list comprehension
         # PROBLEM: can't assign filterset label or color if it is all combined
 
+    def getTableCount(self):
+        return self.getTableRecords().count()
+
+    def getTableData(self, records=None):
         # lovely lovely list comprehension :)
         return [[r.report.reporter.org_name,
                 r.report.domain,
@@ -188,8 +199,8 @@ class View(OrderedModel):
                 ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
                 r.get_spf_display(),
                 r.get_disposition_display(),
-                fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
-                # 'no label'] for r in records]
+                # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+                ] for r in records or self.getTableRecords()]
 
     def getCsvData(self):
         csv_head = ["reporter", "domain", "ip", "country", 

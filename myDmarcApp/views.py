@@ -162,6 +162,7 @@ def view_management(request):
     return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 
 def deep_analysis(request, view_id = None):
+    # XXX LP: rather redirect in urls.py
     if view_id:
         view = View.objects.get(pk=view_id)
     else:
@@ -176,6 +177,7 @@ def deep_analysis(request, view_id = None):
     view_type_line_data  = view.getLineData() if view.type_line else []
     view_type_map_data   = view.getMapData() if view.type_map else []
 
+
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view, 
@@ -183,22 +185,18 @@ def deep_analysis(request, view_id = None):
             'view_type_map_data'    : view_type_map_data
         })
 
+
 def get_table(request, view_id = None):
-    # XXX LP: DRY!
+    # XXX LP: rather redirect in urls.py
     if view_id:
         view = View.objects.get(pk=view_id)
     else:
         view = View.objects.first()
+    
+    records = view.getTableRecords()
+    paginator = Paginator(records, 1000) 
 
-    if not view:
-        messages.add_message(request, messages.WARNING, "You should start creating views before you want to use them.")
-        return redirect("view_management")
-    # XXX LP: DRY! end
-    # x = time.time()
-    data =  view.getTableData()
-    # y = time.time()
-    #print y - x
-    #paginator = Paginator(data, 30)
+    data = view.getTableData(paginator.page(1))
     return HttpResponse(json.dumps({"data" : data}), content_type="application/json")
 
 
