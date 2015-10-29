@@ -9,7 +9,7 @@ import xml.dom.minidom
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from forms import *
 from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
@@ -194,36 +194,22 @@ def get_table(request, view_id = None):
     else:
         view = View.objects.first()
 
-    """
-    extra filtering
-        #XXX LP: It would be nice to not save it in the db
-        tmp_view = self._clone
-        tmp_view
-          change date filter
-        get query
-        tmp_view.delete
+    # Get the data as posted json
+    # django can't handle default urlencoded nested dicts
+    request_data = json.loads(request.POST.get("data"))
 
-    for now I need extra filters for time (on line chart select)
-                                and country (on map select)
-    clone aspect somehow sucks, I don't want to interfere with the model
-    can't do this for countries anyway, there is no country filter, maybe make country filter field?
-    """
+    # Get configuration params
+    draw_counter = int(request_data.get("draw", 1))
+    page_length  = int(request_data.get("length", 10))
+    row_index    = int(request_data.get("start", 0))
 
-
-
-    #
-    ## PAGINATION
-    #
-    #
-    draw_counter = int(request.GET.get("draw"))
-    page_length  = int(request.GET.get("length", 10))
-    record_idx   = int(request.GET.get("start"))
-
+    # Get all (unfiltered) records for this view
     records          = view.getTableRecords()
     records_total    = records.count()
-    records_filtered = records.count()    
+    records_filtered = records.count()
 
-    filtered = True
+    # Filter records
+    filtered = False
     if filtered:
         date_range_tmp = DateRange()
         date_range_tmp.dr_type  = choices.DATE_RANGE_TYPE_FIXED
@@ -233,20 +219,54 @@ def get_table(request, view_id = None):
         records = records.filter(date_range_filter)
         records_filtered = records.count()
 
-    ordered = True
-    if ordered:
-        records = records.order_by("country_iso_code")
+    # Ordering
+    
+    order = request_data.get("order")[0] # XXX LP: beware of multicolum sort!!
+    columns = request_data.get("columns")
+    order_idx = int(order["column"])
 
+    if columns[order_idx]["orderable"]:
+        # XXX LP: Don't like hardcoding here
+        order_by = ["report__reporter__org_name",
+            "report__domain",
+            "source_ip",
+            "country_iso_code",
+            "report__date_range_begin",
+            "report__date_range_end",
+            "count",
+            "",
+            "",
+            "dkim",
+            "",
+            "",
+            "spf",
+            "disposition",
+            "report__report_id"]
+
+        prefix = "-" if order["dir"] == "desc" else ""
+        records = records.order_by(prefix + order_by[order_idx])
+
+    # Create paginator
     paginator = Paginator(records, page_length)
+    # Get 1-based page index
+    page_index = row_index / page_length + 1
 
-    page_num = record_idx / page_length + 1
+    # Get the records for wanted page
+    try:
+        data = paginator.page(page_index)
+    except PageNotAnInteger:
+        data = paginator.page(1)
+    except EmptyPage:
+        data = paginator.page(paginator.num_pages)
 
-    data = view.getTableData(paginator.page(page_num))
+    # Get the table rows for wanted records
+    page_data = view.getTableData(data)
+
     resp = {
         "draw"             : draw_counter,
         "recordsTotal"     : records_total,
         "recordsFiltered"  : records_filtered,
-        "data"             : data
+        "data"             : page_data
     }
     return HttpResponse(json.dumps(resp), content_type="application/json")
 

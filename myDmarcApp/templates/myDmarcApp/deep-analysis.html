@@ -475,14 +475,14 @@
                     <th>Mail sender</th>
                     <th>IP</th>
                     <th>Country</th>
-                    <th>Report Time Begin</th>
+                    <th data-search-value="20140604">Report Time Begin</th>
                     <th>Report Time End</th>
                     <th>Message #</th>
-                    <th>DKIM Domains</th>
-                    <th>DKIM Results</th>
+                    <th data-orderable="false">DKIM Domains</th>
+                    <th data-orderable="false">DKIM Results</th>
                     <th>aligned DKIM</th>
-                    <th>SPF Domains</th>
-                    <th>SPF Results</th>
+                    <th data-orderable="false">SPF Domains</th>
+                    <th data-orderable="false">SPF Results</th>
                     <th>aligned SPF</th>
                     <th>Disposition</th>
                     <th>Report id</th>
@@ -501,9 +501,16 @@
         /*
          * Initialize DataTable 
          */
+
         $(document).ready(function(){
             $('.view-type-table table').DataTable({
-                "ajax"  : "/get-table/{{the_view.id}}/",
+                "ajax" : {
+                    url  : "/get-table/{{the_view.id}}/",
+                    type : "POST",
+                    data: function (data) {
+                         return { "data": JSON.stringify(data) };
+                    },
+                },
                 "searching": false,
                 "serverSide": true,
                 "processing": true

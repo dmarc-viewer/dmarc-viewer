@@ -179,6 +179,9 @@ class View(OrderedModel):
         """If records list or querymanager is specified, use it instead of
         records for this view. this can be useful for pagination"""
 
+        if records is None:
+            records = self.getTableRecords()
+
         return [[r.report.reporter.org_name,
                 r.report.domain,
                 r.source_ip,
@@ -195,7 +198,7 @@ class View(OrderedModel):
                 r.get_disposition_display(),
                 # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
                 r.report.report_id
-                ] for r in records or self.getTableRecords()]
+                ] for r in records]
 
     def getCsvData(self):
         csv_head = ["reporter", "domain", "ip", "country", 
