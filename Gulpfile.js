@@ -1,25 +1,35 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
+var sourceMaps = require('gulp-sourcemaps');
+// var cssImport = require('gulp-cssimport');
 
-
-var input = './myDmarcApp/static/sass/**/*.scss';
-var output = './myDmarcApp/static/css/';
+var config = {
+    paths : {
+        sass   : './myDmarcApp/static/sass',
+        css    : './myDmarcApp/static/css',
+        vendor : './myDmarcApp/static/vendor',
+    }
+}
 
 var sassOptions = {
   errLogToConsole: true,
-  outputStyle: 'expanded'
+  outputStyle: 'expanded',
+  includePaths: [
+                 config.paths.sass,
+                 config.paths.vendor + '/bootstrap-sass-3.3.5/assets/stylesheets',
+             ]
 };
 
 gulp.task('sass', function() {
-    return gulp.src(input)
-        .pipe(sourcemaps.init())
+    return gulp.src(config.paths.sass + '/**/*.scss')
+        .pipe(sourceMaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(output))
+        // .pipe(cssImport())
+        .pipe(sourceMaps.write())
+        .pipe(gulp.dest(config.paths.css))
 });
 
 //Watch task
-gulp.task('default',function() {
-    return gulp.watch(input, ['sass']);
+gulp.task('default', function() {
+    return gulp.watch(config.paths.sass + '/**/*.scss', ['sass']);
 });

@@ -4,7 +4,7 @@
     <title>{% block title %}MyDMARC{% endblock %}</title>
     {% load static %}
     {% load bootstrap3 %}
-    {% bootstrap_css %}
+
     <script src="{% static "vendor/jquery/jquery-1.11.3.min.js" %}"></script>
     <script src="{% static "vendor/jquery/jquery-migrate-1.2.1.min.js" %}"></script>
     <script src="{% static "vendor/Sortable/Sortable.js" %}"></script>
@@ -21,8 +21,8 @@
     <script src="{% static "js/jquery.formset.js" %}"></script>
     <script src="{% static "js/main.js" %}"></script>
     <script src="{% static "js/d3.helper.js" %}"></script>
-
     {% bootstrap_javascript %}
+
     <link href="{% static "vendor/selectize/css/selectize.css" %}" rel="stylesheet">
     <link href="{% static "vendor/selectize/css/selectize.default.css" %}" rel="stylesheet">
     <link href="{% static "vendor/selectize/css/selectize.legacy.css" %}" rel="stylesheet">
@@ -30,10 +30,11 @@
     <link href="{% static "vendor/selectize/css/selectize.bootstrap3.css" %}" rel="stylesheet">
     <link href="{% static "vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css" %}" rel="stylesheet">
     <link href="{% static "vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" %}" rel="stylesheet">
+         
     <link href="{% static "vendor/DataTables-1.10.9/css/dataTables.bootstrap.css" %}" rel="stylesheet">
     <link href="{% static "vendor/DataTables-1.10.9/css/responsive.bootstrap.min.css" %}" rel="stylesheet">
+
     <link href="{% static "css/mydmarc.css" %}" rel="stylesheet">
-    <link href="{% static "css/main.css" %}" rel="stylesheet">
 
 </head>
 

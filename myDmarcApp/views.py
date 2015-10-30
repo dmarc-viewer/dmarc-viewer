@@ -220,7 +220,6 @@ def get_table(request, view_id = None):
         records_filtered = records.count()
 
     # Ordering
-    
     order = request_data.get("order")[0] # XXX LP: beware of multicolum sort!!
     columns = request_data.get("columns")
     order_idx = int(order["column"])
