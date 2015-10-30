@@ -69,10 +69,13 @@ var copy = function(el) {
 var toggleDateRange = function(){
     //Fixed
     var dr_type = $("[name='dr_type']:checked").val();
+    $("[name='dr_type']").closest(".radio").removeClass("active")
     if (dr_type == 1){
+        $("[name='dr_type']:checked").closest(".radio").addClass("active")
         $("#id_quantity, #id_unit").prop('disabled', true).val(null)
         $("#id_begin, #id_end").prop('disabled', false);
     } else if (dr_type == 2) {
+        $("[name='dr_type']:checked").closest(".radio").addClass("active")
         $("#id_begin, #id_end").prop('disabled', true).val(null)
         $("#id_quantity, #id_unit").prop('disabled', false);
     }

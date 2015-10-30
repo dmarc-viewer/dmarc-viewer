@@ -29,8 +29,8 @@ class ViewForm(ModelForm):
 
         # Initialize all fields for date range
         self.fields["dr_type"]     = TypedChoiceField(label="Date Range Type", choices=choices.DATE_RANGE_TYPE, coerce=int, widget=RadioSelect())
-        self.fields["quantity"]    = IntegerField(label="Report Date Range Quantity", required=False)
-        self.fields["unit"]        = TypedChoiceField(label="Report Date Range Unit", coerce=int, choices=choices.TIME_UNIT, required=False)
+        self.fields["quantity"]    = IntegerField(label="Quantity", required=False)
+        self.fields["unit"]        = TypedChoiceField(label="Unit", coerce=int, choices=choices.TIME_UNIT, required=False)
         self.fields["begin"]       = DateTimeField(label="Report Date Begin", required=False, widget=DatePickerWidget())
         self.fields["end"]         = DateTimeField(label="Report Date End", required=False, widget=DatePickerWidget())
 
