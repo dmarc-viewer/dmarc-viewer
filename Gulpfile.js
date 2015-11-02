@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var sourceMaps = require('gulp-sourcemaps');
-// var cssImport = require('gulp-cssimport');
 
 var config = {
     paths : {
@@ -23,11 +22,10 @@ var sassOptions = {
 
 //Create css file from scss
 gulp.task('styles', function() {
-    return gulp.src(config.paths.sass + '/**/*.scss')
+    return gulp.src(config.paths.sass + '/mydmarc.scss')
         .pipe(sourceMaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
-        // .pipe(cssImport())
-        .pipe(sourceMaps.write())
+        .pipe(sourceMaps.write('.'))
         .pipe(gulp.dest(config.paths.css))
 });
 
