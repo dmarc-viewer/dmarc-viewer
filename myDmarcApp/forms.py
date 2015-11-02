@@ -163,7 +163,7 @@ class FilterSetForm(ModelForm):
                 self.fields[field_name].initial = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
 
          # These are extra because they are one-to-one ergo no MultipleChoiceField
-        self.fields["source_ip"]     =  GenericIPAddressField(required=False, label='Source IP')
+        self.fields["source_ip"]     =  GenericIPAddressField(required=False, label='Mail Sender IP')
         self.fields["multiple_dkim"] =  BooleanField(required=False, label='Multiple DKIM only')
 
         if self.instance.id:

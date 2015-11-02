@@ -77,10 +77,10 @@ body {
   $viewFilterFormFields:
     (title, 12),
     (description, 12),
-    (enabled, 12, 3),
-    (type_map, 12, 3),
-    (type_table, 12, 3),
-    (type_line, 12, 3),
+    (enabled, 3, 3),
+    (type_map, 3, 3),
+    (type_table, 3, 3),
+    (type_line, 3, 3),
     (report_type, 12),
     (dr_type, 12),
     (begin, 6, 6, 3, 3),
@@ -100,17 +100,18 @@ body {
   $filterSetContainerFields: 
      (label, 6),
      (color, 6),
-     (source_ip, 12, 6);
-     //(report_sender, )
-     //(report_receiver_domain, )
-     //(raw_dkim_domain, )
-     //(raw_spf_domain, )
-     //(raw_dkim_result, )
-     //(multiple_dkim, )
-     //(raw_spf_result, )
-     //(aligned_dkim_result, )
-     //(aligned_spf_result, )
-     //(disposition, )
+     (report_receiver_domain, 6),
+     //(source_ip, 4),
+     (report_sender, 6),
+     (raw_spf_domain, 6),
+     (raw_spf_result, 6),
+     (raw_dkim_domain, 6),
+     (raw_dkim_result, 6),
+     (multiple_dkim, 12),
+
+     (aligned_dkim_result, 4),
+     (aligned_spf_result, 4),
+     (disposition, 4);
  
   @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
     .filter_#{$id} {

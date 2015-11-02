@@ -8,36 +8,34 @@
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
+    <div class="row">
     <h1 class="page-header">View Editor</h1>
     <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
         <h2>View</h2>
         {% bootstrap_messages %}
-        <div class="row">
-            <div id="{{view_form.title.auto_id}}_container">{% bootstrap_field view_form.title %}</div>
-            <div id="{{view_form.description.auto_id}}_container">{% bootstrap_field view_form.description %}</div>
-            <div id="{{view_form.enabled.auto_id}}_container">{% bootstrap_field view_form.enabled %}</div>
-            <div id="{{view_form.type_map.auto_id}}_container">{% bootstrap_field view_form.type_map %}</div>
-            <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
-            <div id="{{view_form.type_line.auto_id}}_container">{% bootstrap_field view_form.type_line %}</div>
-            <div id="{{view_form.report_type.auto_id}}_container">{% bootstrap_field view_form.report_type %}</div>
-            <div id="{{view_form.dr_type.auto_id}}_container">{% bootstrap_field view_form.dr_type %}</div>
-            <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>
-            <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
-            <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>
-            <div id="{{view_form.unit.auto_id}}_container">{% bootstrap_field view_form.unit %}</div>
-
-        </div>
-        <div id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
+        <div id="{{view_form.title.auto_id}}_container">{% bootstrap_field view_form.title %}</div>
+        <div id="{{view_form.description.auto_id}}_container">{% bootstrap_field view_form.description %}</div>
+        <div id="{{view_form.enabled.auto_id}}_container">{% bootstrap_field view_form.enabled %}</div>
+        <div id="{{view_form.type_map.auto_id}}_container">{% bootstrap_field view_form.type_map %}</div>
+        <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
+        <div id="{{view_form.type_line.auto_id}}_container">{% bootstrap_field view_form.type_line %}</div>
+        <div id="{{view_form.report_type.auto_id}}_container">{% bootstrap_field view_form.report_type %}</div>
+        <div id="{{view_form.dr_type.auto_id}}_container">{% bootstrap_field view_form.dr_type %}</div>
+        <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>
+        <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
+        <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>
+        <div id="{{view_form.unit.auto_id}}_container">{% bootstrap_field view_form.unit %}</div>
+        <div class="col-xs-12" id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
             {{ filter_set_formset.management_form }}
 
             <h3>Filters</h3>
             <div data-formset-body>
-                <!-- New forms will be inserted in here -->
                 {% for filter_set_form in filter_set_formset%}
                     {% show_filter_set filter_set_form %}
                 {% endfor %}
+                <!-- New forms will be inserted in here -->
             </div>
 
             <!-- The empty form template. By wrapping this in a <script> tag, the
@@ -48,8 +46,10 @@
                     {% show_filter_set filter_set_formset.empty_form %}
                 {% endescapescript %}
             </script>
+            <div class="text-right">
+                <input type="button" class="btn btn-primary" value="Add filter set" data-formset-add>
+            </div>
 
-            <input type="button" class="form-control btn btn-primary" value="Add set of filters" data-formset-add>
             <script type="text/javascript">
                 $(function($) {
                     $("#filterSetContainer").formset({
@@ -58,8 +58,11 @@
                 })
             </script>
         </div>
-        <input class="form-control btn btn-success" type="submit" value="Save entire form">
+        <div class="text-right col-xs-12 ">
+            <input class="form-group btn btn-success" type="submit" value="Save view">
+        </div>
     </form>
+    </div>
 </div>
 
 {% endblock %}

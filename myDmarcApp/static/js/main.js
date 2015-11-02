@@ -28,7 +28,7 @@ $.ajaxSetup({
 var copy = function(el) {
         //get the new form and form to copy
         var $formsetPlugin = $("#filterSetContainer").data("formset"),
-            $oldForm = $(el).parent("[data-formset-form]"),
+            $oldForm = $(el).closest("[data-formset-form]"),
             $newForm = $formsetPlugin.addForm();
 
         //copy all selects' options
@@ -59,7 +59,7 @@ var copy = function(el) {
 
         });
 
-        //XXX Add support for other form elements (textarea, radio, checkbox,...)
+        //XXX Add support for other form elements (textarea, radio, ...)
         return $newForm;
 }
 
