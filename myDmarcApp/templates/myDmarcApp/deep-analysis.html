@@ -281,6 +281,10 @@
                 svg.selectAll(".grid .tick")
                     .style("stroke", "lightgrey")
                     .style("opacity", 0.7);
+            })
+            .on("brushend", function(){
+                if (typeof addTimeQuickFilter !== 'undefined')
+                    addTimeQuickFilter(x.domain());
             });
 
         //Append svg to document
@@ -467,25 +471,26 @@
 
     {% if the_view.type_table %}
     <h3>Table</h3>
+    <div id="time-quick-filter"></div>
     <div class="view-type-table">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>Reporter</th>
-                    <th>Mail sender</th>
+                    <th>Sender</th>
                     <th>IP</th>
                     <th>Country</th>
-                    <th data-search-value="20140604">Report Time Begin</th>
-                    <th>Report Time End</th>
-                    <th>Message #</th>
+                    <th>Begin</th>
+                    <th>End</th>
+                    <th>Msg#</th>
                     <th data-orderable="false">DKIM Domains</th>
                     <th data-orderable="false">DKIM Results</th>
-                    <th>aligned DKIM</th>
+                    <th>aDKIM</th>
                     <th data-orderable="false">SPF Domains</th>
                     <th data-orderable="false">SPF Results</th>
-                    <th>aligned SPF</th>
+                    <th>aSPF</th>
                     <th>Disposition</th>
-                    <th>Report id</th>
+                    <th>ReportId</th>
                     {% comment %}
                     <th>Label</th>
                     {% endcomment %}
@@ -501,14 +506,27 @@
         /*
          * Initialize DataTable 
          */
+        var tableTimeRange = []; 
+        var tableApi;
 
+        var addTimeQuickFilter = function(times) {
+            $("#time-quick-filter").html("Quick filtering from " + times[0] + " to " + times[1]);
+            tableTimeRange = times;
+            tableApi.ajax.reload();
+        }
+        
         $(document).ready(function(){
-            $('.view-type-table table').DataTable({
+            tableApi = $('.view-type-table table').DataTable({
                 "ajax" : {
                     url  : "/get-table/{{the_view.id}}/",
                     type : "POST",
                     data: function (data) {
-                         return { "data": JSON.stringify(data) };
+                         data["custom_filters"] = {
+                            "time" : tableTimeRange
+                         }
+                         return { 
+                            "data" : JSON.stringify(data),
+                          };
                     },
                 },
                 "searching": false,

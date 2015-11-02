@@ -200,6 +200,23 @@ class View(OrderedModel):
                 r.report.report_id
                 ] for r in records]
 
+    def getTableOrderFields(self):
+        return ["report__reporter__org_name",
+                "report__domain",
+                "source_ip",
+                "country_iso_code",
+                "report__date_range_begin",
+                "report__date_range_end",
+                "count",
+                "",
+                "",
+                "dkim",
+                "",
+                "",
+                "spf",
+                "disposition",
+                "report__report_id"]
+
     def getCsvData(self):
         csv_head = ["reporter", "domain", "ip", "country", 
                 "date_range_begin", "date_range_end", 

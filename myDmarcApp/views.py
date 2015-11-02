@@ -199,9 +199,10 @@ def get_table(request, view_id = None):
     request_data = json.loads(request.POST.get("data"))
 
     # Get configuration params
-    draw_counter = int(request_data.get("draw", 1))
-    page_length  = int(request_data.get("length", 10))
-    row_index    = int(request_data.get("start", 0))
+    draw_counter    = int(request_data.get("draw", 1))
+    page_length     = int(request_data.get("length", 10))
+    row_index       = int(request_data.get("start", 0))
+    time_filter     = request_data.get("custom_filters").get("time")
 
     # Get all (unfiltered) records for this view
     records          = view.getTableRecords()
@@ -209,15 +210,19 @@ def get_table(request, view_id = None):
     records_filtered = records.count()
 
     # Filter records
-    filtered = False
-    if filtered:
-        date_range_tmp = DateRange()
-        date_range_tmp.dr_type  = choices.DATE_RANGE_TYPE_FIXED
-        date_range_tmp.begin    = datetime.date(2014, 7, 1)
-        date_range_tmp.end      = datetime.date(2014, 7, 2)
-        date_range_filter = date_range_tmp.getRecordFilter()
-        records = records.filter(date_range_filter)
-        records_filtered = records.count()
+    if time_filter:
+        try:
+            date_range_tmp = DateRange()
+            date_range_tmp.dr_type  = choices.DATE_RANGE_TYPE_FIXED
+            date_range_tmp.begin    = datetime.datetime.strptime(time_filter[0], '%Y-%m-%dT%H:%M:%S.%fZ')
+            date_range_tmp.end      = datetime.datetime.strptime(time_filter[1], '%Y-%m-%dT%H:%M:%S.%fZ')
+            date_range_filter       = date_range_tmp.getRecordFilter()
+            records                 = records.filter(date_range_filter)
+            records_filtered        = records.count()
+            
+        except Exception, e:
+            pass
+
 
     # Ordering
     order = request_data.get("order")[0] # XXX LP: beware of multicolum sort!!
@@ -226,21 +231,7 @@ def get_table(request, view_id = None):
 
     if columns[order_idx]["orderable"]:
         # XXX LP: Don't like hardcoding here
-        order_by = ["report__reporter__org_name",
-            "report__domain",
-            "source_ip",
-            "country_iso_code",
-            "report__date_range_begin",
-            "report__date_range_end",
-            "count",
-            "",
-            "",
-            "dkim",
-            "",
-            "",
-            "spf",
-            "disposition",
-            "report__report_id"]
+        order_by = view.getTableOrderFields()
 
         prefix = "-" if order["dir"] == "desc" else ""
         records = records.order_by(prefix + order_by[order_idx])
