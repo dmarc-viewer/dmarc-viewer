@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from django.db.models import Q
+from django.db.models import Q, F
 
 from django.contrib.gis.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -167,11 +167,10 @@ class View(OrderedModel):
 
     def getTableRecords(self):
 
-        # Combine all Filtersets
+        # Combine filters (getQuery) of all Filtersets
         query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
-        # Only retrieve records of a page
-        return Record.objects.filter(query).distinct().order_by('report__date_range_begin') #[page_start:page_end]
-        #use this for list comprehension
+        return Record.objects.filter(query).distinct().order_by('report__date_range_begin')
+        # use this for list comprehension
         # PROBLEM: can't assign filterset label or color if it is all combined
 
 
@@ -276,16 +275,28 @@ class FilterSet(models.Model):
 
     def getMessageCountPerDay(self):
         # XXX LP: to_char is postgres specific, do we care for db flexibility?
-        # XXX L: I don't like to hardcode APP Label
-        return self.getRecords()\
-                .extra(select={'date': "to_char(\"myDmarcApp_report\".\"date_range_begin\", 'YYYYMMDD')"})\
-                .values('date')\
-                .annotate(cnt=Sum('count'))\
-                .values('date', 'cnt')\
-                .order_by('date')
+        
+        # Needs filter(id__in=distinct_records) workaround because
+        # filter(self.getQuery()) does some db joining which can result in duplicate 
+        # record rows that we can't "distinct()" away when using annotate() 
+        
+        # Note: tried to use  Record.objects.filter(self.getQuery()).query
+        # as subquery with .raw()-sql query 
+        # didn't work because of django quotation bug
+        # https://code.djangoproject.com/ticket/17741
+
+        distinct_records = Record.objects.filter(self.getQuery()).distinct().values("id")
+        return Record.objects.filter(id__in=distinct_records)\
+            .values("report__date_range_begin")\
+            .extra(select={'date': "to_char(\"myDmarcApp_report\".\"date_range_begin\", 'YYYYMMDD')"})\
+            .values("date")\
+            .annotate(cnt=Sum('count'))\
+            .values('date', 'cnt')\
+            .order_by('date')
     
     def getMessageCountPerCountry(self):
-        return self.getRecords()\
+        distinct_records = Record.objects.filter(self.getQuery()).distinct().values("id")
+        return Record.objects.filter(id__in=distinct_records)\
                 .values('country_iso_code')\
                 .annotate(cnt=Sum('count'))\
                 .values('country_iso_code', 'cnt')
