@@ -269,10 +269,6 @@ class FilterSet(models.Model):
         else:
             return Q()
 
-    def getRecords(self):
-        query = self.getQuery()
-        return Record.objects.filter(query)
-
     def getMessageCountPerDay(self):
         # XXX LP: to_char is postgres specific, do we care for db flexibility?
         

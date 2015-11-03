@@ -1,7 +1,7 @@
 @import "bootstrap";
 
 h1 {
-    color: green;
+    color: orange;
 }
 
 /*
@@ -97,11 +97,12 @@ body {
   } 
 
   $filterSetContainerFields: 
-     (label, 6),
-     (color, 6),
-     (report_receiver_domain, 6),
-     //(source_ip, 4),
-     (report_sender, 6),
+     (label, 8),
+     (color, 4),
+     (report_receiver_domain, 4),
+     (source_ip, 4),
+     (report_sender, 4),
+     
      (raw_spf_domain, 6),
      (raw_spf_result, 6),
      (raw_dkim_domain, 6),
@@ -121,8 +122,6 @@ body {
     }
   }
 
-
-
   #id_dr_type {
     @extend .btn-group;
     @extend .btn-group-justified;
@@ -138,4 +137,24 @@ body {
   .filter_buttons {
     @extend .btn-group;
   }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  #filterSetContainer {
+
+    [data-formset-form] {
+      border: 1pt solid grey;
+      padding: 20px 60px;
+      margin: 20px 0;
+      @include border-top-radius(3px);
+      @include border-bottom-radius(3px);
+    }
+
+  }
 }
+
+  form label {
+     font-weight: normal;
+  }

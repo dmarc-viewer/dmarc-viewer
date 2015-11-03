@@ -1999,14 +1999,14 @@ pre code {
   clear: both;
 }
 
-.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-sm-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-md-3, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-lg-3, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-xs-4, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_label, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result, .col-sm-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, #viewFilterForm #id_title_container, #viewFilterForm #id_description_container, #viewFilterForm #id_report_type_container, #viewFilterForm #id_dr_type_container, #viewFilterForm .filter_multiple_dkim, .col-sm-12, .col-md-12, .col-lg-12 {
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-sm-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-md-3, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-lg-3, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-xs-4, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_source_ip, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result, .col-sm-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, #viewFilterForm .filter_label, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, #viewFilterForm #id_title_container, #viewFilterForm #id_description_container, #viewFilterForm #id_report_type_container, #viewFilterForm #id_dr_type_container, #viewFilterForm .filter_multiple_dkim, .col-sm-12, .col-md-12, .col-lg-12 {
   position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
 }
 
-.col-xs-1, .col-xs-2, .col-xs-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-xs-4, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition, .col-xs-5, .col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_label, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, #viewFilterForm #id_title_container, #viewFilterForm #id_description_container, #viewFilterForm #id_report_type_container, #viewFilterForm #id_dr_type_container, #viewFilterForm .filter_multiple_dkim {
+.col-xs-1, .col-xs-2, .col-xs-3, #viewFilterForm #id_enabled_container, #viewFilterForm #id_type_map_container, #viewFilterForm #id_type_table_container, #viewFilterForm #id_type_line_container, .col-xs-4, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_source_ip, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition, .col-xs-5, .col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result, .col-xs-7, .col-xs-8, #viewFilterForm .filter_label, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, #viewFilterForm #id_title_container, #viewFilterForm #id_description_container, #viewFilterForm #id_report_type_container, #viewFilterForm #id_dr_type_container, #viewFilterForm .filter_multiple_dkim {
   float: left;
 }
 
@@ -2022,7 +2022,7 @@ pre code {
   width: 25%;
 }
 
-.col-xs-4, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition {
+.col-xs-4, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_source_ip, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_aligned_dkim_result, #viewFilterForm .filter_aligned_spf_result, #viewFilterForm .filter_disposition {
   width: 33.33333%;
 }
 
@@ -2030,7 +2030,7 @@ pre code {
   width: 41.66667%;
 }
 
-.col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_label, #viewFilterForm .filter_color, #viewFilterForm .filter_report_receiver_domain, #viewFilterForm .filter_report_sender, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result {
+.col-xs-6, #viewFilterForm #id_begin_container, #viewFilterForm #id_end_container, #viewFilterForm #id_quantity_container, #viewFilterForm #id_unit_container, #viewFilterForm .filter_raw_spf_domain, #viewFilterForm .filter_raw_spf_result, #viewFilterForm .filter_raw_dkim_domain, #viewFilterForm .filter_raw_dkim_result {
   width: 50%;
 }
 
@@ -2038,7 +2038,7 @@ pre code {
   width: 58.33333%;
 }
 
-.col-xs-8 {
+.col-xs-8, #viewFilterForm .filter_label {
   width: 66.66667%;
 }
 
@@ -7900,7 +7900,7 @@ button.close {
 }
 
 h1 {
-  color: green;
+  color: orange;
 }
 
 /*
@@ -7974,6 +7974,24 @@ body {
 /* Basic Form Styles */
 #viewFilterForm #id_dr_type .radio label {
   width: 100%;
+}
+
+#viewFilterForm .form-group {
+  margin-bottom: 10px;
+}
+
+#viewFilterForm #filterSetContainer [data-formset-form] {
+  border: 1pt solid grey;
+  padding: 20px 60px;
+  margin: 20px 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+form label {
+  font-weight: normal;
 }
 
 /*# sourceMappingURL=mydmarc.css.map */

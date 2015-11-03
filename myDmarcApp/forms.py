@@ -4,7 +4,7 @@ from django.forms import ModelForm, ValidationError, ChoiceField, MultipleChoice
     CharField, GenericIPAddressField, IntegerField, DateTimeField, TypedChoiceField, BooleanField
 from django.forms.models import inlineformset_factory, modelform_factory
 
-from django.forms.widgets import RadioSelect
+from django.forms.widgets import RadioSelect, Textarea
 
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, ReportType, \
@@ -21,6 +21,9 @@ class ViewForm(ModelForm):
         fields = ['title', 'description', 'enabled', 'type_map', 'type_table', 'type_line']
         labels = {
             "enabled": _("Show in sidebar"),
+        }
+        widgets = {
+            'description': Textarea(attrs={'rows': 5}),
         }
 
     def __init__(self, *args, **kwargs):
