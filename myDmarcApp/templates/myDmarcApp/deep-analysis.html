@@ -1,6 +1,7 @@
 {% extends 'myDmarcApp/base.html' %}
 
 {% block title %}MyDmarc - Deep Analysis{% endblock %}
+{% block site_id %}deep-analysis{% endblock %}
 
 {% block content %}
 {% load staticfiles %}
@@ -15,55 +16,56 @@
     </ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% comment %}
     <h1 class="page-header">Deep Analysis</h1>
+    {% endcomment %}
+
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
 
     <div class="panel-group" id="view-filter-details" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" >
-          <h4 class="panel-title">
-            Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
-            on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports</p>
-            <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false">(Click for filter details)
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
-          <div class="panel-body">
-            {% for fs in the_view.filterset_set.all %}
-            <div>
-                <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
-                <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
-                <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
-                <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
-                <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
-                <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
-                <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab">
+                <h4 class="panel-title">
+                    Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
+                    on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports
+                </h4>
+                <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false">(show details)
+                </a>
             </div>
-            {% endfor %}
-          </div>
+            <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
+            <div class="panel-body">
+                {% for fs in the_view.filterset_set.all %}
+                <div>
+                    <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
+                    <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
+                    <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
+                    <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
+                    <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
+                    <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
+                    <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
         </div>
-      </div>
     </div>
 
     {% if the_view.type_map %}
-    <h3>Map</h3>
-
     <div class="view-type-map view-type" style="width:100%">
-        <div class="btn-group"></div>
+        <div class="btn-group switch-filterset"></div>
         <div class="svg-container" style="position:relative"></div>
         <div class="export-svg"> 
-            <button class="btn btn-info" role="button">Export as PDF</button>
+            <a class="btn btn-important" role="button" href="#">Export Map as PDF</a>
         </div>
     </div>
     <script type="text/javascript">
-        var clientWidth = $(".view-type").width();
+        var clientWidth = $(".view-type .svg-container").width();
         /*
          * Creates an array of `n` colors around the baseColor,
          * ranging the HSL lightness value from 0.2 to 0.8
@@ -235,11 +237,10 @@
         </script>
     {% endif %}
     {% if the_view.type_line %}
-    <h3>Line Chart</h3>
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container"></div>
         <div class="export-svg"> 
-            <button class="btn btn-info" role="button">Export as PDF</button>
+            <a href="#" class="btn btn-important" role="button">Export Chart as PDF</a>
         </div>
     </div>
     <script type="text/javascript">
@@ -470,7 +471,6 @@
 
 
     {% if the_view.type_table %}
-    <h3>Table</h3>
     <div id="time-quick-filter"></div>
     <div class="view-type-table">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -499,7 +499,7 @@
             </thead>
         </table>
         <div class="export-csv"> 
-            <button class="btn btn-info" role="button">Export as CSV</button>
+            <a class="btn btn-important" role="button" href="#">Export Table as CSV</a>
         </div>
     </div>
     <script type="text/javascript">
@@ -536,8 +536,8 @@
         });
     </script>
     {% endif %}
-
-    <a class="btn btn-info" role="button" href="/edit-view/{{the_view.id}}/">Edit</a>
+    <div class="clearfix"></div>
+    <a class="btn btn-important" role="button" href="/edit-view/{{the_view.id}}/">Edit View</a>
         
     <script type="text/javascript">
         /*

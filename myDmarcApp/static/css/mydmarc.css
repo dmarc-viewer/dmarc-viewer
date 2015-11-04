@@ -4303,21 +4303,21 @@ tbody.collapse.in {
   }
 }
 
-.btn-group, #viewFilterForm #id_dr_type, #viewFilterForm .filter_buttons,
+.btn-group, #viewFilterForm #id_dr_type,
 .btn-group-vertical {
   position: relative;
   display: inline-block;
   vertical-align: middle;
 }
 
-.btn-group > .btn, #viewFilterForm #id_dr_type > .btn, #viewFilterForm .filter_buttons > .btn, #viewFilterForm #id_dr_type .btn-group > .radio, #viewFilterForm #id_dr_type > .radio, #viewFilterForm #id_dr_type .filter_buttons > .radio,
+.btn-group > .btn, #viewFilterForm #id_dr_type > .btn, #viewFilterForm #id_dr_type .btn-group > .radio, #viewFilterForm #id_dr_type > .radio,
 .btn-group-vertical > .btn, #viewFilterForm #id_dr_type
 .btn-group-vertical > .radio {
   position: relative;
   float: left;
 }
 
-.btn-group > .btn:hover, #viewFilterForm #id_dr_type > .btn:hover, #viewFilterForm .filter_buttons > .btn:hover, #viewFilterForm #id_dr_type .btn-group > .radio:hover, #viewFilterForm #id_dr_type > .radio:hover, #viewFilterForm #id_dr_type .filter_buttons > .radio:hover, .btn-group > .btn:focus, #viewFilterForm #id_dr_type > .btn:focus, #viewFilterForm .filter_buttons > .btn:focus, #viewFilterForm #id_dr_type .btn-group > .radio:focus, #viewFilterForm #id_dr_type > .radio:focus, #viewFilterForm #id_dr_type .filter_buttons > .radio:focus, .btn-group > .btn:active, #viewFilterForm #id_dr_type > .btn:active, #viewFilterForm .filter_buttons > .btn:active, #viewFilterForm #id_dr_type .btn-group > .radio:active, #viewFilterForm #id_dr_type > .radio:active, #viewFilterForm #id_dr_type .filter_buttons > .radio:active, .btn-group > .btn.active, #viewFilterForm #id_dr_type > .btn.active, #viewFilterForm .filter_buttons > .btn.active, #viewFilterForm #id_dr_type .btn-group > .active.radio, #viewFilterForm #id_dr_type > .active.radio, #viewFilterForm #id_dr_type .filter_buttons > .active.radio,
+.btn-group > .btn:hover, #viewFilterForm #id_dr_type > .btn:hover, #viewFilterForm #id_dr_type .btn-group > .radio:hover, #viewFilterForm #id_dr_type > .radio:hover, .btn-group > .btn:focus, #viewFilterForm #id_dr_type > .btn:focus, #viewFilterForm #id_dr_type .btn-group > .radio:focus, #viewFilterForm #id_dr_type > .radio:focus, .btn-group > .btn:active, #viewFilterForm #id_dr_type > .btn:active, #viewFilterForm #id_dr_type .btn-group > .radio:active, #viewFilterForm #id_dr_type > .radio:active, .btn-group > .btn.active, #viewFilterForm #id_dr_type > .btn.active, #viewFilterForm #id_dr_type .btn-group > .active.radio, #viewFilterForm #id_dr_type > .active.radio,
 .btn-group-vertical > .btn:hover, #viewFilterForm #id_dr_type
 .btn-group-vertical > .radio:hover,
 .btn-group-vertical > .btn:focus, #viewFilterForm #id_dr_type
@@ -4329,40 +4329,24 @@ tbody.collapse.in {
   z-index: 2;
 }
 
-.btn-group .btn + .btn, #viewFilterForm #id_dr_type .btn + .btn, #viewFilterForm .filter_buttons .btn + .btn, #viewFilterForm #id_dr_type .btn-group .radio + .btn, #viewFilterForm #id_dr_type .radio + .btn, #viewFilterForm #id_dr_type .filter_buttons .radio + .btn, #viewFilterForm #id_dr_type .btn-group .btn + .radio, #viewFilterForm #id_dr_type .btn + .radio, #viewFilterForm #id_dr_type .filter_buttons .btn + .radio, #viewFilterForm #id_dr_type .btn-group .radio + .radio, #viewFilterForm #id_dr_type .radio + .radio, #viewFilterForm #id_dr_type .filter_buttons .radio + .radio,
-.btn-group .btn + .btn-group, #viewFilterForm #id_dr_type .btn + .btn-group, #viewFilterForm .filter_buttons .btn + .btn-group, #viewFilterForm #id_dr_type
-.btn-group .radio + .btn-group, #viewFilterForm #id_dr_type .radio + .btn-group, #viewFilterForm #id_dr_type .filter_buttons .radio + .btn-group,
+.btn-group .btn + .btn, #viewFilterForm #id_dr_type .btn + .btn, #viewFilterForm #id_dr_type .btn-group .radio + .btn, #viewFilterForm #id_dr_type .radio + .btn, #viewFilterForm #id_dr_type .btn-group .btn + .radio, #viewFilterForm #id_dr_type .btn + .radio, #viewFilterForm #id_dr_type .btn-group .radio + .radio, #viewFilterForm #id_dr_type .radio + .radio,
+.btn-group .btn + .btn-group, #viewFilterForm #id_dr_type .btn + .btn-group, #viewFilterForm #id_dr_type
+.btn-group .radio + .btn-group, #viewFilterForm #id_dr_type .radio + .btn-group,
 .btn-group #viewFilterForm .btn + #id_dr_type, #viewFilterForm
-.btn-group .btn + #id_dr_type, #viewFilterForm #id_dr_type .btn + #id_dr_type, #viewFilterForm .filter_buttons .btn + #id_dr_type, #viewFilterForm #id_dr_type
-.btn-group .radio + #id_dr_type, #viewFilterForm #id_dr_type .radio + #id_dr_type, #viewFilterForm #id_dr_type .filter_buttons .radio + #id_dr_type,
-.btn-group #viewFilterForm .btn + .filter_buttons, #viewFilterForm
-.btn-group .btn + .filter_buttons, #viewFilterForm #id_dr_type .btn + .filter_buttons, #viewFilterForm .filter_buttons .btn + .filter_buttons, #viewFilterForm #id_dr_type
-.btn-group .radio + .filter_buttons, #viewFilterForm #id_dr_type .radio + .filter_buttons, #viewFilterForm #id_dr_type .filter_buttons .radio + .filter_buttons,
-.btn-group .btn-group + .btn, #viewFilterForm #id_dr_type .btn-group + .btn, #viewFilterForm .filter_buttons .btn-group + .btn,
+.btn-group .btn + #id_dr_type, #viewFilterForm #id_dr_type .btn + #id_dr_type, #viewFilterForm #id_dr_type
+.btn-group .radio + #id_dr_type, #viewFilterForm #id_dr_type .radio + #id_dr_type,
+.btn-group .btn-group + .btn, #viewFilterForm #id_dr_type .btn-group + .btn,
 .btn-group #viewFilterForm #id_dr_type + .btn, #viewFilterForm
-.btn-group #id_dr_type + .btn, #viewFilterForm #id_dr_type #id_dr_type + .btn, #viewFilterForm .filter_buttons #id_dr_type + .btn,
-.btn-group #viewFilterForm .filter_buttons + .btn, #viewFilterForm
-.btn-group .filter_buttons + .btn, #viewFilterForm #id_dr_type .filter_buttons + .btn, #viewFilterForm .filter_buttons .filter_buttons + .btn, #viewFilterForm #id_dr_type
-.btn-group .btn-group + .radio, #viewFilterForm #id_dr_type .btn-group + .radio, #viewFilterForm #id_dr_type .filter_buttons .btn-group + .radio, #viewFilterForm #id_dr_type
-.btn-group #id_dr_type + .radio, #viewFilterForm #id_dr_type #id_dr_type + .radio, #viewFilterForm #id_dr_type .filter_buttons #id_dr_type + .radio, #viewFilterForm #id_dr_type
-.btn-group .filter_buttons + .radio, #viewFilterForm #id_dr_type .filter_buttons + .radio, #viewFilterForm #id_dr_type .filter_buttons .filter_buttons + .radio,
-.btn-group .btn-group + .btn-group, #viewFilterForm #id_dr_type .btn-group + .btn-group, #viewFilterForm .filter_buttons .btn-group + .btn-group,
+.btn-group #id_dr_type + .btn, #viewFilterForm #id_dr_type #id_dr_type + .btn, #viewFilterForm #id_dr_type
+.btn-group .btn-group + .radio, #viewFilterForm #id_dr_type .btn-group + .radio, #viewFilterForm #id_dr_type
+.btn-group #id_dr_type + .radio, #viewFilterForm #id_dr_type #id_dr_type + .radio,
+.btn-group .btn-group + .btn-group, #viewFilterForm #id_dr_type .btn-group + .btn-group,
 .btn-group #viewFilterForm #id_dr_type + .btn-group, #viewFilterForm
-.btn-group #id_dr_type + .btn-group, #viewFilterForm #id_dr_type #id_dr_type + .btn-group, #viewFilterForm .filter_buttons #id_dr_type + .btn-group,
-.btn-group #viewFilterForm .filter_buttons + .btn-group, #viewFilterForm
-.btn-group .filter_buttons + .btn-group, #viewFilterForm #id_dr_type .filter_buttons + .btn-group, #viewFilterForm .filter_buttons .filter_buttons + .btn-group,
+.btn-group #id_dr_type + .btn-group, #viewFilterForm #id_dr_type #id_dr_type + .btn-group,
 .btn-group #viewFilterForm .btn-group + #id_dr_type, #viewFilterForm
-.btn-group .btn-group + #id_dr_type, #viewFilterForm #id_dr_type .btn-group + #id_dr_type, #viewFilterForm .filter_buttons .btn-group + #id_dr_type,
+.btn-group .btn-group + #id_dr_type, #viewFilterForm #id_dr_type .btn-group + #id_dr_type,
 .btn-group #viewFilterForm #id_dr_type + #id_dr_type, #viewFilterForm
-.btn-group #id_dr_type + #id_dr_type, #viewFilterForm #id_dr_type #id_dr_type + #id_dr_type, #viewFilterForm .filter_buttons #id_dr_type + #id_dr_type,
-.btn-group #viewFilterForm .filter_buttons + #id_dr_type, #viewFilterForm
-.btn-group .filter_buttons + #id_dr_type, #viewFilterForm #id_dr_type .filter_buttons + #id_dr_type, #viewFilterForm .filter_buttons .filter_buttons + #id_dr_type,
-.btn-group #viewFilterForm .btn-group + .filter_buttons, #viewFilterForm
-.btn-group .btn-group + .filter_buttons, #viewFilterForm #id_dr_type .btn-group + .filter_buttons, #viewFilterForm .filter_buttons .btn-group + .filter_buttons,
-.btn-group #viewFilterForm #id_dr_type + .filter_buttons, #viewFilterForm
-.btn-group #id_dr_type + .filter_buttons, #viewFilterForm #id_dr_type #id_dr_type + .filter_buttons, #viewFilterForm .filter_buttons #id_dr_type + .filter_buttons,
-.btn-group #viewFilterForm .filter_buttons + .filter_buttons, #viewFilterForm
-.btn-group .filter_buttons + .filter_buttons, #viewFilterForm #id_dr_type .filter_buttons + .filter_buttons, #viewFilterForm .filter_buttons .filter_buttons + .filter_buttons {
+.btn-group #id_dr_type + #id_dr_type, #viewFilterForm #id_dr_type #id_dr_type + #id_dr_type {
   margin-left: -1px;
 }
 
@@ -4383,81 +4367,77 @@ tbody.collapse.in {
 .btn-toolbar .btn-group,
 .btn-toolbar #viewFilterForm #id_dr_type, #viewFilterForm
 .btn-toolbar #id_dr_type,
-.btn-toolbar #viewFilterForm .filter_buttons, #viewFilterForm
-.btn-toolbar .filter_buttons,
 .btn-toolbar .input-group {
   float: left;
 }
 
 .btn-toolbar > .btn, #viewFilterForm #id_dr_type .btn-toolbar > .radio,
 .btn-toolbar > .btn-group, #viewFilterForm
-.btn-toolbar > #id_dr_type, #viewFilterForm
-.btn-toolbar > .filter_buttons,
+.btn-toolbar > #id_dr_type,
 .btn-toolbar > .input-group {
   margin-left: 5px;
 }
 
-.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm .filter_buttons > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .btn-group > .radio:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .radio:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .filter_buttons > .radio:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .btn-group > .radio:not(:first-child):not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .radio:not(:first-child):not(:last-child):not(.dropdown-toggle) {
   border-radius: 0;
 }
 
-.btn-group > .btn:first-child, #viewFilterForm #id_dr_type > .btn:first-child, #viewFilterForm .filter_buttons > .btn:first-child, #viewFilterForm #id_dr_type .btn-group > .radio:first-child, #viewFilterForm #id_dr_type > .radio:first-child, #viewFilterForm #id_dr_type .filter_buttons > .radio:first-child {
+.btn-group > .btn:first-child, #viewFilterForm #id_dr_type > .btn:first-child, #viewFilterForm #id_dr_type .btn-group > .radio:first-child, #viewFilterForm #id_dr_type > .radio:first-child {
   margin-left: 0;
 }
 
-.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .btn:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm .filter_buttons > .btn:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .btn-group > .radio:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .radio:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .filter_buttons > .radio:first-child:not(:last-child):not(.dropdown-toggle) {
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .btn:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type .btn-group > .radio:first-child:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type > .radio:first-child:not(:last-child):not(.dropdown-toggle) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
-.btn-group > .btn:last-child:not(:first-child), #viewFilterForm #id_dr_type > .btn:last-child:not(:first-child), #viewFilterForm .filter_buttons > .btn:last-child:not(:first-child), #viewFilterForm #id_dr_type .btn-group > .radio:last-child:not(:first-child), #viewFilterForm #id_dr_type > .radio:last-child:not(:first-child), #viewFilterForm #id_dr_type .filter_buttons > .radio:last-child:not(:first-child),
-.btn-group > .dropdown-toggle:not(:first-child), #viewFilterForm #id_dr_type > .dropdown-toggle:not(:first-child), #viewFilterForm .filter_buttons > .dropdown-toggle:not(:first-child) {
+.btn-group > .btn:last-child:not(:first-child), #viewFilterForm #id_dr_type > .btn:last-child:not(:first-child), #viewFilterForm #id_dr_type .btn-group > .radio:last-child:not(:first-child), #viewFilterForm #id_dr_type > .radio:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child), #viewFilterForm #id_dr_type > .dropdown-toggle:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
 
-.btn-group > .btn-group, #viewFilterForm #id_dr_type > .btn-group, #viewFilterForm .filter_buttons > .btn-group, #viewFilterForm .btn-group > #id_dr_type, #viewFilterForm #id_dr_type > #id_dr_type, #viewFilterForm .filter_buttons > #id_dr_type, #viewFilterForm .btn-group > .filter_buttons, #viewFilterForm #id_dr_type > .filter_buttons, #viewFilterForm .filter_buttons > .filter_buttons {
+.btn-group > .btn-group, #viewFilterForm #id_dr_type > .btn-group, #viewFilterForm .btn-group > #id_dr_type, #viewFilterForm #id_dr_type > #id_dr_type {
   float: left;
 }
 
-.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm .filter_buttons > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm .filter_buttons > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group > .filter_buttons:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type > .filter_buttons:not(:first-child):not(:last-child) > .btn, #viewFilterForm .filter_buttons > .filter_buttons:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type .btn-group > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type .filter_buttons > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm .btn-group > #id_dr_type:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type > #id_dr_type:not(:first-child):not(:last-child) > .radio, #viewFilterForm .filter_buttons > #id_dr_type:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type .btn-group > .filter_buttons:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type > .filter_buttons:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type .filter_buttons > .filter_buttons:not(:first-child):not(:last-child) > .radio {
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type .btn-group > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm .btn-group > #id_dr_type:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type > #id_dr_type:not(:first-child):not(:last-child) > .radio {
   border-radius: 0;
 }
 
-.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .filter_buttons > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .filter_buttons > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group > .filter_buttons:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type > .filter_buttons:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .filter_buttons > .filter_buttons:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type .btn-group > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type .filter_buttons > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm .btn-group > #id_dr_type:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .radio:last-child, #viewFilterForm .filter_buttons > #id_dr_type:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type .btn-group > .filter_buttons:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type > .filter_buttons:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type .filter_buttons > .filter_buttons:first-child:not(:last-child) > .radio:last-child,
-.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm .filter_buttons > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm
-.btn-group > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm .filter_buttons > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm
-.btn-group > .filter_buttons:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm #id_dr_type > .filter_buttons:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm .filter_buttons > .filter_buttons:first-child:not(:last-child) > .dropdown-toggle {
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type .btn-group > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm .btn-group > #id_dr_type:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .radio:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm #id_dr_type > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm
+.btn-group > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm #id_dr_type > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
-.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .filter_buttons > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .filter_buttons > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group > .filter_buttons:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type > .filter_buttons:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .filter_buttons > .filter_buttons:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type .btn-group > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type .filter_buttons > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm .btn-group > #id_dr_type:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type > #id_dr_type:last-child:not(:first-child) > .radio:first-child, #viewFilterForm .filter_buttons > #id_dr_type:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type .btn-group > .filter_buttons:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type > .filter_buttons:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type .filter_buttons > .filter_buttons:last-child:not(:first-child) > .radio:first-child {
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type .btn-group > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm .btn-group > #id_dr_type:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type > #id_dr_type:last-child:not(:first-child) > .radio:first-child {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
 
-.btn-group .dropdown-toggle:active, #viewFilterForm #id_dr_type .dropdown-toggle:active, #viewFilterForm .filter_buttons .dropdown-toggle:active,
-.btn-group.open .dropdown-toggle, #viewFilterForm .open#id_dr_type .dropdown-toggle, #viewFilterForm .open.filter_buttons .dropdown-toggle {
+.btn-group .dropdown-toggle:active, #viewFilterForm #id_dr_type .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle, #viewFilterForm .open#id_dr_type .dropdown-toggle {
   outline: 0;
 }
 
-.btn-group > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type > .btn + .dropdown-toggle, #viewFilterForm .filter_buttons > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type .filter_buttons > .radio + .dropdown-toggle {
+.btn-group > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type > .radio + .dropdown-toggle {
   padding-left: 8px;
   padding-right: 8px;
 }
 
-.btn-group > .btn-lg + .dropdown-toggle, #viewFilterForm #id_dr_type > .btn-lg + .dropdown-toggle, #viewFilterForm .filter_buttons > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle, #viewFilterForm .btn-group-lg#id_dr_type > .btn + .dropdown-toggle, #viewFilterForm .btn-group-lg.filter_buttons > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group-lg.btn-group > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group-lg#id_dr_type > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group-lg.filter_buttons > .radio + .dropdown-toggle {
+.btn-group > .btn-lg + .dropdown-toggle, #viewFilterForm #id_dr_type > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle, #viewFilterForm .btn-group-lg#id_dr_type > .btn + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group-lg.btn-group > .radio + .dropdown-toggle, #viewFilterForm #id_dr_type .btn-group-lg#id_dr_type > .radio + .dropdown-toggle {
   padding-left: 12px;
   padding-right: 12px;
 }
 
-.btn-group.open .dropdown-toggle, #viewFilterForm .open#id_dr_type .dropdown-toggle, #viewFilterForm .open.filter_buttons .dropdown-toggle {
+.btn-group.open .dropdown-toggle, #viewFilterForm .open#id_dr_type .dropdown-toggle {
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-.btn-group.open .dropdown-toggle.btn-link, #viewFilterForm .open#id_dr_type .dropdown-toggle.btn-link, #viewFilterForm .open.filter_buttons .dropdown-toggle.btn-link {
+.btn-group.open .dropdown-toggle.btn-link, #viewFilterForm .open#id_dr_type .dropdown-toggle.btn-link {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -4477,30 +4457,27 @@ tbody.collapse.in {
 
 .btn-group-vertical > .btn, #viewFilterForm #id_dr_type .btn-group-vertical > .radio,
 .btn-group-vertical > .btn-group, #viewFilterForm
-.btn-group-vertical > #id_dr_type, #viewFilterForm
-.btn-group-vertical > .filter_buttons,
+.btn-group-vertical > #id_dr_type,
 .btn-group-vertical > .btn-group > .btn, #viewFilterForm
-.btn-group-vertical > #id_dr_type > .btn, #viewFilterForm
-.btn-group-vertical > .filter_buttons > .btn, #viewFilterForm #id_dr_type
+.btn-group-vertical > #id_dr_type > .btn, #viewFilterForm #id_dr_type
 .btn-group-vertical > .btn-group > .radio, #viewFilterForm
-.btn-group-vertical > #id_dr_type > .radio, #viewFilterForm #id_dr_type
-.btn-group-vertical > .filter_buttons > .radio {
+.btn-group-vertical > #id_dr_type > .radio {
   display: block;
   float: none;
   width: 100%;
   max-width: 100%;
 }
 
-.btn-group-vertical > .btn-group:before, #viewFilterForm .btn-group-vertical > #id_dr_type:before, #viewFilterForm .btn-group-vertical > .filter_buttons:before, .btn-group-vertical > .btn-group:after, #viewFilterForm .btn-group-vertical > #id_dr_type:after, #viewFilterForm .btn-group-vertical > .filter_buttons:after {
+.btn-group-vertical > .btn-group:before, #viewFilterForm .btn-group-vertical > #id_dr_type:before, .btn-group-vertical > .btn-group:after, #viewFilterForm .btn-group-vertical > #id_dr_type:after {
   content: " ";
   display: table;
 }
 
-.btn-group-vertical > .btn-group:after, #viewFilterForm .btn-group-vertical > #id_dr_type:after, #viewFilterForm .btn-group-vertical > .filter_buttons:after {
+.btn-group-vertical > .btn-group:after, #viewFilterForm .btn-group-vertical > #id_dr_type:after {
   clear: both;
 }
 
-.btn-group-vertical > .btn-group > .btn, #viewFilterForm .btn-group-vertical > #id_dr_type > .btn, #viewFilterForm .btn-group-vertical > .filter_buttons > .btn, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group > .radio, #viewFilterForm .btn-group-vertical > #id_dr_type > .radio, #viewFilterForm #id_dr_type .btn-group-vertical > .filter_buttons > .radio {
+.btn-group-vertical > .btn-group > .btn, #viewFilterForm .btn-group-vertical > #id_dr_type > .btn, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group > .radio, #viewFilterForm .btn-group-vertical > #id_dr_type > .radio {
   float: none;
 }
 
@@ -4508,24 +4485,15 @@ tbody.collapse.in {
 .btn-group-vertical > .btn + .btn-group, #viewFilterForm #id_dr_type
 .btn-group-vertical > .radio + .btn-group, #viewFilterForm
 .btn-group-vertical > .btn + #id_dr_type, #viewFilterForm #id_dr_type
-.btn-group-vertical > .radio + #id_dr_type, #viewFilterForm
-.btn-group-vertical > .btn + .filter_buttons, #viewFilterForm #id_dr_type
-.btn-group-vertical > .radio + .filter_buttons,
+.btn-group-vertical > .radio + #id_dr_type,
 .btn-group-vertical > .btn-group + .btn, #viewFilterForm
-.btn-group-vertical > #id_dr_type + .btn, #viewFilterForm
-.btn-group-vertical > .filter_buttons + .btn, #viewFilterForm #id_dr_type
+.btn-group-vertical > #id_dr_type + .btn, #viewFilterForm #id_dr_type
 .btn-group-vertical > .btn-group + .radio, #viewFilterForm #id_dr_type
-.btn-group-vertical > #id_dr_type + .radio, #viewFilterForm #id_dr_type
-.btn-group-vertical > .filter_buttons + .radio,
+.btn-group-vertical > #id_dr_type + .radio,
 .btn-group-vertical > .btn-group + .btn-group, #viewFilterForm
 .btn-group-vertical > #id_dr_type + .btn-group, #viewFilterForm
-.btn-group-vertical > .filter_buttons + .btn-group, #viewFilterForm
 .btn-group-vertical > .btn-group + #id_dr_type, #viewFilterForm
-.btn-group-vertical > #id_dr_type + #id_dr_type, #viewFilterForm
-.btn-group-vertical > .filter_buttons + #id_dr_type, #viewFilterForm
-.btn-group-vertical > .btn-group + .filter_buttons, #viewFilterForm
-.btn-group-vertical > #id_dr_type + .filter_buttons, #viewFilterForm
-.btn-group-vertical > .filter_buttons + .filter_buttons {
+.btn-group-vertical > #id_dr_type + #id_dr_type {
   margin-top: -1px;
   margin-left: 0;
 }
@@ -4546,19 +4514,18 @@ tbody.collapse.in {
   border-top-left-radius: 0;
 }
 
-.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group-vertical > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group-vertical > .filter_buttons:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm .btn-group-vertical > #id_dr_type:not(:first-child):not(:last-child) > .radio, #viewFilterForm #id_dr_type .btn-group-vertical > .filter_buttons:not(:first-child):not(:last-child) > .radio {
+.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn, #viewFilterForm .btn-group-vertical > #id_dr_type:not(:first-child):not(:last-child) > .btn, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .radio, #viewFilterForm .btn-group-vertical > #id_dr_type:not(:first-child):not(:last-child) > .radio {
   border-radius: 0;
 }
 
-.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group-vertical > .filter_buttons:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm .btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .radio:last-child, #viewFilterForm #id_dr_type .btn-group-vertical > .filter_buttons:first-child:not(:last-child) > .radio:last-child,
+.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child, #viewFilterForm .btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .btn:last-child, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:first-child:not(:last-child) > .radio:last-child, #viewFilterForm .btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .radio:last-child,
 .btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm
-.btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle, #viewFilterForm
-.btn-group-vertical > .filter_buttons:first-child:not(:last-child) > .dropdown-toggle {
+.btn-group-vertical > #id_dr_type:first-child:not(:last-child) > .dropdown-toggle {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group-vertical > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group-vertical > .filter_buttons:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm .btn-group-vertical > #id_dr_type:last-child:not(:first-child) > .radio:first-child, #viewFilterForm #id_dr_type .btn-group-vertical > .filter_buttons:last-child:not(:first-child) > .radio:first-child {
+.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child, #viewFilterForm .btn-group-vertical > #id_dr_type:last-child:not(:first-child) > .btn:first-child, #viewFilterForm #id_dr_type .btn-group-vertical > .btn-group:last-child:not(:first-child) > .radio:first-child, #viewFilterForm .btn-group-vertical > #id_dr_type:last-child:not(:first-child) > .radio:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
@@ -4572,18 +4539,17 @@ tbody.collapse.in {
 
 .btn-group-justified > .btn, #viewFilterForm #id_dr_type > .btn, #viewFilterForm #id_dr_type .btn-group-justified > .radio, #viewFilterForm #id_dr_type > .radio,
 .btn-group-justified > .btn-group, #viewFilterForm #id_dr_type > .btn-group, #viewFilterForm
-.btn-group-justified > #id_dr_type, #viewFilterForm #id_dr_type > #id_dr_type, #viewFilterForm
-.btn-group-justified > .filter_buttons, #viewFilterForm #id_dr_type > .filter_buttons {
+.btn-group-justified > #id_dr_type, #viewFilterForm #id_dr_type > #id_dr_type {
   float: none;
   display: table-cell;
   width: 1%;
 }
 
-.btn-group-justified > .btn-group .btn, #viewFilterForm #id_dr_type > .btn-group .btn, #viewFilterForm .btn-group-justified > #id_dr_type .btn, #viewFilterForm #id_dr_type > #id_dr_type .btn, #viewFilterForm .btn-group-justified > .filter_buttons .btn, #viewFilterForm #id_dr_type > .filter_buttons .btn, .btn-group-justified > .btn-group #viewFilterForm #id_dr_type .radio, #viewFilterForm #id_dr_type .btn-group-justified > .btn-group .radio, #viewFilterForm #id_dr_type > .btn-group .radio, #viewFilterForm .btn-group-justified > #id_dr_type .radio, #viewFilterForm #id_dr_type > #id_dr_type .radio, #viewFilterForm .btn-group-justified > .filter_buttons #id_dr_type .radio, #viewFilterForm #id_dr_type .btn-group-justified > .filter_buttons .radio, #viewFilterForm #id_dr_type > .filter_buttons .radio {
+.btn-group-justified > .btn-group .btn, #viewFilterForm #id_dr_type > .btn-group .btn, #viewFilterForm .btn-group-justified > #id_dr_type .btn, #viewFilterForm #id_dr_type > #id_dr_type .btn, .btn-group-justified > .btn-group #viewFilterForm #id_dr_type .radio, #viewFilterForm #id_dr_type .btn-group-justified > .btn-group .radio, #viewFilterForm #id_dr_type > .btn-group .radio, #viewFilterForm .btn-group-justified > #id_dr_type .radio, #viewFilterForm #id_dr_type > #id_dr_type .radio {
   width: 100%;
 }
 
-.btn-group-justified > .btn-group .dropdown-menu, #viewFilterForm #id_dr_type > .btn-group .dropdown-menu, #viewFilterForm .btn-group-justified > #id_dr_type .dropdown-menu, #viewFilterForm #id_dr_type > #id_dr_type .dropdown-menu, #viewFilterForm .btn-group-justified > .filter_buttons .dropdown-menu, #viewFilterForm #id_dr_type > .filter_buttons .dropdown-menu {
+.btn-group-justified > .btn-group .dropdown-menu, #viewFilterForm #id_dr_type > .btn-group .dropdown-menu, #viewFilterForm .btn-group-justified > #id_dr_type .dropdown-menu, #viewFilterForm #id_dr_type > #id_dr_type .dropdown-menu {
   left: auto;
 }
 
@@ -4591,17 +4557,13 @@ tbody.collapse.in {
 [data-toggle="buttons"] > .btn input[type="checkbox"], #viewFilterForm #id_dr_type
 [data-toggle="buttons"] > .radio input[type="checkbox"],
 [data-toggle="buttons"] > .btn-group > .btn input[type="radio"], #viewFilterForm
-[data-toggle="buttons"] > #id_dr_type > .btn input[type="radio"], #viewFilterForm
-[data-toggle="buttons"] > .filter_buttons > .btn input[type="radio"], #viewFilterForm #id_dr_type
+[data-toggle="buttons"] > #id_dr_type > .btn input[type="radio"], #viewFilterForm #id_dr_type
 [data-toggle="buttons"] > .btn-group > .radio input[type="radio"], #viewFilterForm
-[data-toggle="buttons"] > #id_dr_type > .radio input[type="radio"], #viewFilterForm #id_dr_type
-[data-toggle="buttons"] > .filter_buttons > .radio input[type="radio"],
+[data-toggle="buttons"] > #id_dr_type > .radio input[type="radio"],
 [data-toggle="buttons"] > .btn-group > .btn input[type="checkbox"], #viewFilterForm
-[data-toggle="buttons"] > #id_dr_type > .btn input[type="checkbox"], #viewFilterForm
-[data-toggle="buttons"] > .filter_buttons > .btn input[type="checkbox"], #viewFilterForm #id_dr_type
+[data-toggle="buttons"] > #id_dr_type > .btn input[type="checkbox"], #viewFilterForm #id_dr_type
 [data-toggle="buttons"] > .btn-group > .radio input[type="checkbox"], #viewFilterForm
-[data-toggle="buttons"] > #id_dr_type > .radio input[type="checkbox"], #viewFilterForm #id_dr_type
-[data-toggle="buttons"] > .filter_buttons > .radio input[type="checkbox"] {
+[data-toggle="buttons"] > #id_dr_type > .radio input[type="checkbox"] {
   position: absolute;
   clip: rect(0, 0, 0, 0);
   pointer-events: none;
@@ -4686,20 +4648,16 @@ tbody.collapse.in {
 .input-group-btn:first-child > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:first-child > .radio,
 .input-group-btn:first-child > .btn-group > .btn, #viewFilterForm
-.input-group-btn:first-child > #id_dr_type > .btn, #viewFilterForm
-.input-group-btn:first-child > .filter_buttons > .btn, #viewFilterForm #id_dr_type
+.input-group-btn:first-child > #id_dr_type > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:first-child > .btn-group > .radio, #viewFilterForm
-.input-group-btn:first-child > #id_dr_type > .radio, #viewFilterForm #id_dr_type
-.input-group-btn:first-child > .filter_buttons > .radio,
+.input-group-btn:first-child > #id_dr_type > .radio,
 .input-group-btn:first-child > .dropdown-toggle,
 .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle), #viewFilterForm #id_dr_type
 .input-group-btn:last-child > .radio:not(:last-child):not(.dropdown-toggle),
 .input-group-btn:last-child > .btn-group:not(:last-child) > .btn, #viewFilterForm
-.input-group-btn:last-child > #id_dr_type:not(:last-child) > .btn, #viewFilterForm
-.input-group-btn:last-child > .filter_buttons:not(:last-child) > .btn, #viewFilterForm #id_dr_type
+.input-group-btn:last-child > #id_dr_type:not(:last-child) > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:last-child > .btn-group:not(:last-child) > .radio, #viewFilterForm
-.input-group-btn:last-child > #id_dr_type:not(:last-child) > .radio, #viewFilterForm #id_dr_type
-.input-group-btn:last-child > .filter_buttons:not(:last-child) > .radio {
+.input-group-btn:last-child > #id_dr_type:not(:last-child) > .radio {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
@@ -4713,20 +4671,16 @@ tbody.collapse.in {
 .input-group-btn:last-child > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:last-child > .radio,
 .input-group-btn:last-child > .btn-group > .btn, #viewFilterForm
-.input-group-btn:last-child > #id_dr_type > .btn, #viewFilterForm
-.input-group-btn:last-child > .filter_buttons > .btn, #viewFilterForm #id_dr_type
+.input-group-btn:last-child > #id_dr_type > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:last-child > .btn-group > .radio, #viewFilterForm
-.input-group-btn:last-child > #id_dr_type > .radio, #viewFilterForm #id_dr_type
-.input-group-btn:last-child > .filter_buttons > .radio,
+.input-group-btn:last-child > #id_dr_type > .radio,
 .input-group-btn:last-child > .dropdown-toggle,
 .input-group-btn:first-child > .btn:not(:first-child), #viewFilterForm #id_dr_type
 .input-group-btn:first-child > .radio:not(:first-child),
 .input-group-btn:first-child > .btn-group:not(:first-child) > .btn, #viewFilterForm
-.input-group-btn:first-child > #id_dr_type:not(:first-child) > .btn, #viewFilterForm
-.input-group-btn:first-child > .filter_buttons:not(:first-child) > .btn, #viewFilterForm #id_dr_type
+.input-group-btn:first-child > #id_dr_type:not(:first-child) > .btn, #viewFilterForm #id_dr_type
 .input-group-btn:first-child > .btn-group:not(:first-child) > .radio, #viewFilterForm
-.input-group-btn:first-child > #id_dr_type:not(:first-child) > .radio, #viewFilterForm #id_dr_type
-.input-group-btn:first-child > .filter_buttons:not(:first-child) > .radio {
+.input-group-btn:first-child > #id_dr_type:not(:first-child) > .radio {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
@@ -4755,15 +4709,13 @@ tbody.collapse.in {
 
 .input-group-btn:first-child > .btn, #viewFilterForm #id_dr_type .input-group-btn:first-child > .radio,
 .input-group-btn:first-child > .btn-group, #viewFilterForm
-.input-group-btn:first-child > #id_dr_type, #viewFilterForm
-.input-group-btn:first-child > .filter_buttons {
+.input-group-btn:first-child > #id_dr_type {
   margin-right: -1px;
 }
 
 .input-group-btn:last-child > .btn, #viewFilterForm #id_dr_type .input-group-btn:last-child > .radio,
 .input-group-btn:last-child > .btn-group, #viewFilterForm
-.input-group-btn:last-child > #id_dr_type, #viewFilterForm
-.input-group-btn:last-child > .filter_buttons {
+.input-group-btn:last-child > #id_dr_type {
   z-index: 2;
   margin-left: -1px;
 }
@@ -7033,7 +6985,7 @@ button.close {
   margin-bottom: 0;
 }
 
-.modal-footer .btn-group .btn + .btn, .modal-footer #viewFilterForm #id_dr_type .btn + .btn, #viewFilterForm .modal-footer #id_dr_type .btn + .btn, .modal-footer #viewFilterForm .filter_buttons .btn + .btn, #viewFilterForm .modal-footer .filter_buttons .btn + .btn, #viewFilterForm #id_dr_type .modal-footer .btn-group .radio + .btn, .modal-footer #viewFilterForm #id_dr_type .radio + .btn, #viewFilterForm .modal-footer #id_dr_type .radio + .btn, .modal-footer #viewFilterForm #id_dr_type .filter_buttons .radio + .btn, #viewFilterForm #id_dr_type .modal-footer .filter_buttons .radio + .btn, #viewFilterForm #id_dr_type .modal-footer .btn-group .btn + .radio, .modal-footer #viewFilterForm #id_dr_type .btn + .radio, #viewFilterForm .modal-footer #id_dr_type .btn + .radio, .modal-footer #viewFilterForm #id_dr_type .filter_buttons .btn + .radio, #viewFilterForm #id_dr_type .modal-footer .filter_buttons .btn + .radio, #viewFilterForm #id_dr_type .modal-footer .btn-group .radio + .radio, .modal-footer #viewFilterForm #id_dr_type .radio + .radio, #viewFilterForm .modal-footer #id_dr_type .radio + .radio, .modal-footer #viewFilterForm #id_dr_type .filter_buttons .radio + .radio, #viewFilterForm #id_dr_type .modal-footer .filter_buttons .radio + .radio {
+.modal-footer .btn-group .btn + .btn, .modal-footer #viewFilterForm #id_dr_type .btn + .btn, #viewFilterForm .modal-footer #id_dr_type .btn + .btn, #viewFilterForm #id_dr_type .modal-footer .btn-group .radio + .btn, .modal-footer #viewFilterForm #id_dr_type .radio + .btn, #viewFilterForm .modal-footer #id_dr_type .radio + .btn, #viewFilterForm #id_dr_type .modal-footer .btn-group .btn + .radio, .modal-footer #viewFilterForm #id_dr_type .btn + .radio, #viewFilterForm .modal-footer #id_dr_type .btn + .radio, #viewFilterForm #id_dr_type .modal-footer .btn-group .radio + .radio, .modal-footer #viewFilterForm #id_dr_type .radio + .radio, #viewFilterForm .modal-footer #id_dr_type .radio + .radio {
   margin-left: -1px;
 }
 
@@ -7597,12 +7549,12 @@ button.close {
   }
 }
 
-.clearfix:before, .clearfix:after {
+.clearfix:before, .btn-important:before, .clearfix:after, .btn-important:after {
   content: " ";
   display: table;
 }
 
-.clearfix:after {
+.clearfix:after, .btn-important:after {
   clear: both;
 }
 
@@ -7900,15 +7852,9 @@ button.close {
   }
 }
 
-h1 {
-  color: #006699;
-}
-
-/*
-JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
-*/
-/*
- * Base structure
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
  */
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
@@ -7943,8 +7889,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
+    border-right: 4px solid #eee;
   }
 }
 
@@ -7957,8 +7902,7 @@ body {
 }
 
 .nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding: 5px 20px 5px 10px;
 }
 
 .nav-sidebar > .active > a,
@@ -7968,30 +7912,32 @@ body {
   background-color: #428bca;
 }
 
-.hidden, #viewFilterForm[data-hide-incoming='true'] [data-group='From Incoming Reports'],
-#viewFilterForm[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
-  display: none;
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Editor
+ */
+#viewFilterForm form label {
+  font-weight: normal;
 }
 
-/* Basic Form Styles */
 #viewFilterForm #id_dr_type .radio label {
   width: 100%;
+}
+
+#viewFilterForm .selectize-dropdown .optgroup-header,
+#viewFilterForm .selectize-dropdown .optgroup {
+  border: 0;
+}
+
+#viewFilterForm .selectize-dropdown .optgroup:before {
+  content: none;
 }
 
 #viewFilterForm .form-group {
   margin-bottom: 10px;
 }
 
-#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup-header,
-#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup {
-  border: 0;
-}
-
-#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup:before {
-  content: none;
-}
-
-#viewFilterForm #filterSetContainer [data-formset-form] {
+#viewFilterForm [data-formset-form] {
   border: 1pt solid grey;
   padding: 20px 60px;
   margin: 20px 0;
@@ -8001,8 +7947,42 @@ body {
   border-bottom-left-radius: 3px;
 }
 
-form label {
-  font-weight: normal;
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Deep Analysis
+ */
+#deep-analysis .view-type {
+  margin-bottom: 60px;
+}
+
+#deep-analysis .view-type .svg-container {
+  border: 1pt solid grey;
+}
+
+#deep-analysis .view-type-map .switch-filterset .btn, #deep-analysis .view-type-map .switch-filterset #viewFilterForm #id_dr_type .radio, #viewFilterForm #id_dr_type #deep-analysis .view-type-map .switch-filterset .radio {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Diverse
+ */
+h1 {
+  color: #006699;
+}
+
+.hidden, #viewFilterForm[data-hide-incoming='true'] [data-group='From Incoming Reports'],
+#viewFilterForm[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
+  display: none;
+}
+
+.btn-important {
+  float: right;
+  margin: 10px 0;
+  width: 200px;
+  border-color: #006699;
+  background-color: white;
 }
 
 /*# sourceMappingURL=mydmarc.css.map */

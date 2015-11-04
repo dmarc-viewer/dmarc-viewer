@@ -13,7 +13,7 @@
                 var width = 200,
                     height = 200,
                     margin = {top: 50, left: 50},
-                    radius = Math.min(width, height) / 2;
+                    radius = 90;
 
                 var color;
                 if (type == "disposition"){
@@ -50,11 +50,11 @@
                    .attr("d", arc)
                    .style("fill", function(d) { return color(d.data.label); });
 
-                g.append("text")
-                    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
-                    .style("text-anchor", "middle")
-                    .text(function(d) {return d.data.label; });
+                // g.append("text")
+                //     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+                //     .attr("dy", ".35em")
+                //     .style("text-anchor", "middle")
+                //     .text(function(d) {return d.data.label; });
 
                 g.append("text")
                     .attr("transform", "translate(0, -120)")

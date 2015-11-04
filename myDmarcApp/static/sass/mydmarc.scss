@@ -5,29 +5,22 @@
 $dmarc-blue: #006699;
 
 
-h1 {
-    color: $dmarc-blue;
-}
 
-/*
-JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
-*/
-
-/*
- * Base structure
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
  */
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 50px;
+    padding-top: 50px;
 }
-
 /*
  * Top navigation
  * Hide default border to remove 1px line.
  */
 .navbar-fixed-top {
-  border: 0;
+    border: 0;
 }
 
 /*
@@ -36,147 +29,178 @@ body {
 
 /* Hide for mobile, show later */
 .sidebar {
-  display: none;
+    display: none;
 }
 @media (min-width: 768px) {
-  .sidebar {
-    position: fixed;
-    top: 51px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
-  }
+    .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        //background-color: #f5f5f5;
+        border-right: 4px solid #eee;
+    }
 }
 
 /* Sidebar navigation */
 .nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
-  margin-bottom: 20px;
-  margin-left: -20px;
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
 }
 .nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
+    padding: 5px 20px 5px 10px;
 }
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
-  color: #fff;
-  background-color: #428bca;
+    color: #fff;
+    background-color: #428bca;
 }
 
-.hidden{
-  display: none;
-}
 
-/* Basic Form Styles */
-
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Editor
+ */
 #viewFilterForm {
-  $viewFilterFormFields:
-    (title, 12),
-    (description, 12),
-    (enabled, 3, 3),
-    (type_map, 3, 3),
-    (type_table, 3, 3),
-    (type_line, 3, 3),
-    (report_type, 12),
-    (dr_type, 12),
-    (begin, 6, 6, 3, 3),
-    (end, 6, 6, 3, 3),
-    (quantity, 6, 6, 3, 3),
-    (unit, 6, 6, 3, 3);
+    form label {
+        font-weight: normal;
+    } 
+    $viewFilterFormFields:
+        (title, 12),
+        (description, 12),
+        (enabled, 3, 3),
+        (type_map, 3, 3),
+        (type_table, 3, 3),
+        (type_line, 3, 3),
+        (report_type, 12),
+        (dr_type, 12),
+        (begin, 6, 6, 3, 3),
+        (end, 6, 6, 3, 3),
+        (quantity, 6, 6, 3, 3),
+        (unit, 6, 6, 3, 3);
 
-  @each $id, $colXs, $colSm, $colMd, $colLg in $viewFilterFormFields {
-    #id_#{$id}_container {
-      @extend .col-xs-#{$colXs};
-      @extend .col-sm-#{$colSm};
-      @extend .col-md-#{$colMd};
-      @extend .col-lg-#{$colLg};
-    }
-  } 
-  
-  $filterSetContainerFields: 
-     (label, 8),
-     (color, 4),
-     (report_receiver_domain, 4),
-     (source_ip, 4),
-     (report_sender, 4),
-     
-     (raw_spf_domain, 6),
-     (raw_spf_result, 6),
-     (raw_dkim_domain, 6),
-     (raw_dkim_result, 6),
-     (multiple_dkim, 12),
-
-     (aligned_dkim_result, 4),
-     (aligned_spf_result, 4),
-     (disposition, 4);
- 
-  @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
-    .filter_#{$id} {
-      @extend .col-xs-#{$colXs};
-      @extend .col-sm-#{$colSm};
-      @extend .col-md-#{$colMd};
-      @extend .col-lg-#{$colLg};
-    }
-  }
-
-  #id_dr_type {
-    @extend .btn-group;
-    @extend .btn-group-justified;
-    .radio {
-      @extend .btn;
-      @extend .btn-default;
-      label {
-        width:100%;
-      }
-    }
-  }
-
-  &[data-hide-incoming='true'] [data-group='From Incoming Reports'],
-  &[data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
-    @extend .hidden;
-  }
-
-
-  .filter_buttons {
-    @extend .btn-group;
-  }
-
-  .form-group {
-    margin-bottom: 10px;
-  }
-
-  #filterSetContainer {
-
-    .selectize-dropdown {
-        .optgroup-header,
-        .optgroup {
-          border: 0;
+    @each $id, $colXs, $colSm, $colMd, $colLg in $viewFilterFormFields {
+        #id_#{$id}_container {
+            @extend .col-xs-#{$colXs};
+            @extend .col-sm-#{$colSm};
+            @extend .col-md-#{$colMd};
+            @extend .col-lg-#{$colLg};
         }
+    } 
+  
+    $filterSetContainerFields: 
+        (label, 8),
+        (color, 4),
+        (report_receiver_domain, 4),
+        (source_ip, 4),
+        (report_sender, 4),
+        (raw_spf_domain, 6),
+        (raw_spf_result, 6),
+        (raw_dkim_domain, 6),
+        (raw_dkim_result, 6),
+        (multiple_dkim, 12),
+        (aligned_dkim_result, 4),
+        (aligned_spf_result, 4),
+        (disposition, 4);
+ 
+    @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
+        .filter_#{$id} {
+        @extend .col-xs-#{$colXs};
+        @extend .col-sm-#{$colSm};
+        @extend .col-md-#{$colMd};
+        @extend .col-lg-#{$colLg};
+        }
+    }
+
+    // Radio Input to Button Group magic :)
+    // like a wolf in sheep's clothing
+    #id_dr_type {
+        @extend .btn-group;
+        @extend .btn-group-justified;
+        .radio {
+            @extend .btn;
+            @extend .btn-default;
+            label {
+                width:100%;
+            }
+        }
+    }
+
+    // Don't show selectize options that are not relevant
+    // And override some optgroup css
+    // XXX LP: Change to ajax load someday
+    &[data-hide-incoming='true'] [data-group='From Incoming Reports'],
+    &[data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
+        @extend .hidden;
+    }
+    .selectize-dropdown {
+            .optgroup-header,
+            .optgroup {
+                border: 0;
+            }
         .optgroup:before {
             content: none;
         }
     }
 
-    [data-formset-form] {
-      border: 1pt solid grey;
-      padding: 20px 60px;
-      margin: 20px 0;
-      @include border-top-radius(3px);
-      @include border-bottom-radius(3px);
+    .form-group {
+        margin-bottom: 10px;
     }
 
-  }
+    //Filterset border
+    [data-formset-form] {
+        border: 1pt solid grey;
+        padding: 20px 60px;
+        margin: 20px 0;
+        @include border-top-radius(3px);
+        @include border-bottom-radius(3px);
+    }
 }
 
-  form label {
-     font-weight: normal;
-  }
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Deep Analysis
+ */
 
+#deep-analysis {
+    .view-type {
+        margin-bottom: 60px;
+        .svg-container {
+            border: 1pt solid grey;
+        }
+    }
+    .view-type-map {
+        .switch-filterset .btn {
+            @include border-bottom-radius(0);
+        }
+    }
+}
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Diverse
+ */
+h1 {
+    color: $dmarc-blue;
+}
+.hidden {
+    display: none;
+}
+
+.btn-important {
+    float: right;
+    margin: 10px 0;
+    width: 200px;
+    border-color: $dmarc-blue;
+    background-color: white;
+
+    @extend .clearfix;
+
+}

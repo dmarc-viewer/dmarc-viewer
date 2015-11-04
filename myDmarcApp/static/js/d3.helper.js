@@ -8,7 +8,7 @@
         // options format
         // {legendItems : [{color: <color>, name: <name>},..]}
         g.each(function() {
-            options
+            
             var g = d3.select(this),
                 legendPadding = 5,
                 radius = 5,

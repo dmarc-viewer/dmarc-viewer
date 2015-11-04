@@ -5,6 +5,7 @@
 
 
 {% block title %}MyDmarc - View Editor{% endblock %}
+{% block site_id %}view-editor{% endblock %}
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
@@ -44,9 +45,7 @@
                     {% show_filter_set filter_set_formset.empty_form %}
                 {% endescapescript %}
             </script>
-            <div class="text-right">
-                <input type="button" class="btn btn-default" value="Add" data-formset-add>
-            </div>
+            <input type="button" class="btn btn-important" value="Add" data-formset-add>
 
             <script type="text/javascript">
                 $(function($) {
@@ -57,7 +56,7 @@
             </script>
         </div>
         <div class="text-right col-xs-12 ">
-            <input class="form-group btn btn-default" type="submit" value="Save view">
+            <input class="form-group btn btn-important" type="submit" value="Save view">
         </div>
     </form>
     </div>
