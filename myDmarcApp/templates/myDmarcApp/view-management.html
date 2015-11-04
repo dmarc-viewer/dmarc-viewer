@@ -15,7 +15,7 @@
           <th>Show</th>
           <th>Title</th>
           <th>Description</th> 
-          <th>Actions</th>
+          <th style="text-align:center">Actions</th>
         </tr>
       </thead>
       <tbody id="sortableViews">
@@ -24,8 +24,8 @@
             <td class="sort-handle"><span class="glyphicon glyphicon-resize-vertical"></span></td>
             <td>{{view.enabled}}</td>
             <td>{{view.title}}</td>
-            <td>{{view.description}}</td> 
-            <td>
+            <td >{{view.description}}</td> 
+            <td align="right">
               <div class="btn-group">
                 <a class="btn btn-default" role="button" href="/deep-analysis/{{view.id}}/">View</a>
                 <a class="btn btn-default" role="button" href="/edit-view/{{view.id}}/">Edit</a>
@@ -37,6 +37,7 @@
       {% endfor %}
       </tbody>
     </table>
+
     <script type="text/javascript">
     $(document).ready(function(){
       var sortContainer = $("#sortableViews").get(0)
@@ -61,6 +62,10 @@
       });
     })
     </script>
-        <a class="btn btn-default" role="button" href="/add-view/">Add View</a>
+    <div class="row">
+        <div class="col-xs-12 text-right">
+          <a class="btn btn-default" role="button" href="/add-view/">Add View</a>
+        </div>
+    </div>
 </div>
 {% endblock %}

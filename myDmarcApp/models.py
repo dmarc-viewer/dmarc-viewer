@@ -134,11 +134,15 @@ class OrderedModel(models.Model):
         """If new assign order number (max(order of all objects) or 0)
         If exists save normal."""
 
+        print  "save ordered"
         if not self.id:
+            print  "save ordered new"
+
             try:
-                self.position = self.__class__.all().aggregate(Max("position")).value("price__max") + 1
+                self.position = self.__class__.objects.aggregate(Max("position")).get("position__max", 0) + 1
             except Exception, e:
-                self.position = 0 # Defaut anyways, do this for more explicitness
+                self.position = 0 # Default anyways, do this for more explicitness
+                raise e
         super(OrderedModel, self).save()
 
     @staticmethod

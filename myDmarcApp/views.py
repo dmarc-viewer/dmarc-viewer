@@ -33,9 +33,9 @@ def clone(request, view_id = None):
     try:
         view = View.objects.get(pk=view_id)
         _clone(view)
-        messages.add_message(request, messages.SUCCESS, "Successfully cloned view.")
+        messages.add_message(request, messages.SUCCESS, "Successfully cloned view '%s'" % (view.title,))
     except Exception, e:
-        messages.add_message(request, messages.ERROR, "You are such a prick!")
+        messages.add_message(request, messages.ERROR, "Something went wrong while cloning")
         raise e
     return redirect(view_management)
 
@@ -54,15 +54,15 @@ def edit(request, view_id = None):
     # if we got a view_id look if there is an according view
     if view_id:
         try:
-            view_instance = View.objects.get(pk=view_id)
+            view = View.objects.get(pk=view_id)
         except Exception, e:
             raise e
     else:
-        view_instance = None
+        view = None
 
     # Create Forms and formsets
-    view_form               = ViewForm(data=data, instance=view_instance)
-    filter_set_formset      = FilterSetFormSet(data=data, instance = view_instance)
+    view_form               = ViewForm(data=data, instance=view)
+    filter_set_formset      = FilterSetFormSet(data=data, instance = view)
 
     if request.method == 'POST':
         valid = False
@@ -71,13 +71,13 @@ def edit(request, view_id = None):
                 valid = True
 
         if valid:
-            view_instance = view_form.save()
-            filter_set_formset.instance = view_instance
+            view = view_form.save()
+            filter_set_formset.instance = view
             filter_set_formset.save()
-            messages.add_message(request, messages.SUCCESS, "Successfully saved.")
+            messages.add_message(request, messages.SUCCESS, "Successfully saved view '%s'" % (view.title,))
             return redirect("view_management")
         else:
-            messages.add_message(request, messages.ERROR, "You are such a prick.")
+            messages.add_message(request, messages.ERROR, "Form invalid.")
 
     if request.method == 'GET':
         pass
@@ -90,8 +90,9 @@ def edit(request, view_id = None):
 def delete(request, view_id):
     # XXX: Add try catch
     # XXX: Add ask confirm in Javascript
-    View.objects.get(pk=view_id).delete()
-    messages.add_message(request, messages.SUCCESS, "Successfully deleted view.")
+    view = View.objects.get(pk=view_id)
+    view.delete()
+    messages.add_message(request, messages.SUCCESS, "Successfully deleted view '%s'" % (view.title,))
     return redirect("view_management")
 
 def export_svg(request, view_id):
@@ -148,7 +149,7 @@ def order(request):
         response = {"message" : "Successfully ordered views."}
         #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
     except Exception, e:
-        response = {"message" : "Could not order views."}
+        response = {"message" : "Something went wrong while ordering."}
 
         #messages.add_message(request, messages.ERROR, "Ordering did not work.")
         raise e
