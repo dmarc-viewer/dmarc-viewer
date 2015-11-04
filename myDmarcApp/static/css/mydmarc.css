@@ -7640,7 +7640,8 @@ button.close {
   border: 0;
 }
 
-.hidden {
+.hidden, #viewFilterForm[data-hide-incoming='true'] [data-group='From Incoming Reports'],
+#viewFilterForm[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
   display: none !important;
 }
 
@@ -7900,7 +7901,7 @@ button.close {
 }
 
 h1 {
-  color: orange;
+  color: #006699;
 }
 
 /*
@@ -7967,7 +7968,8 @@ body {
   background-color: #428bca;
 }
 
-.hidden {
+.hidden, #viewFilterForm[data-hide-incoming='true'] [data-group='From Incoming Reports'],
+#viewFilterForm[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
   display: none;
 }
 
@@ -7978,6 +7980,15 @@ body {
 
 #viewFilterForm .form-group {
   margin-bottom: 10px;
+}
+
+#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup-header,
+#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup {
+  border: 0;
+}
+
+#viewFilterForm #filterSetContainer .selectize-dropdown .optgroup:before {
+  content: none;
 }
 
 #viewFilterForm #filterSetContainer [data-formset-form] {

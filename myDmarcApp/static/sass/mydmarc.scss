@@ -1,7 +1,12 @@
 @import "bootstrap";
 
+//Variables
+//
+$dmarc-blue: #006699;
+
+
 h1 {
-    color: orange;
+    color: $dmarc-blue;
 }
 
 /*
@@ -95,7 +100,7 @@ body {
       @extend .col-lg-#{$colLg};
     }
   } 
-
+  
   $filterSetContainerFields: 
      (label, 8),
      (color, 4),
@@ -134,6 +139,12 @@ body {
     }
   }
 
+  &[data-hide-incoming='true'] [data-group='From Incoming Reports'],
+  &[data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
+    @extend .hidden;
+  }
+
+
   .filter_buttons {
     @extend .btn-group;
   }
@@ -143,6 +154,16 @@ body {
   }
 
   #filterSetContainer {
+
+    .selectize-dropdown {
+        .optgroup-header,
+        .optgroup {
+          border: 0;
+        }
+        .optgroup:before {
+            content: none;
+        }
+    }
 
     [data-formset-form] {
       border: 1pt solid grey;
@@ -158,3 +179,4 @@ body {
   form label {
      font-weight: normal;
   }
+
