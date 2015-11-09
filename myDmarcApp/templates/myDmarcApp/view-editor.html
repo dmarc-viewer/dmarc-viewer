@@ -14,18 +14,20 @@
          {% csrf_token %}
          {% load formset_tags %}
         {% bootstrap_messages %}
-        <div id="{{view_form.title.auto_id}}_container">{% bootstrap_field view_form.title %}</div>
-        <div id="{{view_form.description.auto_id}}_container">{% bootstrap_field view_form.description %}</div>
-        <div id="{{view_form.enabled.auto_id}}_container">{% bootstrap_field view_form.enabled %}</div>
-        <div id="{{view_form.type_map.auto_id}}_container">{% bootstrap_field view_form.type_map %}</div>
-        <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
-        <div id="{{view_form.type_line.auto_id}}_container">{% bootstrap_field view_form.type_line %}</div>
-        <div id="{{view_form.report_type.auto_id}}_container">{% bootstrap_field view_form.report_type %}</div>
-        <div id="{{view_form.dr_type.auto_id}}_container">{% bootstrap_field view_form.dr_type %}</div>
-        <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>
-        <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
-        <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>
-        <div id="{{view_form.unit.auto_id}}_container">{% bootstrap_field view_form.unit %}</div>
+        <div class="row">
+            <div id="{{view_form.title.auto_id}}_container">{% bootstrap_field view_form.title %}</div>
+            <div id="{{view_form.description.auto_id}}_container">{% bootstrap_field view_form.description %}</div>
+            <div id="{{view_form.enabled.auto_id}}_container">{% bootstrap_field view_form.enabled %}</div>
+            <div id="{{view_form.type_map.auto_id}}_container">{% bootstrap_field view_form.type_map %}</div>
+            <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
+            <div id="{{view_form.type_line.auto_id}}_container">{% bootstrap_field view_form.type_line %}</div>
+            <div id="{{view_form.report_type.auto_id}}_container">{% bootstrap_field view_form.report_type %}</div>
+            <div id="{{view_form.dr_type.auto_id}}_container">{% bootstrap_field view_form.dr_type %}</div>
+            <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>
+            <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
+            <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>
+            <div id="{{view_form.unit.auto_id}}_container">{% bootstrap_field view_form.unit %}</div>
+        </div>
         <div class="row">
             <div class="col-xs-12" id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
                 {{ filter_set_formset.management_form }}

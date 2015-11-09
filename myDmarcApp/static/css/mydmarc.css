@@ -7951,6 +7951,10 @@ body {
  * ---------------------------------------------------------------------------------------------------------------------
  * Deep Analysis
  */
+#deep-analysis #view-filter-details .panel-heading {
+  background-color: transparent;
+}
+
 #deep-analysis #view-filter-details a {
   font-size: 12px;
 }
@@ -7987,6 +7991,19 @@ body {
   border-bottom: 0pt;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+#deep-analysis .view-type-table tr {
+  background-color: transparent;
+}
+
+#deep-analysis .view-type-table tr td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+#deep-analysis .view-type-table tr td:before {
+  top: 1px;
 }
 
 #deep-analysis #time-quick-filter {
