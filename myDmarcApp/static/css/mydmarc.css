@@ -7951,6 +7951,29 @@ body {
  * ---------------------------------------------------------------------------------------------------------------------
  * Deep Analysis
  */
+#deep-analysis #view-filter-details a {
+  font-size: 12px;
+}
+
+#deep-analysis #view-filter-details h5 {
+  margin-bottom: 0;
+}
+
+#deep-analysis #view-filter-details p {
+  margin-bottom: 2px;
+}
+
+#deep-analysis #view-filter-details .circle {
+  display: inline-block;
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
 #deep-analysis .view-type {
   margin-bottom: 60px;
 }
@@ -7966,12 +7989,28 @@ body {
   border-bottom-left-radius: 0;
 }
 
+#deep-analysis #time-quick-filter {
+  margin-bottom: 30px;
+}
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Overview
+ */
+#overview .charts-container {
+  text-align: center;
+}
+
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
  * Diverse
  */
 h1 {
   color: #006699;
+}
+
+h2 {
+  font-size: 22px;
 }
 
 .hidden, #view-editor[data-hide-incoming='true'] [data-group='From Incoming Reports'],
@@ -7985,6 +8024,16 @@ h1 {
   width: 200px;
   border-color: #006699;
   background-color: white;
+}
+
+.description {
+  font-size: 15px;
+  font-style: italic;
+  color: green;
+}
+
+.right {
+  float: right;
 }
 
 /*# sourceMappingURL=mydmarc.css.map */

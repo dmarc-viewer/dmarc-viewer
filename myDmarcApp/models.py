@@ -225,7 +225,7 @@ class View(OrderedModel):
                 "date_range_begin", "date_range_end", 
                 "count", "dkim domains", "dkim results", 
                 "aligned dkim", "spf domains", "spf results",
-                "aligned spf", "disposition"]
+                "aligned spf", "disposition", "report id"]
 
         return [csv_head] + self.getTableData()
 

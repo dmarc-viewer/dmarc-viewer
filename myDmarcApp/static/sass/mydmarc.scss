@@ -171,6 +171,25 @@ body {
  */
 
 #deep-analysis {
+    #view-filter-details {
+        a {
+            font-size: 12px;
+        }
+        h5 {
+            margin-bottom: 0;
+        }
+        p {
+            margin-bottom: 2px;
+        }
+        .circle {
+            display: inline-block;
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            @include border-bottom-radius(8px);
+            @include border-top-radius(8px);
+        }
+    }
     .view-type {
         margin-bottom: 60px;
         .svg-container {
@@ -184,7 +203,23 @@ body {
             @include border-bottom-radius(0);
         }
     }
+
+    #time-quick-filter {
+        margin-bottom:30px;
+    }
 }
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Overview
+ */
+
+#overview {
+    .charts-container {
+        text-align: center;
+    }
+}
+
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
@@ -192,6 +227,9 @@ body {
  */
 h1 {
     color: $dmarc-blue;
+}
+h2 {
+    font-size: 22px;
 }
 .hidden {
     display: none;
@@ -206,4 +244,14 @@ h1 {
 
     @extend .clearfix;
 
+}
+
+.description {
+    font-size:15px;
+    font-style: italic;
+    color: green;
+}
+
+.right {
+    float:right;
 }

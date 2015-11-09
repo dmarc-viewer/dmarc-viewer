@@ -29,15 +29,19 @@
                 <h4 class="panel-title">
                     Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
                     on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports
+                    <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false"> (click for details)
                 </h4>
-                <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false">(show details)
+                
                 </a>
             </div>
             <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
             <div class="panel-body">
                 {% for fs in the_view.filterset_set.all %}
                 <div>
-                    <h4 style="background-color:{{fs.color}}">Filter Set "{{fs.label}}"</h4>
+
+                    <h5>
+                        <span class="circle" style="background-color:{{fs.color}}"></span><span>Filter Set '{{fs.label}}'</span>
+                    </h5>
                     <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
                     <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
                     <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
@@ -298,6 +302,8 @@
                 // Inline not so nice, but problem with export, maybe use css inliner on export
                 svg.selectAll(".grid .tick")
                     .style("stroke", "#DADADA");
+                svg.selectAll(".tick text")
+                    .style("font-size", "10px");
             })
             .on("brushend", function(){
                 if (typeof addTimeQuickFilter !== 'undefined')
@@ -476,6 +482,7 @@
           .call(d3.legend, lineLegendOptions); 
 
         svg.append("text")
+            .attr("text-anchor", "middle")
             .attr("transform", "translate("+ (width / 2) + ", " + (margin.top / 2) +")")
             .style("font-weight", "bold")
             .text("Messages over time");
@@ -487,7 +494,15 @@
 
 
     {% if the_view.type_table %}
-    <div id="time-quick-filter"></div>
+    <div id="time-quick-filter">
+        <span class="description">
+            Filter table records by selecting a time range in the line chart minimap.
+            {% if not the_view.type_line %}
+                Of course you have to enable the line chart in the <a href="/edit-view/{{the_view.id}}/">view editor</a>.
+            {% endif %}
+         </span><br>
+        <span id="time-quick-filter-date"></span>
+    </div>
     <div class="view-type-table">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>
@@ -524,9 +539,10 @@
          */
         var tableTimeRange = []; 
         var tableApi;
+        var formatDate = d3.time.format("%Y-%m-%d");
 
         var addTimeQuickFilter = function(times) {
-            $("#time-quick-filter").html("Quick filtering from " + times[0] + " to " + times[1]);
+            $("#time-quick-filter-date").html("Filtering from <strong>" + formatDate(times[0]) + "</strong> to <strong>" + formatDate(times[1]) + "</strong");
             tableTimeRange = times;
             tableApi.ajax.reload();
         }

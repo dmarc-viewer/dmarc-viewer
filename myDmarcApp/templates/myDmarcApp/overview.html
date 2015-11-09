@@ -2,10 +2,13 @@
 
 
 {% block title %} MyDmarc - Overview {% endblock %}
+{% block site_id %}overview{% endblock %}
+
 {% block content %}
 {% load my_filters %}
 
 <div class="col-sm-12 col-md-12 main">
+
 <script type="text/javascript">
     var appendPies = function(data, targetSelector) {
 
@@ -108,5 +111,4 @@
     No outgoing reports so far. Start by ...
     {% endif %}
 </div>
-
 {% endblock %}
