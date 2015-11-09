@@ -137,8 +137,8 @@ body {
     // Don't show selectize options that are not relevant
     // And override some optgroup css
     // XXX LP: Change to ajax load someday
-    &[data-hide-incoming='true'] [data-group='From Incoming Reports'],
-    &[data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
+    [data-hide-incoming='true'] [data-group='From Incoming Reports'],
+    [data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
         @extend .hidden;
     }
     .selectize-dropdown {

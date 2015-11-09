@@ -9,8 +9,7 @@
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
-    <div class="row">
-    <h1 class="page-header col-sm-12">Create views for the deep analysis page</h1>
+    <h1 class="page-header">Create views for the deep analysis page</h1>
     <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
@@ -27,39 +26,39 @@
         <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
         <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>
         <div id="{{view_form.unit.auto_id}}_container">{% bootstrap_field view_form.unit %}</div>
-        <div class="col-xs-12" id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
-            {{ filter_set_formset.management_form }}
+        <div class="row">
+            <div class="col-xs-12" id="filterSetContainer" data-formset-prefix="{{ filter_set_formset.prefix }}">
+                {{ filter_set_formset.management_form }}
 
-            <div data-formset-body>
-                {% for filter_set_form in filter_set_formset%}
-                    {% show_filter_set filter_set_form %}
-                {% endfor %}
-                <!-- New forms will be inserted in here -->
+                <div data-formset-body>
+                    {% for filter_set_form in filter_set_formset%}
+                        {% show_filter_set filter_set_form %}
+                    {% endfor %}
+                    <!-- New forms will be inserted in here -->
+                </div>
+
+                <!-- The empty form template. By wrapping this in a <script> tag, the
+                __prefix__ placeholder can easily be replaced in both attributes and
+                any scripts -->
+                <script type="form-template" data-formset-empty-form>
+                    {% escapescript %}
+                        {% show_filter_set filter_set_formset.empty_form %}
+                    {% endescapescript %}
+                </script>
+                <input type="button" class="btn btn-important" value="Add" data-formset-add>
+
+                <script type="text/javascript">
+                    $(function($) {
+                        $("#filterSetContainer").formset({
+                            'animateForms': true,
+                        });
+                    })
+                </script>
             </div>
-
-            <!-- The empty form template. By wrapping this in a <script> tag, the
-            __prefix__ placeholder can easily be replaced in both attributes and
-            any scripts -->
-            <script type="form-template" data-formset-empty-form>
-                {% escapescript %}
-                    {% show_filter_set filter_set_formset.empty_form %}
-                {% endescapescript %}
-            </script>
-            <input type="button" class="btn btn-important" value="Add" data-formset-add>
-
-            <script type="text/javascript">
-                $(function($) {
-                    $("#filterSetContainer").formset({
-                        'animateForms': true,
-                    });
-                })
-            </script>
         </div>
-        <div class="text-right col-xs-12 ">
-            <input class="form-group btn btn-important" type="submit" value="Save view">
-        </div>
+        <div class="clearfix"></div>
+        <input class="form-group btn btn-important" type="submit" value="Save view">
     </form>
-    </div>
 </div>
 
 {% endblock %}

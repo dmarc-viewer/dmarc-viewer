@@ -7592,8 +7592,8 @@ button.close {
   border: 0;
 }
 
-.hidden, #view-editor[data-hide-incoming='true'] [data-group='From Incoming Reports'],
-#view-editor[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
+.hidden, #view-editor [data-hide-incoming='true'] [data-group='From Incoming Reports'],
+#view-editor [data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
   display: none !important;
 }
 
@@ -8013,8 +8013,8 @@ h2 {
   font-size: 22px;
 }
 
-.hidden, #view-editor[data-hide-incoming='true'] [data-group='From Incoming Reports'],
-#view-editor[data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
+.hidden, #view-editor [data-hide-incoming='true'] [data-group='From Incoming Reports'],
+#view-editor [data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
   display: none;
 }
 

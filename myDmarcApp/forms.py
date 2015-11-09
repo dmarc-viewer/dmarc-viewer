@@ -22,8 +22,8 @@ class ViewForm(ModelForm):
         labels = {
             "enabled": _("show"),
             "type_map": _("show map"),
-            "type_line": _("Show line chart"),
-            "type_table": _("Show table"),
+            "type_line": _("show line chart"),
+            "type_table": _("show table"),
         }
         widgets = {
             'description': Textarea(attrs={'rows': 5}),
@@ -198,17 +198,21 @@ class FilterSetForm(ModelForm):
         # Add new many-to-one filter fields to a filter set object
         # remove existing if removed in form 
         for field_name, field_dict in self.additional_filter_fields.iteritems():
-            existing_filters = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
-            for filter_value in field_dict["choices"]:
-                # We need the first choices tuple, because this is stored in the db and refers to form values (cleaned data)
-                filter_value = filter_value[0]
-                if filter_value not in existing_filters and filter_value in self.cleaned_data[field_name]:
+            # Get list of existing filters
+            existing_filters = list(field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True))
+            for filter_value in self.cleaned_data[field_name]:
+                # Save new filters
+                if filter_value not in existing_filters:
                     new_filter = field_dict["class"]()
                     new_filter.foreign_key = self.instance
                     new_filter.value = filter_value
                     new_filter.save()
-                if filter_value in existing_filters and filter_value not in self.cleaned_data[field_name]:
-                    field_dict["class"].objects.filter(foreign_key=self.instance.id, value=filter_value).delete()
+                else:
+                    existing_filters.remove(filter_value)
+            # Delete old filters that were deleted in form
+            for deleted_filter in existing_filters:
+                field_dict["class"].objects.filter(foreign_key=self.instance.id, value=deleted_filter).delete()
+                    
 
         #  update, create or delete source_ip
         source_ip       = SourceIP.objects.filter(foreign_key=self.instance.id).first()
