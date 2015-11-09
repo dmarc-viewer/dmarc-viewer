@@ -18,9 +18,12 @@ class ViewForm(ModelForm):
 
     class Meta:
         model = View
-        fields = ['title', 'description', 'enabled', 'type_map', 'type_table', 'type_line']
+        fields = ['title', 'description', 'enabled', 'type_map', 'type_line', 'type_table']
         labels = {
-            "enabled": _("Show in sidebar"),
+            "enabled": _("show"),
+            "type_map": _("show map"),
+            "type_line": _("Show line chart"),
+            "type_table": _("Show table"),
         }
         widgets = {
             'description': Textarea(attrs={'rows': 5}),

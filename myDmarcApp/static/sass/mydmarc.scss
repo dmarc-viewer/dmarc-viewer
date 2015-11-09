@@ -68,7 +68,8 @@ body {
  * ---------------------------------------------------------------------------------------------------------------------
  * Editor
  */
-#viewFilterForm {
+#view-editor {
+
     form label {
         font-weight: normal;
     } 
@@ -174,10 +175,12 @@ body {
         margin-bottom: 60px;
         .svg-container {
             border: 1pt solid grey;
+            overflow: hidden;
         }
     }
     .view-type-map {
         .switch-filterset .btn {
+            border-bottom: 0pt;
             @include border-bottom-radius(0);
         }
     }
