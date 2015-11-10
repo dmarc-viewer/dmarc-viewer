@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q, F
 
-from django.contrib.gis.db import models
+from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db.models.fields.related import ForeignKey
 from django.db.models import Sum, Count, Max
@@ -82,8 +82,6 @@ class Record(models.Model):
     # Row
     source_ip               = models.GenericIPAddressField(null = True)
     country_iso_code        = models.CharField(max_length = 2)
-    geometry                = models.PointField(srid=4326, null = True)
-    objects                 = models.GeoManager()
 
     count                   = models.IntegerField()
 

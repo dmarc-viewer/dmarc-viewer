@@ -231,7 +231,6 @@ def get_table(request, view_id = None):
     order_idx = int(order["column"])
 
     if columns[order_idx]["orderable"]:
-        # XXX LP: Don't like hardcoding here
         order_by = view.getTableOrderFields()
 
         prefix = "-" if order["dir"] == "desc" else ""

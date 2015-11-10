@@ -63,12 +63,17 @@ body {
     background-color: #428bca;
 }
 
+.container-margin {
+    width: 80%;
+    margin: auto;
+}
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
  * Editor
  */
 #view-editor {
+    @extend .container-margin;
 
     form label {
         font-weight: normal;
@@ -229,6 +234,14 @@ body {
         margin-bottom:30px;
     }
 }
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Deep Analysis
+ */
+
+#view-management {
+    @extend .container-margin;
+}
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
@@ -236,6 +249,7 @@ body {
  */
 
 #overview {
+    @extend .container-margin;
     .charts-container {
         text-align: center;
     }

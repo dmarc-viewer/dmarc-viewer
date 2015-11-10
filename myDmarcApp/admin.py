@@ -1,4 +1,4 @@
-from django.contrib.gis import admin
+from django.contrib import admin
 from super_inlines.admin import SuperInlineModelAdmin, SuperModelAdmin
 from myDmarcApp.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \

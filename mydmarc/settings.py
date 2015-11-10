@@ -36,9 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',
     'super_inlines',
-    'world',
     'bootstrap3',
     'djangoformsetjs',
     'myDmarcApp'
@@ -85,7 +83,7 @@ WSGI_APPLICATION = 'mydmarc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dmarc_django_db',
         'USER': 'dmarc_django_db',
         'HOST': '127.0.0.1'
