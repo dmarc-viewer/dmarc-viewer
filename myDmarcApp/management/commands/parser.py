@@ -264,7 +264,7 @@ class Command(BaseCommand):
                 except Exception, e:
                     msg = "Could not save DMARC record for for report '%s': %s" % (report.report_id, e)
                     logger.error(msg)
-
-            except Exception, e:
-                msg = "Something went wrong while parsing '%s': %s" % (file_name, e)
-                logger.error(msg)
+                    
+        except Exception, e:
+            msg = "Something went wrong while parsing '%s': %s" % (file_name, e)
+            logger.error(msg)
