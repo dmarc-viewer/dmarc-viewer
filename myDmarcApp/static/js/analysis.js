@@ -1,5 +1,62 @@
 var analysis = {
+    overview: {
+        appendPies: function(data, targetSelector) {
+            ["dkim", "spf", "disposition"].forEach(function(type){
+                var width = 200,
+                    height = 200,
+                    margin = {top: 50, left: 50},
+                    radius = 90;
 
+                var color;
+                if (type == "disposition"){
+                color = d3.scale.ordinal()
+                    .domain(["reject", "quarantine", "none"])
+                    .range(["#CC0000", "#CCCC00", "#00CC00"]);
+                } else {
+                color = d3.scale.ordinal()
+                    .domain(["fail", "pass"])
+                    .range(["#CC0000", "#00CC00"]);
+                }
+
+                var arc = d3.svg.arc()
+                    .outerRadius(radius - 10)
+                    .innerRadius(0);
+
+                var pie = d3.layout.pie()
+                    .sort(null)
+                    .value(function(d) { return d.cnt; });
+
+                var svg = d3.select(targetSelector).append("svg")
+                    .attr("class", type)
+                    .attr("width", width + margin.left)
+                    .attr("height", height + margin.top)
+                    .append("g")
+                    .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+
+                var g = svg.selectAll(".arc")
+                    .data(pie(data[type]))
+                    .enter().append("g")
+                    .attr("class", "arc");
+
+                g.append("path")
+                   .attr("d", arc)
+                   .style("fill", function(d) { return color(d.data.label); });
+
+                g.append("text")
+                    .attr("transform", "translate(0, -120)")
+                    .text(type.toUpperCase());
+                    
+                var lineLegendOptions = {
+                    legendItems : data[type].map(function(d){return {color: color(d.label), name: (d.cnt + " " + d.label)} })
+                }
+                g.append("g")
+                  .attr("class", "legend")
+                  .attr("transform", "translate(-120, -110)")
+                  .style("font-size", "12px")
+                  .call(d3.legend, lineLegendOptions); 
+            });
+        }
+    },
     map : {
         _map: null,
         _dataSets : [],
@@ -8,7 +65,7 @@ var analysis = {
         _countryCodeMapping: {
             "AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH", "BW": "BWA", "BR": "BRA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "24": ",CD", "24": ",CG", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GA": "GAB", "22": ",GM", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GR": "GRC", "GD": "GRD", "GT": "GTM", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MR": "MRT", "MU": "MUS", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PL": "POL", "PT": "PRT", "QA": "QAT", "RO": "ROU", "RU": "RUS", "RW": "RWA", "KN": "KNA", "LC": "LCA", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VA": "VAT", "VE": "VEN", "VN": "VNM", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE", "GE": "GEO", "TW": "TWN", "AZ": "AZE", "CY": "CYP", "MD": "MDA", "SO": "SOM", "GE": "GEO", "AU": "AUS", "CX": "CXR", "CC": "CCK", "AU": "AUS", "HM": "HMD", "NF": "NFK", "NC": "NCL", "PF": "PYF", "YT": "MYT", "GP": "GLP", "GP": "GLP", "PM": "SPM", "WF": "WLF", "TF": "ATF", "PF": "PYF", "BV": "BVT", "CK": "COK", "NU": "NIU", "TK": "TKL", "GG": "GGY", "IM": "IMN", "JE": "JEY", "AI": "AIA", "BM": "BMU", "IO": "IOT", "VG": "VGB", "KY": "CYM", "FK": "FLK", "GI": "GIB", "MS": "MSR", "PN": "PCN", "SH": "SHN", "GS": "SGS", "TC": "TCA", "MP": "MNP", "PR": "PRI", "AS": "ASM", "UM": "UMI", "GU": "GUM", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "VI": "VIR", "UM": "UMI", "HK": "HKG", "MO": "MAC", "FO": "FRO", "GL": "GRL", "GF": "GUF", "GP": "GLP", "MQ": "MTQ", "RE": "REU", "AX": "ALA", "AW": "ABW", "AN": "ANT", "SJ": "SJM", "AC": "ASC", "TA": "TAA", "AQ": "ATA", "AQ": "ATA", "CN": "CHN"
         },
-        _defaults: 
+        _defaults: {
             defaultFill: "white",
             defaultBorderColor: "darkgrey",
             defaultBorderWidth: 0.5,
@@ -16,15 +73,15 @@ var analysis = {
         },
         /*
          * Creates an array of `n` colors around the baseColor,
-         * ranging the HSL lightness value from 0.2 to 0.8
+         * ranging the HSL lightness value from 0.1 to 0.9
          * 
          * cf. "Color Use Guidelines for Mapping and Visualization",
          * Brewer (sequential scheme, one hue)
          */
         createColorRange: function(baseColor, n) {
             var colorHsl = d3.hsl(baseColor),
-                minL = 0.2,
-                maxL = 0.8;
+                minL = 0.1,
+                maxL = 0.9;
             var stepSize = (maxL - minL) / n;
             var colors = [];
             for (var i = 0; i < n; i++ ){
@@ -85,7 +142,7 @@ var analysis = {
                 });
 
                 //Create and append button for each dataset
-                var $mapDataSetBtn = $("<button>", {class: "btn btn-default", value: idx, text: mapDataSet.label});
+                var $mapDataSetBtn = $("<button>", {class: "btn btn-default", value: idx, text: dataSet.label});
                 $(".view-type-map .btn-group").append($mapDataSetBtn);
             })
 
@@ -108,7 +165,7 @@ var analysis = {
                                     $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
                                     return $hoverInfo.prop('outerHTML');
                                 }
-                }
+                },
                 done: function(map) {
                     //Enable zooming and panning
                     map.svg.call(d3.behavior.zoom().on("zoom", function(){
@@ -117,7 +174,7 @@ var analysis = {
                             .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
                     }));
                 },
-                fills: {analysis.map._defaults.defaultFill},
+                fills: {defaultFill : analysis.map._defaults.defaultFill}
             });
         },
 
@@ -130,7 +187,7 @@ var analysis = {
             $(elem).addClass('active');
 
             // Get data at button val index
-            var data  = analysis.map._dataSetsMap[$(elem).val()];
+            var data  = analysis.map._mapDataSets[$(elem).val()];
             var label = analysis.map._dataSets[$(elem).val()].label;
 
             // Reset fills and info directly on svg
@@ -169,7 +226,7 @@ var analysis = {
                 .text("Messages per time for '"+ label +"'");
         }
     },
-    line: 
+    line: {
         _data : null,
         _dataSetsLine : null,
         _defaults : {
@@ -190,7 +247,7 @@ var analysis = {
             analysis.line._data = data;
 
             clientWidth  = $(".view-type .svg-container").width();
-            clientHeight = clientWidth / 5 * 3, // keep a 5:3 ratio;
+            clientHeight = 500, // keep a 5:3 ratio;
             // Create margins, heights, widths for both plots
             width      = clientWidth - analysis.line._defaults.margin.left - analysis.line._defaults.margin.right,
             height     = clientHeight - analysis.line._defaults.margin.top - analysis.line._defaults.margin.bottom,
@@ -236,7 +293,7 @@ var analysis = {
                         .style("font-size", "10px");
                 })
                 .on("brushend", function(){
-                    analysis.map.addDateTimeFilter(x.domain());
+                    analysis.table.addDateTimeFilter(x.domain());
                 });
 
             //Append svg to document
@@ -426,7 +483,7 @@ var analysis = {
     table: {
         _api: null,
         _tableTimes: [],
-        addDateTimeFilter: function(dateTimes){
+        addDateTimeFilter: function(dateTimes) {
             var formatDate = d3.time.format("%Y-%m-%d");
             $filterContainer = $("#time-quick-filter-date");
             if ($filterContainer)
@@ -438,12 +495,11 @@ var analysis = {
 
                 analysis.table._tableTimes = dateTimes;
                 analysis.table._api.ajax.reload();
-            }
         },
-        init: function() {
+        init: function(viewId) {
             analysis.table._api = $('.view-type-table table').DataTable({
                 "ajax" : {
-                    url  : "/get-table/{{the_view.id}}/",
+                    url  : "/get-table/" + viewId + "/",
                     type : "POST",
                     data: function (data) {
                          data["custom_filters"] = {
@@ -460,5 +516,4 @@ var analysis = {
             });
         }
     }
-
 }

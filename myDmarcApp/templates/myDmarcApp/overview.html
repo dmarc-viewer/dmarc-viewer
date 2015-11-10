@@ -9,106 +9,49 @@
 
 <div class="col-sm-12 col-md-12 main">
 
-<script type="text/javascript">
-    var appendPies = function(data, targetSelector) {
-
-        ["dkim", "spf", "disposition"].forEach(function(type){
-                var width = 200,
-                    height = 200,
-                    margin = {top: 50, left: 50},
-                    radius = 90;
-
-                var color;
-                if (type == "disposition"){
-                color = d3.scale.ordinal()
-                    .domain(["reject", "quarantine", "none"])
-                    .range(["#CC0000", "#CCCC00", "#00CC00"]);
-                } else {
-                color = d3.scale.ordinal()
-                    .domain(["fail", "pass"])
-                    .range(["#CC0000", "#00CC00"]);
-                }
-
-                var arc = d3.svg.arc()
-                    .outerRadius(radius - 10)
-                    .innerRadius(0);
-
-                var pie = d3.layout.pie()
-                    .sort(null)
-                    .value(function(d) { return d.cnt; });
-
-                var svg = d3.select(targetSelector).append("svg")
-                    .attr("class", type)
-                    .attr("width", width + margin.left)
-                    .attr("height", height + margin.top)
-                    .append("g")
-                    .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
-
-                var g = svg.selectAll(".arc")
-                    .data(pie(data[type]))
-                    .enter().append("g")
-                    .attr("class", "arc");
-
-                g.append("path")
-                   .attr("d", arc)
-                   .style("fill", function(d) { return color(d.data.label); });
-
-                // g.append("text")
-                //     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                //     .attr("dy", ".35em")
-                //     .style("text-anchor", "middle")
-                //     .text(function(d) {return d.data.label; });
-
-                g.append("text")
-                    .attr("transform", "translate(0, -120)")
-                    .text(type.toUpperCase());
-                    
-                var lineLegendOptions = {
-                    legendItems : data[type].map(function(d){return {color: color(d.label), name: (d.cnt + " " + d.label)} })
-                }
-                g.append("g")
-                  .attr("class", "legend")
-                  .attr("transform", "translate(-120, -120)")
-                  .style("font-size", "12px")
-                  .call(d3.legend, lineLegendOptions); 
-            });
-    }
-</script>
-
 <h1 class="page-header">Overview</h1>
-<div id="incoming">
-    <h2>Incoming reports</h2>
-    {% if incoming.oldest_date %}
 
-    <strong>{{ incoming.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
-    my domains: <strong>{{incoming.data.domain_cnt}}</strong>,
-    reports: <strong>{{incoming.data.report_cnt}}</strong>,
-    messages: <strong>{{incoming.data.message_cnt}}</strong>
-    <div class="charts-container"></div>
+<h2>Incoming reports</h2>
+{% if start_incoming %}
+    <div id="incoming-container">
+        <div class="text-container" style="display:none">
+            <strong>{{ start_incoming | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
+            my domains: <strong id="incoming-domain-cnt">{{incoming.data.domain_cnt}}</strong>,
+            reports: <strong id="incoming-report-cnt">{{incoming.data.report_cnt}}</strong>,
+            messages: <strong id="incoming-message-cnt">{{incoming.data.message_cnt}}</strong>
+        </div>
+        <div class="charts-container"></div>
+    </div>
     <script type="text/javascript">
-        var incomingData = {{ incoming.data | to_json }};
-        appendPies(incomingData, "#incoming .charts-container");
+        $("#incoming-container").addClass("loading");
+        $.get( "/overview_async/", { "report_type": "incoming" }, function(data) {
+            analysis.overview.appendPies(data, "#incoming-container .charts-container");
+            $("#incoming-domain-cnt").html(data.domain_cnt);
+            $("#incoming-report-cnt").html(data.report_cnt);
+            $("#incoming-message-cnt").html(data.message_cnt);
+            $("#incoming-container .text-container").show();
+        }).always(function() {
+            $("#incoming-container").removeClass("loading");
+        });
     </script>
-    {% else %}
-    No incoming reports so far. Start by ...
-    {% endif %}
-</div>
-<div id="outgoing">
-    <h2>Outgoing reports</h2>
-    {% if outgoing.oldest_date %}
-    <strong>{{ outgoing.oldest_date | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
-    
-    foreign domains: <strong>{{outgoing.data.domain_cnt}}</strong>, 
-    reports: <strong>{{outgoing.data.report_cnt}}</strong>,
-    messages: <strong>{{outgoing.data.message_cnt}}</strong>
-    
-    <div class="charts-container"></div>
-    <script type="text/javascript">
-        var outgoingData = {{ outgoing.data | to_json }};
-        appendPies(outgoingData, "#outgoing .charts-container");
-    </script>
-    {% else %}
-    No outgoing reports so far. Start by ...
-    {% endif %}
-</div>
+{% else %}
+    No incoming reports so far. Start parsing reports...
+{% endif %}
+
+<h2>Outgoing reports</h2>
+{% if start_outgoing %}
+<strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
+foreign domains: <strong>{{outgoing.data.domain_cnt}}</strong>, 
+reports: <strong>{{outgoing.data.report_cnt}}</strong>,
+messages: <strong>{{outgoing.data.message_cnt}}</strong>
+
+<div class="charts-container"></div>
+<script type="text/javascript">
+    $.get( "/overview_async/", { "report_type": "outgoing" }, function(data) {
+        analysis.overview.appendPies(data, "#outgoing .charts-container");
+    });
+</script>
+{% else %}
+No outgoing reports so far. Start parsing reports...
+{% endif %}
 {% endblock %}

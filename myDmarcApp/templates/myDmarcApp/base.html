@@ -21,7 +21,9 @@
 
     <script src="{% static "js/jquery.formset.js" %}"></script>
     <script src="{% static "js/main.js" %}"></script>
-    <script src="{% static "js/d3.helper.js" %}"></script>
+    <script src="{% static "js/editor.js" %}"></script>
+    <script src="{% static "js/analysis.js" %}"></script>
+    <script src="{% static "js/d3.legend.js" %}"></script>
 
     <link href="{% static "vendor/selectize/css/selectize.css" %}" rel="stylesheet">
     <link href="{% static "vendor/selectize/css/selectize.default.css" %}" rel="stylesheet">
@@ -39,7 +41,6 @@
 </head>
 
 <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -64,13 +65,6 @@
     </nav>
     <div id="{% block site_id %}{% endblock %}" class="container-fluid">
         <div class="row">
-            {% comment %}
-                
-            <div class="col-sm-3 col-md-2 sidebar">
-            </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            {% endcomment %}
-
             {% block content %}{% endblock %}
         </div>
     </div>

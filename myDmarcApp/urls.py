@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'view-management/$', views.view_management, name='view_management'),
     url(r'help/$', views.help, name='help'),
     url(r'overview/$', views.overview, name='overview'),
+    url(r'overview_async/$', views.overview_async, name='overview_async'),
     url(r'^$', RedirectView.as_view(pattern_name='overview'))
 ]

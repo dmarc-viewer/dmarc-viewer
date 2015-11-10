@@ -140,7 +140,7 @@ class OrderedModel(models.Model):
                 self.position = self.__class__.objects.aggregate(Max("position")).get("position__max", 0) + 1
             except Exception, e:
                 self.position = 0 # Default anyways, do this for more explicitness
-                raise e
+                
         super(OrderedModel, self).save()
 
     @staticmethod

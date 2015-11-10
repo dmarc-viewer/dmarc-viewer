@@ -123,31 +123,35 @@ class FilterSetForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FilterSetForm, self).__init__(*args, **kwargs)
         self.additional_filter_fields = {
-            "report_sender"              : {"choices" : (
-                                                          ("From Incoming Reports", list(Reporter.objects.filter(report__report_type=choices.INCOMING).distinct().order_by('email').values_list('email', 'email'))),
-                                                          ("From Outgoing Reports", list(Reporter.objects.filter(report__report_type=choices.OUTGOING).distinct().order_by('email').values_list('email', 'email')))
-                                                        ),
+            "report_sender"              : {"choices" : (),
+                                                        # (
+                                                        #   ("From Incoming Reports", list(Reporter.objects.filter(report__report_type=choices.INCOMING).distinct().order_by('email').values_list('email', 'email'))),
+                                                        #   ("From Outgoing Reports", list(Reporter.objects.filter(report__report_type=choices.OUTGOING).distinct().order_by('email').values_list('email', 'email')))
+                                                        # ),
                                             "label"   : "Report Sender",
                                             "class"   : ReportSender,
                                             "type"    : unicode},
-            "report_receiver_domain"     : {"choices" : (
-                                                          ("From Incoming Reports", list(Report.objects.filter(report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                          ("From Outgoing Reports", list(Report.objects.filter(report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        ),
+            "report_receiver_domain"     : {"choices" : (),
+                                                        # (
+                                                        #   ("From Incoming Reports", list(Report.objects.filter(report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
+                                                        #   ("From Outgoing Reports", list(Report.objects.filter(report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
+                                                        # ),
                                             "label"   : "Report Receiver Domain", 
                                             "class"   : ReportReceiverDomain,
                                             "type"    : unicode},
-            "raw_dkim_domain"            : {"choices" : (
-                                                          ("From Incoming Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                          ("From Outgoing Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        ), 
+            "raw_dkim_domain"            : {"choices" : (),
+                                                        # (
+                                                        #   ("From Incoming Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
+                                                        #   ("From Outgoing Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
+                                                        # ), 
                                             "label"   : "Raw DKIM Domain", 
                                             "class"   : RawDkimDomain,
                                             "type"    : unicode},
-            "raw_spf_domain"             : {"choices" : (
-                                                          ("From Incoming Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                          ("From Outgoing Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        ), 
+            "raw_spf_domain"             : {"choices" : (),
+                                                        # (
+                                                        #   ("From Incoming Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
+                                                        #   ("From Outgoing Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
+                                                        # ), 
                                             "label"   : "Raw SPF Domain", 
                                             "class"   : RawSpfDomain,
                                             "type"    : unicode},

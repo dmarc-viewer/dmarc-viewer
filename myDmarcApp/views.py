@@ -15,20 +15,34 @@ from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
 
 def overview(request):
-    context = {"incoming" : {
-                "oldest_date" : Report.getOldestReportDate(choices.INCOMING),
-                "data"        : Report.getOverviewSummary(choices.INCOMING)
-                },
-              "outgoing" : {
-                "oldest_date" : Report.getOldestReportDate(choices.OUTGOING),
-                "data"        : Report.getOverviewSummary(choices.OUTGOING)
-             }
+    response = {
+            "start_incoming" : Report.getOldestReportDate(choices.INCOMING),
+            "start_outgoing" : Report.getOldestReportDate(choices.OUTGOING),
     }
-    return render(request, 'myDmarcApp/overview.html', context)
+
+    return render(request, 'myDmarcApp/overview.html', response)
+
+def overview_async(request):
+    report_type = request.GET.get("report_type")
+    if report_type == "incoming":
+        response = Report.getOverviewSummary(choices.INCOMING)
+    elif report_type == "outgoing":
+        response = Report.getOverviewSummary(choices.OUTGOING)
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 """
 VIEW VIEWS BEGIN
 """
+# def get_choices(request):
+#     request.GET.get("report_type")
+    
+#     report_type = request.
+#     Reporter.objects.filter(report__report_type=choices.INCOMING).distinct().order_by('email').values_list('email', 'email')
+#     Report.objects.filter(report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
+#     AuthResultDKIM.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
+#     AuthResultSPF.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
+
 def clone(request, view_id = None):
     try:
         view = View.objects.get(pk=view_id)
@@ -95,6 +109,30 @@ def delete(request, view_id):
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view '%s'" % (view.title,))
     return redirect("view_management")
 
+def order(request):
+    """Gets an orderd list of view ids. Calls OrderedModel static order method
+    to save the order to view model. """
+    
+    try:
+        view_ids = json.loads(request.body)
+        views = []
+        for view_id in view_ids:
+            views.append(View.objects.get(pk=view_id))
+        OrderedModel.order(views)
+        response = {"message" : "Successfully ordered views."}
+        #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
+    except Exception, e:
+        response = {"message" : "Something went wrong while ordering."}
+
+        #messages.add_message(request, messages.ERROR, "Ordering did not work.")
+        raise e
+
+    # XXX LP: Make nice ajax messages like in normal templates
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+"""
+VIEW VIEWS END
+"""
 def export_svg(request, view_id):
 
     # Get data from client side via POST variables
@@ -136,30 +174,6 @@ def export_csv(request, view_id):
     response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
     return response
 
-def order(request):
-    """Gets an orderd list of view ids. Calls OrderedModel static order method
-    to save the order to view model. """
-    
-    try:
-        view_ids = json.loads(request.body)
-        views = []
-        for view_id in view_ids:
-            views.append(View.objects.get(pk=view_id))
-        OrderedModel.order(views)
-        response = {"message" : "Successfully ordered views."}
-        #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
-    except Exception, e:
-        response = {"message" : "Something went wrong while ordering."}
-
-        #messages.add_message(request, messages.ERROR, "Ordering did not work.")
-        raise e
-
-    # XXX LP: Make nice ajax messages like in normal templates
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-"""
-VIEW VIEWS END
-"""
 def view_management(request):
     return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 

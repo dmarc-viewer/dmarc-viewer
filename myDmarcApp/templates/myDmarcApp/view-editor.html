@@ -55,6 +55,11 @@
                             'animateForms': true,
                         });
                     })
+                    $(document).ready(editor.toggleDateRange)
+                    $(document).on("click", "[name='dr_type']", editor.toggleDateRange)
+
+                    $(document).ready(editor.toggleReportTypeOptGroups)
+                    $(document).on("change", "[name='report_type']", editor.toggleReportTypeOptGroups)
                 </script>
             </div>
         </div>

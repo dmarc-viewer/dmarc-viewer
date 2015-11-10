@@ -8029,7 +8029,7 @@ body {
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
- * Diverse
+ * Miscellaneous
  */
 h1 {
   color: #006699;
@@ -8060,6 +8060,70 @@ h2 {
 
 .right {
   float: right;
+}
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Loading wheel
+ */
+.loading {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  color: #006699;
+}
+
+.loading:before {
+  content: " ";
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  border: 9px double;
+  border-color: transparent #006699 #006699;
+  display: table;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-top-left-radius: 50%;
+  animation: spinner 2000ms infinite linear;
+  -o-animation: spinner 2000ms infinite linear;
+  -ms-animation: spinner 2000ms infinite linear;
+  -webkit-animation: spinner 2000ms infinite linear;
+  -moz-animation: spinner 2000ms infinite linear;
+}
+
+.loading:after {
+  width: 50px;
+  height: 50px;
+  content: "loading...";
+}
+
+@-webkit-keyframes spinner {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes spinner {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-ms-keyframes spinner {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 /*# sourceMappingURL=mydmarc.css.map */
