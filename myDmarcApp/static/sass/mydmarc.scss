@@ -138,23 +138,6 @@ body {
         }
     }
 
-    // Don't show selectize options that are not relevant
-    // And override some optgroup css
-    // XXX LP: Change to ajax load someday
-    [data-hide-incoming='true'] [data-group='From Incoming Reports'],
-    [data-hide-outgoing='true'] [data-group='From Outgoing Reports']{
-        @extend .hidden;
-    }
-    .selectize-dropdown {
-            .optgroup-header,
-            .optgroup {
-                border: 0;
-            }
-        .optgroup:before {
-            content: none;
-        }
-    }
-
     .form-group {
         margin-bottom: 10px;
     }
@@ -321,6 +304,15 @@ h2 {
   @-ms-keyframes #{$name} { @content; }
   @keyframes #{$name} { @content; } 
 }
+
+.selectize-loading .selectize-input {
+    color: $dmarc-blue;
+    &:after {
+        text-align: right;
+        content: 'loading...';
+    }
+}
+
 
 .loading {
     width: 100%;

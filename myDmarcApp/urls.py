@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'delete-view/(?P<view_id>[0-9]+)/$', views.delete, name='delete_view'),
     url(r'order-views/$', views.order, name='order_views'),
     url(r'view-management/$', views.view_management, name='view_management'),
+    url(r'delete-view/(?P<view_id>[0-9]+)/$', views.delete, name='delete_view'),
+    url(r'choices-async/$', views.choices_async, name='choices_async'),
     #Help, FAQ
     url(r'help/$', views.help, name='help')
 ]

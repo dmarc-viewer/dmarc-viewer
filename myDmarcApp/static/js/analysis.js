@@ -1,15 +1,15 @@
 var analysis = {
     overview: {
         init: function(type) {
-            $("#"+ type +"-container").addClass("loading");
+            $("#t"+ type +"-container").addClass("loading");
             $.get( "/overview-async/", { "report_type": type }, function(data) {
-                analysis.overview.appendPies(data, "#"+ type +"-container .charts-container");
-                $("#"+ type +"-domain-cnt").html(data.domain_cnt);
-                $("#"+ type +"-report-cnt").html(data.report_cnt);
-                $("#"+ type +"-message-cnt").html(data.message_cnt);
-                $("#"+ type +"-container .text-container").show();
+                analysis.overview.appendPies(data, "#t"+ type +"-container .charts-container");
+                $("#t"+ type +"-domain-cnt").html(data.domain_cnt);
+                $("#t"+ type +"-report-cnt").html(data.report_cnt);
+                $("#t"+ type +"-message-cnt").html(data.message_cnt);
+                $("#t"+ type +"-container .text-container").show();
             }).always(function() {
-                $("#"+ type +"-container").removeClass("loading");
+                $("#t"+ type +"-container").removeClass("loading");
             });
         },
         appendPies: function(data, targetSelector) {
@@ -583,7 +583,6 @@ var analysis = {
                 'name': 'csrfmiddlewaretoken',
                 'value': getCookie('csrftoken'),
             })).submit();  
-            getCookie
         },
     }
 }

@@ -7592,8 +7592,7 @@ button.close {
   border: 0;
 }
 
-.hidden, #view-editor [data-hide-incoming='true'] [data-group='From Incoming Reports'],
-#view-editor [data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
+.hidden {
   display: none !important;
 }
 
@@ -7929,15 +7928,6 @@ body {
   width: 100%;
 }
 
-#view-editor .selectize-dropdown .optgroup-header,
-#view-editor .selectize-dropdown .optgroup {
-  border: 0;
-}
-
-#view-editor .selectize-dropdown .optgroup:before {
-  content: none;
-}
-
 #view-editor .form-group {
   margin-bottom: 10px;
 }
@@ -8043,8 +8033,7 @@ h2 {
   font-size: 22px;
 }
 
-.hidden, #view-editor [data-hide-incoming='true'] [data-group='From Incoming Reports'],
-#view-editor [data-hide-outgoing='true'] [data-group='From Outgoing Reports'] {
+.hidden {
   display: none;
 }
 
@@ -8073,6 +8062,15 @@ h2 {
  * ---------------------------------------------------------------------------------------------------------------------
  * Loading wheel
  */
+.selectize-loading .selectize-input {
+  color: #006699;
+}
+
+.selectize-loading .selectize-input:after {
+  text-align: right;
+  content: 'loading...';
+}
+
 .loading, #deep-analysis .view-type-table .dataTables_processing {
   width: 100%;
   padding: 20px 0;

@@ -58,8 +58,11 @@
                     $(document).ready(editor.toggleDateRange)
                     $(document).on("click", "[name='dr_type']", editor.toggleDateRange)
 
-                    $(document).ready(editor.toggleReportTypeOptGroups)
-                    $(document).on("change", "[name='report_type']", editor.toggleReportTypeOptGroups)
+                    $(document).on("change", "[name='report_type']", function(){
+                        $("select.selectize-dynamic").each(function(){
+                            this.selectize.clearOptions();
+                        });
+                    })                    
                 </script>
             </div>
         </div>

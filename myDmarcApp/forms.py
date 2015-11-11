@@ -118,40 +118,32 @@ class ViewForm(ModelForm):
 
         return view_instance
 
+class MyTypedMultipleChoiceField(TypedMultipleChoiceField):
+    """A TypedMultipleChoiceField without validation.
+    Enables dynamic adding of choices on client side.
+    We need this because we add some choices with ajax.
+     """
+    def validate(self, value):
+        pass
+
 
 class FilterSetForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FilterSetForm, self).__init__(*args, **kwargs)
         self.additional_filter_fields = {
-            "report_sender"              : {"choices" : (),
-                                                        # (
-                                                        #   ("From Incoming Reports", list(Reporter.objects.filter(report__report_type=choices.INCOMING).distinct().order_by('email').values_list('email', 'email'))),
-                                                        #   ("From Outgoing Reports", list(Reporter.objects.filter(report__report_type=choices.OUTGOING).distinct().order_by('email').values_list('email', 'email')))
-                                                        # ),
+            "report_sender"              : {"load"    : "reporter", # cf. view.choices_async
                                             "label"   : "Report Sender",
                                             "class"   : ReportSender,
                                             "type"    : unicode},
-            "report_receiver_domain"     : {"choices" : (),
-                                                        # (
-                                                        #   ("From Incoming Reports", list(Report.objects.filter(report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                        #   ("From Outgoing Reports", list(Report.objects.filter(report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        # ),
+            "report_receiver_domain"     : {"load"    : "reportee", # cf. view.choices_async
                                             "label"   : "Report Receiver Domain", 
                                             "class"   : ReportReceiverDomain,
                                             "type"    : unicode},
-            "raw_dkim_domain"            : {"choices" : (),
-                                                        # (
-                                                        #   ("From Incoming Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                        #   ("From Outgoing Reports", list(AuthResultDKIM.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        # ), 
+            "raw_dkim_domain"            : {"load"    : "dkim_domain", # cf. view.choices_async
                                             "label"   : "Raw DKIM Domain", 
                                             "class"   : RawDkimDomain,
                                             "type"    : unicode},
-            "raw_spf_domain"             : {"choices" : (),
-                                                        # (
-                                                        #   ("From Incoming Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain'))),
-                                                        #   ("From Outgoing Reports", list(AuthResultSPF.objects.filter(record__report__report_type=choices.OUTGOING).distinct().order_by('domain').values_list('domain', 'domain')))
-                                                        # ), 
+            "raw_spf_domain"             : {"load"   : "spf_domain", # cf. view.choices_async
                                             "label"   : "Raw SPF Domain", 
                                             "class"   : RawSpfDomain,
                                             "type"    : unicode},
@@ -180,11 +172,18 @@ class FilterSetForm(ModelForm):
         for field_name, field_dict in self.additional_filter_fields.iteritems():
 
             # Creating a typed choice field helps performing built in form clean magic
-            self.fields[field_name]  = TypedMultipleChoiceField(coerce=field_dict["type"], required=False, label=field_dict["label"], choices=field_dict["choices"], widget=MultiSelectWidget)
+            self.fields[field_name]  = MyTypedMultipleChoiceField(coerce=field_dict.get("type"), 
+                                                                required=False, 
+                                                                label=field_dict.get("label"), 
+                                                                choices=field_dict.get("choices", ()), 
+                                                                widget=MultiSelectWidget(**{"load": field_dict.get("load", "")}))
+
             if self.instance.id:
                 self.fields[field_name].initial = field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True)
+                if not field_dict.get("choices"):
+                    self.fields[field_name].choices = [(value, value) for value in self.fields[field_name].initial]
 
-         # These are extra because they are one-to-one ergo no MultipleChoiceField
+        # These are extra because they are one-to-one ergo no MultipleChoiceField
         self.fields["source_ip"]     =  GenericIPAddressField(required=False, label='Mail Sender IP')
         self.fields["multiple_dkim"] =  BooleanField(required=False, label='Multiple DKIM only')
 
@@ -197,6 +196,7 @@ class FilterSetForm(ModelForm):
                 self.fields["multiple_dkim"].initial = multiple_dkim_initial[0]
 
     def save(self, commit=True):
+
         instance = super(FilterSetForm, self).save()
 
         # Add new many-to-one filter fields to a filter set object

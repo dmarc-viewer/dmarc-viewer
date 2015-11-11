@@ -57,17 +57,30 @@ var editor = {
         }
     },
     /*
-     * Show only selectize options that are relevant for report type
-     * XXX LP: it would be nicer to load and change them via ajax (+chache)
-     *         especially if the list is very very long
+     * Load choices from server
      */
-    toggleReportTypeOptGroups: function(evt){
-        $("#viewFilterForm").attr("data-hide-incoming", false)
-                            .attr("data-hide-outgoing", false);
-
-        if ($("[name='report_type']").val() == "1")
-            $("#viewFilterForm").attr("data-hide-outgoing", true);
-        if ($("[name='report_type']").val() == "2")
-            $("#viewFilterForm").attr("data-hide-incoming", true);
+    _xhr: null,
+    loadChoices: function(str){
+        if (!str.length) return;
+        editor._xhr && editor._xhr.abort();
+        this.load(function(callback) {
+            editor._xhr = $.ajax({
+                url: '/choices-async/',
+                data: {
+                    report_type : $("[name='report_type']").val(),
+                    choice_type : this.settings.load_choice_type,
+                    query_str  : str
+                },
+                success: function(results) {
+                    var choices = results.choices.map(function(obj){
+                        return {value: obj, text: obj};
+                    });
+                    callback(choices);
+                },
+                error: function() {
+                    callback();
+                }
+            });
+        });
     }
 }

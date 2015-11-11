@@ -13,17 +13,17 @@
 
 <h2>Incoming reports</h2>
 {% if start_incoming %}
-    <div id="incoming-container">
+    <div id="t{{choices.INCOMING}}-container">
         <div class="text-container" style="display:none">
             <strong>{{ start_incoming | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
-            my domains: <strong id="incoming-domain-cnt"></strong>,
-            reports: <strong id="incoming-report-cnt"></strong>,
-            messages: <strong id="incoming-message-cnt"></strong>
+            my domains: <strong id="t{{choices.INCOMING}}}-domain-cnt"></strong>,
+            reports: <strong id="t{{choices.INCOMING}}}-report-cnt"></strong>,
+            messages: <strong id="t{{choices.INCOMING}}}-message-cnt"></strong>
         </div>
         <div class="charts-container"></div>
     </div>
     <script type="text/javascript">
-        analysis.overview.init("incoming");
+        analysis.overview.init({{choices.INCOMING}});
     </script>
 {% else %}
     No incoming reports so far. Start parsing reports...
@@ -31,17 +31,17 @@
 
 <h2>Outgoing reports</h2>
 {% if start_outgoing %}
-    <div id="outgoing-container">
+    <div id="t{{choices.OUTGOING}}-container">
         <div class="text-container" style="display:none">
             <strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
-            foreign domains: <strong id="outgoing-domain-cnt"></strong>, 
-            reports: <strong id="outgoing-report-cnt"></strong>,
-            messages: <strong id="outgoing-message-cnt"></strong>
+            foreign domains: <strong id="{{choices.OUTGOING}}-domain-cnt"></strong>, 
+            reports: <strong id="{{choices.OUTGOING}}-report-cnt"></strong>,
+            messages: <strong id="{{choices.OUTGOING}}-message-cnt"></strong>
         </div>
         <div class="charts-container"></div>
     </div>
         <script type="text/javascript">
-            analysis.overview.init("outgoing");
+            analysis.overview.init({{choices.OUTGOING}});
         </script>
 {% else %}
     No outgoing reports so far. Start parsing reports...

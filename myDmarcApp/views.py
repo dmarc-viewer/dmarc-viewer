@@ -18,27 +18,16 @@ def overview(request):
     response = {
             "start_incoming" : Report.getOldestReportDate(choices.INCOMING),
             "start_outgoing" : Report.getOldestReportDate(choices.OUTGOING),
+            "choices": choices
     }
 
     return render(request, 'myDmarcApp/overview.html', response)
 
 def overview_async(request):
-    report_type = request.GET.get("report_type")
-    if report_type == "incoming":
-        response = Report.getOverviewSummary(choices.INCOMING)
-    elif report_type == "outgoing":
-        response = Report.getOverviewSummary(choices.OUTGOING)
+    report_type = int(request.GET.get("report_type"))
+    response = Report.getOverviewSummary(report_type)
 
     return HttpResponse(json.dumps(response), content_type="application/json")
-
-# def get_choices(request):
-#     request.GET.get("report_type")
-    
-#     report_type = request.
-#     Reporter.objects.filter(report__report_type=choices.INCOMING).distinct().order_by('email').values_list('email', 'email')
-#     Report.objects.filter(report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
-#     AuthResultDKIM.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
-#     AuthResultSPF.objects.filter(record__report__report_type=choices.INCOMING).distinct().order_by('domain').values_list('domain', 'domain')
 
 def clone(request, view_id = None):
     try:
@@ -93,6 +82,51 @@ def edit(request, view_id = None):
             'view_form'               : view_form,
             'filter_set_formset'      : filter_set_formset
         })
+
+def choices_async(request):
+    report_type = request.GET.get("report_type")
+    choice_type = request.GET.get("choice_type")
+    query_str   = request.GET.get("query_str")
+
+    if choice_type == "reporter":
+        values = Reporter.objects.filter(
+                                    report__report_type=report_type
+                                ).filter(
+                                    email__icontains=query_str
+                                ).distinct().order_by(
+                                    'email'
+                                ).values_list('email')
+    elif choice_type == "reportee":
+        values = Report.objects.filter(
+                                    report_type=report_type
+                                ).filter(
+                                    domain__icontains=query_str
+                                ).distinct().order_by(
+                                    'domain'
+                                ).values_list('domain', flat=True)
+    elif choice_type == "dkim_domain":
+        values = AuthResultDKIM.objects.filter(
+                                    record__report__report_type=report_type
+                                ).filter(
+                                    domain__icontains=query_str
+                                ).distinct().order_by(
+                                    'domain'
+                                ).values_list('domain')
+    elif choice_type == "spf_domain":
+        values = AuthResultSPF.objects.filter(
+                                    record__report__report_type=report_type
+                                ).filter(
+                                    domain__icontains=query_str
+                                ).distinct().order_by(
+                                    'domain'
+                                ).values_list('domain')
+    else:
+        values = []
+
+    return HttpResponse(json.dumps({"choices": list(values)}), content_type="application/json")
+
+    
+
 
 def delete(request, view_id):
     # XXX: Add try catch

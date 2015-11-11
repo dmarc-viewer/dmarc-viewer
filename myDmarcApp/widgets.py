@@ -8,17 +8,29 @@ class MultiSelectWidget(SelectMultiple):
     """Simple Multi Select using Selectize.js"""
 
     def __init__(self, *args, **kwargs):
+        self.load = kwargs.pop("load")
         super(MultiSelectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None):
+        if self.load:
+            attrs = {
+                "class" : "selectize-dynamic"
+            }
         html = super(MultiSelectWidget, self).render(name, value, attrs)
         js   =  '''<script type="text/javascript">
                     (function($){
+                        var options = {
+                            loadingClass: "selectize-loading"
+                        };
+                        if (%(load)r){
+                            options.onType = editor.loadChoices;
+                            options.load_choice_type = "%(load)s";
+                            }
                         $(document).ready(function(){
-                            $('#id_%s').selectize();
+                            $('#id_%(name)s').selectize(options);
                         });
                     })('django' in window && django.jQuery ? django.jQuery: jQuery);
-                </script>''' % name
+                </script>''' % {'load' : self.load, 'name': name}
         return  mark_safe("%s %s" % (html, js))
 
 
