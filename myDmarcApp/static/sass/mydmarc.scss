@@ -183,7 +183,7 @@ body {
             font-size: 12px;
         }
         h5 {
-            margin-bottom: 0;
+            margin: 0;
         }
         p {
             margin-bottom: 2px;
@@ -195,6 +195,11 @@ body {
             height: 16px;
             @include border-bottom-radius(8px);
             @include border-top-radius(8px);
+        }
+        .panel-body {
+            div:not(:last-child) {
+                margin-bottom: 15px;
+            }
         }
     }
     .view-type {
@@ -226,6 +231,9 @@ body {
                 //padding: 0 10px 0 10px;
                 //border-bottom: 0;
             }
+        }
+        .dataTables_processing {
+            @extend .loading; 
         }
     }
 
@@ -281,9 +289,12 @@ h2 {
 }
 
 .description {
-    font-size:15px;
+    font-size: 15px;
     font-style: italic;
-    color: green;
+    font-variant: small-caps;
+    color: $dmarc-blue;
+    line-height: 12px;
+    margin-bottom: 20px;
 }
 
 .right {
@@ -313,7 +324,7 @@ h2 {
 
 .loading {
     width: 100%;
-    height: 50px;
+    padding: 20px 0;
     text-align: center;
     color: $dmarc-blue;
     &:before {
@@ -326,7 +337,7 @@ h2 {
         display: table;
         @include border-bottom-radius(50%);
         @include border-top-radius(50%);
-        @include animation(2000ms)
+        @include animation(1200ms)
     }
     &:after {
         width: 50px;

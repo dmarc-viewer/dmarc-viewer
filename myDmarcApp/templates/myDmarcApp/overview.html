@@ -16,23 +16,14 @@
     <div id="incoming-container">
         <div class="text-container" style="display:none">
             <strong>{{ start_incoming | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
-            my domains: <strong id="incoming-domain-cnt">{{incoming.data.domain_cnt}}</strong>,
-            reports: <strong id="incoming-report-cnt">{{incoming.data.report_cnt}}</strong>,
-            messages: <strong id="incoming-message-cnt">{{incoming.data.message_cnt}}</strong>
+            my domains: <strong id="incoming-domain-cnt"></strong>,
+            reports: <strong id="incoming-report-cnt"></strong>,
+            messages: <strong id="incoming-message-cnt"></strong>
         </div>
         <div class="charts-container"></div>
     </div>
     <script type="text/javascript">
-        $("#incoming-container").addClass("loading");
-        $.get( "/overview_async/", { "report_type": "incoming" }, function(data) {
-            analysis.overview.appendPies(data, "#incoming-container .charts-container");
-            $("#incoming-domain-cnt").html(data.domain_cnt);
-            $("#incoming-report-cnt").html(data.report_cnt);
-            $("#incoming-message-cnt").html(data.message_cnt);
-            $("#incoming-container .text-container").show();
-        }).always(function() {
-            $("#incoming-container").removeClass("loading");
-        });
+        analysis.overview.init("incoming");
     </script>
 {% else %}
     No incoming reports so far. Start parsing reports...
@@ -40,18 +31,19 @@
 
 <h2>Outgoing reports</h2>
 {% if start_outgoing %}
-<strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
-foreign domains: <strong>{{outgoing.data.domain_cnt}}</strong>, 
-reports: <strong>{{outgoing.data.report_cnt}}</strong>,
-messages: <strong>{{outgoing.data.message_cnt}}</strong>
-
-<div class="charts-container"></div>
-<script type="text/javascript">
-    $.get( "/overview_async/", { "report_type": "outgoing" }, function(data) {
-        analysis.overview.appendPies(data, "#outgoing .charts-container");
-    });
-</script>
+    <div id="outgoing-container">
+        <div class="text-container" style="display:none">
+            <strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
+            foreign domains: <strong id="outgoing-domain-cnt"></strong>, 
+            reports: <strong id="outgoing-report-cnt"></strong>,
+            messages: <strong id="outgoing-message-cnt"></strong>
+        </div>
+        <div class="charts-container"></div>
+    </div>
+        <script type="text/javascript">
+            analysis.overview.init("outgoing");
+        </script>
 {% else %}
-No outgoing reports so far. Start parsing reports...
+    No outgoing reports so far. Start parsing reports...
 {% endif %}
 {% endblock %}

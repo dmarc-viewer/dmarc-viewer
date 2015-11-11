@@ -31,9 +31,6 @@ def overview_async(request):
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-"""
-VIEW VIEWS BEGIN
-"""
 # def get_choices(request):
 #     request.GET.get("report_type")
     
@@ -54,11 +51,7 @@ def clone(request, view_id = None):
     return redirect(view_management)
 
 def edit(request, view_id = None):
-    """Check filterset_set-INITIAL_FORMS and filterset_set-N-id for cloning.
-    Both must be empty for cloning to work. But this should be possible on the server.
-    OR just make a deep copy
-    """
-    
+
     # Assign form data if posted
     if request.method == 'POST':
         data = request.POST
@@ -75,7 +68,7 @@ def edit(request, view_id = None):
         view = None
 
     # Create Forms and formsets
-    view_form               = ViewForm(data=data, instance=view)
+    view_form               = ViewForm(data=data, instance = view)
     filter_set_formset      = FilterSetFormSet(data=data, instance = view)
 
     if request.method == 'POST':
@@ -130,9 +123,6 @@ def order(request):
     # XXX LP: Make nice ajax messages like in normal templates
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-"""
-VIEW VIEWS END
-"""
 def export_svg(request, view_id):
 
     # Get data from client side via POST variables
@@ -189,20 +179,34 @@ def deep_analysis(request, view_id = None):
         return redirect("view_management")
 
     sidebar_views        = View.objects.filter(enabled='true').values('id', 'title')
-    # Only fetch querysets if they are displayed
-    view_type_line_data  = view.getLineData() if view.type_line else []
-    view_type_map_data   = view.getMapData() if view.type_map else []
-
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
-            'the_view'              : view, 
-            'view_type_line_data'   : view_type_line_data,
-            'view_type_map_data'    : view_type_map_data
+            'the_view'              : view
         })
 
+def map_async(request, view_id = None):
+    # XXX LP: rather redirect in urls.py
+    if view_id:
+        view = View.objects.get(pk=view_id)
+    else:
+        view = View.objects.first()
 
-def get_table(request, view_id = None):
+    view_type_map_data   = view.getMapData() if view.type_map else []
+    return HttpResponse(json.dumps(view_type_map_data), content_type="application/json")
+
+def line_async(request, view_id = None):
+    # XXX LP: rather redirect in urls.py
+    if view_id:
+        view = View.objects.get(pk=view_id)
+    else:
+        view = View.objects.first()
+
+    view_type_line_data  = view.getLineData() if view.type_line else []
+    return HttpResponse(json.dumps(view_type_line_data), content_type="application/json")
+
+
+def table_async(request, view_id = None):
     # XXX LP: rather redirect in urls.py
     if view_id:
         view = View.objects.get(pk=view_id)
