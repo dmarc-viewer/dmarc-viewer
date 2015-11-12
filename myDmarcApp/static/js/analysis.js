@@ -557,7 +557,7 @@ var analysis = {
         }
     },
     export: {
-        svg: function(viewId, btn) {
+        svg: function(viewId, type, btn) {
             var svg_node = $(btn).closest(".view-type").find(".svg-container svg").get(0)
             $('<form>', {
                 'action': "/export-svg/"+viewId+"/",
@@ -566,6 +566,10 @@ var analysis = {
             }).append($('<textarea>', {
                 'name': "svg",
                 'value': (new XMLSerializer).serializeToString(svg_node),
+            })).append($('<input>', {
+                'type': 'hidden',
+                'name': 'view_type',
+                'value': type
             })).append($('<input>', {
                 'type': 'hidden',
                 'name': 'csrfmiddlewaretoken',

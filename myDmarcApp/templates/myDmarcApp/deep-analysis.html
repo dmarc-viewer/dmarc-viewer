@@ -68,7 +68,7 @@
         <div class="btn-group switch-filterset"></div>
         <div class="svg-container" style="position:relative"></div>
         <div class="export-svg"> 
-            <a onClick="analysis.export.svg({{the_view.id}}, this)" class="btn btn-important" role="button" href="#">Export map as PDF</a>
+            <a onClick="analysis.export.svg({{the_view.id}}, 'map', this)" class="btn btn-important" role="button" href="#">Export map as PDF</a>
         </div>
     </div>
     <script type="text/javascript">
@@ -84,7 +84,7 @@
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container"></div>
         <div class="export-svg"> 
-            <a onClick="analysis.export.svg({{the_view.id}}, this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
+            <a onClick="analysis.export.svg({{the_view.id}}, 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
         </div>
     </div>
     <script type="text/javascript">

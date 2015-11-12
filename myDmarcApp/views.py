@@ -2,10 +2,8 @@ import json
 import time
 import datetime
 import csv
-from svglib.svglib import SvgRenderer
-from reportlab.graphics import renderPDF
+import cairosvg
 
-import xml.dom.minidom
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
@@ -159,22 +157,23 @@ def order(request):
 
 def export_svg(request, view_id):
 
+
     # Get data from client side via POST variables
     svg_data = request.POST.get("svg")
+    view_type = request.POST.get("view_type")
 
-    document = xml.dom.minidom.parseString(svg_data)
-    svg = document.documentElement
+    view = View.objects.get(pk=view_id)
+    date = datetime.datetime.now().strftime('%Y%m%d')
 
-    # create svg
-    svg_renderer = SvgRenderer()
-    svg_renderer.render(svg)
-    svg_rendered = svg_renderer.finish()
-    pdf = renderPDF.drawToString(svg_rendered)
+    # create pdf
+    # NOTE: replaces svglib.svglib.SvgRenderer, reportlab.graphics.renderPDF, xml.dom.minidom
+    # also works with stylesheets and clippath
+    pdf = cairosvg.svg2pdf(svg_data)
 
     # Response is file-like we can write pdf to it
-    # XXX LP: Think of a proper filename like view title stripped + date
     response = HttpResponse(content_type="application/pdf")
-    response['Content-Disposition'] = "attachment; filename='somefilename.pdf'"
+    response['Content-Disposition'] = "attachment; filename='%s_%s_%s.pdf'" % (view.title, view_type, date)
+
     response.write(pdf)     
 
     return response
