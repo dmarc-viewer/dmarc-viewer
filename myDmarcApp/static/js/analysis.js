@@ -127,8 +127,9 @@ var analysis = {
                     }));
 
                     // Define color range with 5 colors
-                    var colors = analysis.map.createColorRange(dataSet.color, 4)
-                    var paletteScale = d3.scale.quantize()
+                    // var colors = analysis.map.createColorRange(dataSet.color, 4)
+                    var colors = ["#feedde", "#fdbe85", "#e6550d", "#a63603"];
+                    var paletteScale = d3.scale.quantile()
                         .domain([1, max])
                         .range(colors);
 
@@ -304,10 +305,18 @@ var analysis = {
                     xMini = d3.time.scale().range([0, width]),
                     yMini = d3.scale.linear().range([heightMini, 0]);
 
+                var customTimeFormat = d3.time.format.multi([
+                    ["%b %d", function(d) { return d.getDate() != 1; }],
+                    ["%B", function(d) { return d.getMonth(); }],
+                    ["%Y", function() { return true; }]
+                ]);
+
                 // Axis for both plots
                 var xAxis = d3.svg.axis().scale(x).orient("bottom"),
                     yAxis = d3.svg.axis().scale(y).orient("left"),
                     xAxisMini = d3.svg.axis().scale(xMini).orient("bottom");
+                xAxis.tickFormat(customTimeFormat);
+
 
                 // Grid lines
                 var xGridLines = d3.svg.axis().scale(x)
