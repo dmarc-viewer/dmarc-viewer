@@ -11,16 +11,31 @@ var editor = {
         //copy all selects' options
         var $selectsOld = $oldForm.find("select");
         $newForm.find("select").each(function(idx){ 
+
+            //HTML select
             var optionsHTML = $selectsOld[idx].innerHTML;
             if (optionsHTML)
                 $(this).html(optionsHTML);
 
-            //Handle selectize plugin
-            //XXX It would be nice if selectize did this on its own
-            $selectize = $(this)[0].selectize;
-            $(this).find("option[selected='selected']").each(function(idx){
-                $selectize.addItem($(this).val(), true);
-            });
+            //Selectize
+            //XXX LP: It would be nice if selectize did this on its own
+            $selectizeNew = $(this)[0].selectize;
+            if ($selectizeNew != 'undefined') {
+                //options - Available options in dropdown - {text: <>, value: <> }
+                oldOptions = $selectsOld[idx].selectize.options;
+                for (optionName in oldOptions) {
+                    $selectizeNew.addOption({
+                        text: oldOptions[optionName].text, 
+                        value: oldOptions[optionName].value
+                    });
+                }
+
+                //items - selected options in input -  <value>
+                oldItems   = $selectsOld[idx].selectize.items;
+                oldItems.forEach(function(item){
+                    $selectizeNew.addItem(item);
+                });
+            }
         });
 
         //copy all inputs' values

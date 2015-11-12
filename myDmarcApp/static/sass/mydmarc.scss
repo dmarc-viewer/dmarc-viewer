@@ -276,8 +276,13 @@ h2 {
     font-style: italic;
     font-variant: small-caps;
     color: $dmarc-blue;
-    line-height: 12px;
+    line-height: 18px;
     margin-bottom: 20px;
+}
+
+code {
+    width: 100%;
+    display: inline;
 }
 
 .right {
