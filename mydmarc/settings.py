@@ -55,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'myDmarcApp.middleware.BootstrapAjaxMessage'
 )
 
 ROOT_URLCONF = 'mydmarc.urls'

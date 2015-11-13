@@ -23,3 +23,13 @@ $.ajaxSetup({
      } 
 });
 
+
+var main = {
+    showAjaxMessages: function(response) {
+        if ("ajax_message_block" in response){
+            $(".bootstrap-messages-container").hide("slow");
+            $(".bootstrap-messages-container").html(response.ajax_message_block);
+            $(".bootstrap-messages-container").show("slow");
+        }
+    }
+}

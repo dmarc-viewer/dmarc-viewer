@@ -13,7 +13,6 @@ from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
 
 def overview(request):
-    print blogid
     response = {
             "start_incoming" : Report.getOldestReportDate(choices.INCOMING),
             "start_outgoing" : Report.getOldestReportDate(choices.OUTGOING),
@@ -141,16 +140,13 @@ def order(request):
         for view_id in view_ids:
             views.append(View.objects.get(pk=view_id))
         OrderedModel.order(views)
-        response = {"message" : "Successfully ordered views."}
-        #messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
+        messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
     except Exception, e:
-        response = {"message" : "Something went wrong while ordering."}
-
-        #messages.add_message(request, messages.ERROR, "Ordering did not work.")
+        messages.add_message(request, messages.ERROR, "Ordering did not work.")
         raise e
 
     # XXX LP: Make nice ajax messages like in normal templates
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps({}), content_type="application/json")
 
 def export_svg(request, view_id):
 

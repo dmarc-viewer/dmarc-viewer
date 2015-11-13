@@ -1,4 +1,5 @@
 {% extends 'myDmarcApp/base.html' %}
+{% load bootstrap3 %}
 
 {% block title %}MyDmarc - Overview{% endblock %}
 
@@ -16,6 +17,9 @@
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h1 class="page-header">Frequently asked questions</h1>
+    <div class="bootstrap-messages-container">
+        {% bootstrap_messages %}
+    </div>
     {% for topic_id, topic in topics.items %}
         <div class="faq-container" >
         <h2 id="{{topic_id}}">{{topic.title}}</h2>

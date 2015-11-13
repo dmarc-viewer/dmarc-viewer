@@ -8,7 +8,9 @@
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
     <h1 class="page-header">View Management</h1>
-    {% bootstrap_messages %}
+    <div class="bootstrap-messages-container">
+        {% bootstrap_messages %}
+    </div>
 
     <table class="table table-condensed">
         <thead>
@@ -29,7 +31,7 @@
                 <td >{{view.description}}</td> 
                 <td align="right">
                     <div class="btn-group">
-                        <a class="btn btn-default" role="button" href="/deep-analysis/{{view.id}}/">View</a>
+                        <a class="btn btn-default" role="button" href="/deep-analysis/{{view.id}}/">Show</a>
                         <a class="btn btn-default" role="button" href="/edit-view/{{view.id}}/">Edit</a>
                         <a class="btn btn-default" role="button" href="/clone-view/{{view.id}}/">Clone</a>
                         <a class="btn btn-danger"  role="button" href="/delete-view/{{view.id}}/">Delete</a>
@@ -58,7 +60,9 @@
                     url: /order-views/,
                     data:  JSON.stringify(view_id_list),
                     contentType: "application/json",
-                    success: function(response){console.log(response.message)},
+                    success: function(response){
+                        main.showAjaxMessages(response);
+                    },
                 });
             }
         });
