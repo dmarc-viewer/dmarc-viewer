@@ -2,6 +2,7 @@
 {# Load the tag library #}
 {% load bootstrap3 %}
 {% load my_tags %}
+{% load formset_tags %}
 
 
 {% block title %}MyDmarc - View Editor{% endblock %}
@@ -10,13 +11,13 @@
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
     <h1 class="page-header">Create views for the deep analysis page</h1>
+    {% bootstrap_messages %}
     <div class="description">The data for a view is retrieved by applying the below chosen filter. Different filter fields are ANDed together whereas filter fields of one kind with multiple selections are ORed together.<br>
     <strong>Eg: </strong> <code>find reports where report_type = incoming AND (reporter = google.com OR yahoo.com) ...</code>
     </div>
     <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
-        {% bootstrap_messages %}
         <div class="row">
             <div id="{{view_form.title.auto_id}}_container">{% bootstrap_field view_form.title %}</div>
             <div id="{{view_form.description.auto_id}}_container">{% bootstrap_field view_form.description %}</div>
@@ -50,7 +51,7 @@
                         {% show_filter_set filter_set_formset.empty_form %}
                     {% endescapescript %}
                 </script>
-                <input type="button" class="btn btn-important" value="Add" data-formset-add>
+                <input type="button" class="btn btn-important" value="Add Filter Set" data-formset-add>
 
                 <script type="text/javascript">
                     $(function($) {
@@ -69,7 +70,10 @@
                 </script>
             </div>
         </div>
-        <input class="form-group btn btn-important" type="submit" value="Save view">
+        <div class="btn-group">
+            <input class="form-group btn btn-important" type="submit" value="Save View">
+            <input class="form-group btn btn-important" type="submit" name="redirect_to_analysis" value="Save and show View">
+        </div>
     </form>
 </div>
 

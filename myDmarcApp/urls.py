@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'overview/$', views.overview, name='overview'),
     url(r'overview-async/$', views.overview_async, name='overview_async'),
     # Analysis, Data, Export
-    url(r'deep-analysis/$', views.deep_analysis, name='deep_analysis'),
+    url(r'deep-analysis/$', views.deep_analysis_first, name='deep_analysis_first'),
     url(r'deep-analysis/(?P<view_id>[0-9]+)/$', views.deep_analysis, name='deep_analysis'),
     url(r'map-async/(?P<view_id>[0-9]+)/$', views.map_async, name='map_async'),
     url(r'line-async/(?P<view_id>[0-9]+)/$', views.line_async, name='line_async'),

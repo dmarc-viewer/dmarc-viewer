@@ -13,6 +13,7 @@ from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
 
 def overview(request):
+    print blogid
     response = {
             "start_incoming" : Report.getOldestReportDate(choices.INCOMING),
             "start_outgoing" : Report.getOldestReportDate(choices.OUTGOING),
@@ -38,7 +39,6 @@ def clone(request, view_id = None):
     return redirect(view_management)
 
 def edit(request, view_id = None):
-
     # Assign form data if posted
     if request.method == 'POST':
         data = request.POST
@@ -69,12 +69,12 @@ def edit(request, view_id = None):
             filter_set_formset.instance = view
             filter_set_formset.save()
             messages.add_message(request, messages.SUCCESS, "Successfully saved view '%s'" % (view.title,))
+           
+            if request.POST.get("redirect_to_analysis"):
+                return redirect("deep_analysis", view_id=view.id)
             return redirect("view_management")
         else:
-            messages.add_message(request, messages.ERROR, "Form invalid.")
-
-    if request.method == 'GET':
-        pass
+            messages.add_message(request, messages.ERROR, "Could not save view.")
 
     return render(request, 'myDmarcApp/view-editor.html', {
             'view_form'               : view_form,
@@ -122,9 +122,6 @@ def choices_async(request):
         values = []
 
     return HttpResponse(json.dumps({"choices": list(values)}), content_type="application/json")
-
-    
-
 
 def delete(request, view_id):
     # XXX: Add try catch
@@ -200,51 +197,42 @@ def export_csv(request, view_id):
 def view_management(request):
     return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 
-def deep_analysis(request, view_id = None):
-    # XXX LP: rather redirect in urls.py
-    if view_id:
-        view = View.objects.get(pk=view_id)
-    else:
+def deep_analysis_first(request):
+    try:
         view = View.objects.first()
-    
-    if not view:
-        messages.add_message(request, messages.WARNING, "You should start creating views before you want to use them.")
-        return redirect("view_management")
+    except View.DoesNotExist as e:
+        messages.add_message(request, messages.WARNING, "You should start adding views before you want to use them.")
+        return redirect("view_management") 
+    return redirect("deep_analysis", view_id=view.id)
 
-    sidebar_views        = View.objects.filter(enabled='true').values('id', 'title')
+def deep_analysis(request, view_id):
+    try:
+        view = View.objects.get(pk=view_id)
+    except View.DoesNotExist as e:
+        messages.add_message(request, messages.WARNING, "The view you were looking for does not exist. Why not choose one from below?")
+        return redirect("view_management")        
+
+    sidebar_views = View.objects.filter(enabled='true').values('id', 'title')
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
             'the_view'              : view
         })
 
-def map_async(request, view_id = None):
-    # XXX LP: rather redirect in urls.py
-    if view_id:
-        view = View.objects.get(pk=view_id)
-    else:
-        view = View.objects.first()
-
+def map_async(request, view_id):
+    view = View.objects.get(pk=view_id)
     view_type_map_data   = view.getMapData() if view.type_map else []
     return HttpResponse(json.dumps(view_type_map_data), content_type="application/json")
 
-def line_async(request, view_id = None):
-    # XXX LP: rather redirect in urls.py
-    if view_id:
-        view = View.objects.get(pk=view_id)
-    else:
-        view = View.objects.first()
+def line_async(request, view_id):
+    view = View.objects.get(pk=view_id)
 
     view_type_line_data  = view.getLineData() if view.type_line else []
     return HttpResponse(json.dumps(view_type_line_data), content_type="application/json")
 
 
-def table_async(request, view_id = None):
-    # XXX LP: rather redirect in urls.py
-    if view_id:
-        view = View.objects.get(pk=view_id)
-    else:
-        view = View.objects.first()
+def table_async(request, view_id):
+    view = View.objects.get(pk=view_id)
 
     # Get the data as posted json
     # django can't handle default urlencoded nested dicts

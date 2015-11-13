@@ -1,12 +1,14 @@
 {% extends 'myDmarcApp/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load my_filters %}
+{% load my_tags %}
+
 
 {% block title %}MyDmarc - Deep Analysis{% endblock %}
 {% block site_id %}deep-analysis{% endblock %}
 
 {% block content %}
-{% load staticfiles %}
-{% load my_filters %}
-{% load my_tags %}
 
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
@@ -16,9 +18,8 @@
     </ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    {% comment %}
     <h1 class="page-header">Deep Analysis</h1>
-    {% endcomment %}
+    {% bootstrap_messages %}
 
     <h2>{{the_view.title}}</h2>
     <p>{{the_view.description}}</p>
