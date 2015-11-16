@@ -98,6 +98,9 @@
 
 
     {% if the_view.type_table %}
+    <div class="description">
+        The table shows distinct records for all filter sets. If you want to see the records for a specific filter set, please create a view containing only the specific filter set.
+    </div>
     <div id="time-quick-filter">
         <div class="description">
             By selecting a date range in the the line chart only records within the range a shown in the table.
@@ -113,18 +116,18 @@
                 <tr>
                     <th>Reporter</th>
                     <th>Sender</th>
+                    <th>aDKIM</th>
+                    <th>aSPF</th>
+                    <th>Disposition</th>
+                    <th data-orderable="false">DKIM Domains</th>
+                    <th data-orderable="false">DKIM Results</th>
+                    <th data-orderable="false">SPF Domains</th>
+                    <th data-orderable="false">SPF Results</th>
+                    <th>Msg#</th>
                     <th>IP</th>
                     <th>Country</th>
                     <th>Begin</th>
                     <th>End</th>
-                    <th>Msg#</th>
-                    <th data-orderable="false">DKIM Domains</th>
-                    <th data-orderable="false">DKIM Results</th>
-                    <th>aDKIM</th>
-                    <th data-orderable="false">SPF Domains</th>
-                    <th data-orderable="false">SPF Results</th>
-                    <th>aSPF</th>
-                    <th>Disposition</th>
                     <th>ReportId</th>
                     {% comment %}
                     <th>Label</th>

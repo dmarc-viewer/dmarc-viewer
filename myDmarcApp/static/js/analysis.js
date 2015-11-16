@@ -257,7 +257,7 @@ var analysis = {
                 .attr("text-anchor", "middle")
                 .attr("transform", "translate("+ (analysis.map._width / 2) + ", 30)")
                 .style("font-weight", "bold")
-                .text("Messages per time for '"+ label +"'");
+                .text("Messages per country for '"+ label +"'");
         }
     },
     line: {

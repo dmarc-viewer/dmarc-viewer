@@ -182,18 +182,18 @@ class View(OrderedModel):
 
         return [[r.report.reporter.org_name,
                 r.report.domain,
+                r.get_dkim_display(),
+                r.get_spf_display(),
+                r.get_disposition_display(),
+                ' '.join([dkim.domain for dkim in r.authresultdkim_set.all()]),
+                ' '.join([dkim.get_result_display() for dkim in r.authresultdkim_set.all()]),
+                ' '.join([spf.domain for spf in r.authresultspf_set.all()]),
+                ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
+                r.count,
                 r.source_ip,
                 r.country_iso_code,
                 r.report.date_range_begin.strftime('%Y%m%d'),
                 r.report.date_range_end.strftime('%Y%m%d'),
-                r.count,
-                ' '.join([dkim.domain for dkim in r.authresultdkim_set.all()]),
-                ' '.join([dkim.get_result_display() for dkim in r.authresultdkim_set.all()]),
-                r.get_dkim_display(),
-                ' '.join([spf.domain for spf in r.authresultspf_set.all()]),
-                ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
-                r.get_spf_display(),
-                r.get_disposition_display(),
                 # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
                 r.report.report_id
                 ] for r in records]
@@ -201,26 +201,25 @@ class View(OrderedModel):
     def getTableOrderFields(self):
         return ["report__reporter__org_name",
                 "report__domain",
+                "dkim",
+                "spf",
+                "disposition",
+                "", # raw dkim domains/results are not ordered
+                "", # raw dkim domains/results are not ordered
+                "", # raw spf  domains/results are not ordered
+                "", # raw spf  domains/results are not ordered
+                "count",
                 "source_ip",
                 "country_iso_code",
                 "report__date_range_begin",
                 "report__date_range_end",
-                "count",
-                "",
-                "",
-                "dkim",
-                "",
-                "",
-                "spf",
-                "disposition",
                 "report__report_id"]
 
     def getCsvData(self):
-        csv_head = ["reporter", "domain", "ip", "country", 
-                "date_range_begin", "date_range_end", 
-                "count", "dkim domains", "dkim results", 
-                "aligned dkim", "spf domains", "spf results",
-                "aligned spf", "disposition", "report id"]
+        csv_head = ["reporter", "domain", "aligned dkim", "aligned spf",
+                    "disposition", "dkim domains", "dkim results",
+                    "spf domains", "spf results", "count", "ip", "country", 
+                    "date_range_begin", "date_range_end", "report id"]
 
         return [csv_head] + self.getTableData()
 
