@@ -276,6 +276,15 @@ h2 {
     display: none;
 }
 
+.nav-sidebar li {
+    a {
+        color: $dmarc-blue;
+    }
+    &.active > a, &.active > a:hover{
+        background-color: $dmarc-blue;
+    }
+}
+
 .btn-important {
     float: right;
     margin: 10px 0;
@@ -305,6 +314,15 @@ code {
 
 .right {
     float:right;
+}
+
+.brand {
+    color: #9d9d9d;
+    float: left;
+    padding: 15px 15px;
+    font-size: 20px;
+    line-height: 20px;
+    height: 50px;
 }
 
 

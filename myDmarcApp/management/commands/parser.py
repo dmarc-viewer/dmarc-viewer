@@ -256,7 +256,7 @@ class Command(BaseCommand):
                         result_spf.save()
                     except Exception, e:
                         msg = "Could not save SPF auth_result for report '%s': %s" % (report.report_id, e)
-                        logger.wargning(msg)
+                        logger.warning(msg)
 
                 # Assign DKIM results counter to report and re-save
                 try:

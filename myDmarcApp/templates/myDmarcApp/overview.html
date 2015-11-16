@@ -20,9 +20,9 @@
     <div id="t{{choices.INCOMING}}-container">
         <div class="text-container" style="display:none">
             <strong>{{ start_incoming | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>,
-            my domains: <strong id="t{{choices.INCOMING}}}-domain-cnt"></strong>,
-            reports: <strong id="t{{choices.INCOMING}}}-report-cnt"></strong>,
-            messages: <strong id="t{{choices.INCOMING}}}-message-cnt"></strong>
+            my domains: <strong id="t{{choices.INCOMING}}-domain-cnt"></strong>,
+            reports: <strong id="t{{choices.INCOMING}}-report-cnt"></strong>,
+            messages: <strong id="t{{choices.INCOMING}}-message-cnt"></strong>
         </div>
         <div class="charts-container"></div>
     </div>
@@ -38,9 +38,9 @@
     <div id="t{{choices.OUTGOING}}-container">
         <div class="text-container" style="display:none">
             <strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
-            foreign domains: <strong id="{{choices.OUTGOING}}-domain-cnt"></strong>, 
-            reports: <strong id="{{choices.OUTGOING}}-report-cnt"></strong>,
-            messages: <strong id="{{choices.OUTGOING}}-message-cnt"></strong>
+            foreign domains: <strong id="t{{choices.OUTGOING}}-domain-cnt"></strong>, 
+            reports: <strong id="t{{choices.OUTGOING}}-report-cnt"></strong>,
+            messages: <strong id="t{{choices.OUTGOING}}-message-cnt"></strong>
         </div>
         <div class="charts-container"></div>
     </div>

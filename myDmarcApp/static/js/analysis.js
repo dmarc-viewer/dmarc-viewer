@@ -166,8 +166,7 @@ var analysis = {
                     //Create and append button for each dataset
                     var $mapDataSetBtn = $("<button>", {class: "btn btn-default", 
                                                         value: idx, 
-                                                        text: dataSet.label, 
-                                                        style: "color:"+ dataSet.color});
+                                                        text: dataSet.label});
                     $(".view-type-map .btn-group").append($mapDataSetBtn);
                 })
 

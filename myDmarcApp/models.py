@@ -81,7 +81,7 @@ class Record(models.Model):
 
     # Row
     source_ip               = models.GenericIPAddressField(null = True)
-    country_iso_code        = models.CharField(max_length = 2)
+    country_iso_code        = models.CharField(max_length = 2, null = True)
 
     count                   = models.IntegerField()
 
