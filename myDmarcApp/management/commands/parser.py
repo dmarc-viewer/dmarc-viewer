@@ -26,7 +26,7 @@ from django.contrib.gis.geos import Point
 
 import myDmarcApp.choices as choices
 
-logger = logging.getLogger("django")
+logger = logging.getLogger("parser")
 logger.info("Parse DMARC Aggregate Report into MyDMARC DB")
 
 geoip_reader = geoip2.database.Reader("/Users/topfpflanze/projectsOther/master/mydmarc/myDmarcApp/data/GeoLite2-City.mmdb")
@@ -68,7 +68,7 @@ class Command(BaseCommand):
                     self.iterate(os.path.join(root, f), report_type)
         else:
             msg = "Could not find '%s'" % file_name
-            logger.debug(msg)
+            logger.info(msg)
 
     def parse(self, file_name, report_type):
         """Parses single DMARC aggregate report and stores to db."""
@@ -122,8 +122,9 @@ class Command(BaseCommand):
                 try:
                     reporter.save()
                 except Exception, e:
-                    msg = "Could save reporter '%s': %s" % (org_name, e)
-                    logger.warning(msg)
+                    msg = "Could not save reporter '%s': %s" % (org_name, e)
+                    logger.error(msg)
+                    return False
 
             # Assign reporter
             report.reporter = reporter
@@ -240,7 +241,7 @@ class Command(BaseCommand):
                         dkim_count += 1
                     except Exception, e:
                         msg = "Could not save DKIM auth_result for report '%s': %s" % (report.report_id, e)
-                        logger.error(msg)
+                        logger.warning(msg)
 
                 # Create SPF authentication result objects
                 for node_spf_result in node_auth_results.findall('spf'):
@@ -254,8 +255,8 @@ class Command(BaseCommand):
                     try:
                         result_spf.save()
                     except Exception, e:
-                        msg = "Could notsave SPF auth_result for report '%s': %s" % (report.report_id, e)
-                        logger.error(msg)
+                        msg = "Could not save SPF auth_result for report '%s': %s" % (report.report_id, e)
+                        logger.wargning(msg)
 
                 # Assign DKIM results counter to report and re-save
                 try:
@@ -263,7 +264,7 @@ class Command(BaseCommand):
                     record.save()
                 except Exception, e:
                     msg = "Could not save DMARC record for for report '%s': %s" % (report.report_id, e)
-                    logger.error(msg)
+                    logger.warning(msg)
                     
         except Exception, e:
             msg = "Something went wrong while parsing '%s': %s" % (file_name, e)

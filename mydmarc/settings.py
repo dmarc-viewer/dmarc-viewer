@@ -114,11 +114,22 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
         'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join(BASE_DIR, 'log/mydmarc.log')
+                }
         },
     },
     'loggers': {
+        'parser': {
+            'handlers': ['file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+
+        },
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
