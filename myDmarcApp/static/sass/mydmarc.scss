@@ -194,6 +194,8 @@ body {
     }
     .view-type-map {
         .switch-filterset .btn {
+            //text-shadow: 0 0 1px grey;
+            font-weight: bold;
             border-bottom: 0pt;
             @include border-bottom-radius(0);
         }

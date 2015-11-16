@@ -7987,6 +7987,7 @@ body {
 }
 
 #deep-analysis .view-type-map .switch-filterset .btn, #deep-analysis .view-type-map .switch-filterset #view-editor #id_dr_type .radio, #view-editor #id_dr_type #deep-analysis .view-type-map .switch-filterset .radio {
+  font-weight: bold;
   border-bottom: 0pt;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;

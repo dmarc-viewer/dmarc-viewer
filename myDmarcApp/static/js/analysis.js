@@ -92,8 +92,8 @@ var analysis = {
          */
         createColorRange: function(baseColor, n) {
             var colorHsl = d3.hsl(baseColor),
-                minL = 0.1,
-                maxL = 0.9;
+                minL = 0.0,
+                maxL = 0.8;
             var stepSize = (maxL - minL) / n;
             var colors = [];
             for (var i = 0; i < n; i++ ){
@@ -127,8 +127,8 @@ var analysis = {
                     }));
 
                     // Define color range with 5 colors
-                    // var colors = analysis.map.createColorRange(dataSet.color, 4)
-                    var colors = ["#feedde", "#fdbe85", "#e6550d", "#a63603"];
+                    var colors = analysis.map.createColorRange(dataSet.color, 4)
+                    // var colors = ["#feedde", "#fdbe85", "#e6550d", "#a63603"];
                     var paletteScale = d3.scale.quantile()
                         .domain([1, max])
                         .range(colors);
@@ -164,7 +164,10 @@ var analysis = {
                     });
 
                     //Create and append button for each dataset
-                    var $mapDataSetBtn = $("<button>", {class: "btn btn-default", value: idx, text: dataSet.label});
+                    var $mapDataSetBtn = $("<button>", {class: "btn btn-default", 
+                                                        value: idx, 
+                                                        text: dataSet.label, 
+                                                        style: "color:"+ dataSet.color});
                     $(".view-type-map .btn-group").append($mapDataSetBtn);
                 })
 
