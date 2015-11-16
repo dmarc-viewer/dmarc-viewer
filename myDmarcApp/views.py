@@ -194,9 +194,8 @@ def view_management(request):
     return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
 
 def deep_analysis_first(request):
-    try:
-        view = View.objects.first()
-    except View.DoesNotExist as e:
+    view = View.objects.first()
+    if not view:
         messages.add_message(request, messages.WARNING, "You should start adding views before you want to use them.")
         return redirect("view_management") 
     return redirect("deep_analysis", view_id=view.id)

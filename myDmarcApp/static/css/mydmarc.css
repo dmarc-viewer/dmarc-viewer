@@ -7592,7 +7592,7 @@ button.close {
   border: 0;
 }
 
-.hidden {
+.hidden, #view-editor .disabled .help-block {
   display: none !important;
 }
 
@@ -7942,6 +7942,19 @@ body {
   border-bottom-left-radius: 3px;
 }
 
+#view-editor .disabled {
+  opacity: 0.3;
+}
+
+#view-editor .disabled label {
+  color: black;
+}
+
+#view-editor .disabled input, #view-editor .disabled select {
+  border-color: #ccc;
+  background: white;
+}
+
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
  * Deep Analysis
@@ -8034,7 +8047,7 @@ h2 {
   font-size: 22px;
 }
 
-.hidden {
+.hidden, #view-editor .disabled .help-block {
   display: none;
 }
 
@@ -8044,6 +8057,10 @@ h2 {
   width: 200px;
   border-color: #006699;
   background-color: white;
+}
+
+.btn-important:hover {
+  background-color: #e6e6e6;
 }
 
 .description {

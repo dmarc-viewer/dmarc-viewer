@@ -150,6 +150,20 @@ body {
         @include border-top-radius(3px);
         @include border-bottom-radius(3px);
     }
+
+    .disabled {
+        opacity: 0.3;
+        label {
+            color: black;
+        }
+        input, select {
+            border-color: #ccc;
+            background: white;
+        }
+        .help-block {
+            @extend .hidden;
+        }
+    }
 }
 
 /*  
@@ -268,7 +282,9 @@ h2 {
     width: 200px;
     border-color: $dmarc-blue;
     background-color: white;
-
+    &:hover{
+        background-color: #e6e6e6;
+    }
     //@extend .clearfix;
 
 }

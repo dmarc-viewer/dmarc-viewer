@@ -56,19 +56,33 @@ var editor = {
     },
     /*
      * Toggle Date Range Type
+     * Disable input fields of deslected date range type 
+     * 1: variable
+     * 2: fixed
+     * Add/Remove some classes for css
+     * 
      */
     toggleDateRange: function(){
         //Fixed
         var dr_type = $("[name='dr_type']:checked").val();
         $("[name='dr_type']").closest(".radio").removeClass("active")
+
         if (dr_type == 1){
-            $("[name='dr_type']:checked").closest(".radio").addClass("active")
-            $("#id_quantity, #id_unit").prop('disabled', true).val(null)
+            $("[name='dr_type']:checked").closest(".radio").addClass("active");
+            $("#id_quantity, #id_unit").prop('disabled', true).val(null);
+            $("#id_quantity_container, #id_unit_container").addClass("disabled");
+
             $("#id_begin, #id_end").prop('disabled', false);
+            $("#id_begin_container, #id_end_container").removeClass("disabled");
+
         } else if (dr_type == 2) {
-            $("[name='dr_type']:checked").closest(".radio").addClass("active")
-            $("#id_begin, #id_end").prop('disabled', true).val(null)
+            $("[name='dr_type']:checked").closest(".radio").addClass("active");
+            $("#id_begin, #id_end").prop('disabled', true).val(null);
+            $("#id_begin_container, #id_end_container").addClass("disabled");
+
             $("#id_quantity, #id_unit").prop('disabled', false);
+            $("#id_quantity_container, #id_unit_container").removeClass("disabled");
+
         }
     },
     /*
