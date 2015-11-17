@@ -119,12 +119,20 @@ class ViewForm(ModelForm):
         return view_instance
 
 class MyTypedMultipleChoiceField(TypedMultipleChoiceField):
-    """A TypedMultipleChoiceField without validation.
+    """A TypedMultipleChoiceField without real validation.
     Enables dynamic adding of choices on client side.
     We need this because we add some choices with ajax.
-     """
-    def validate(self, value):
-        pass
+    """
+    def validate(self, values):
+        """Add new values to choices list. To show them again in client if view is
+        invalid.
+        """
+        for value in values:
+            for choice_tuple in self.choices:
+                if value == choice_tuple[0]:
+                    return True
+            self.choices.append((value, value))
+        return True
 
 
 class FilterSetForm(ModelForm):

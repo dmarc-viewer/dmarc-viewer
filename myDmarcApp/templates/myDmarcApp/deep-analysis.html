@@ -48,7 +48,7 @@
                     <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
                     <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
                     <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
-                    <p>{% join_filter_set_field_values fs.alignedspfresult.all "Aligend SPF Result" " or " True %}</p>
+                    <p>{% join_filter_set_field_values fs.alignedspfresult_set.all "Aligend SPF Result" " or " True %}</p>
                     <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
                     <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
                     <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
