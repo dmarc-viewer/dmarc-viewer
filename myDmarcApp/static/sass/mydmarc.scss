@@ -228,6 +228,7 @@ body {
                     @include border-top-radius(0);
                     border-bottom-right-radius: 10px;
                     border: 0;
+                    background-color: $dmarc-blue;
                 }
             }
             li {
@@ -238,6 +239,16 @@ body {
         }
         .dataTables_processing {
             @extend .loading; 
+        }
+        .pagination {
+            a {
+                color: $dmarc-blue;
+            }
+            .active a {
+                color: #fff;
+                background-color: $dmarc-blue;
+                border-color: $dmarc-blue;
+            }
         }
     }
 

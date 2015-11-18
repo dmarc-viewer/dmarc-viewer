@@ -181,13 +181,14 @@ class Echo(object):
 
 def export_csv(request, view_id):
     view = View.objects.get(pk=view_id)
+    date = datetime.datetime.now().strftime('%Y%m%d')
 
     csv_data = view.getCsvData()
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
     response = StreamingHttpResponse((writer.writerow(row) for row in csv_data),
                                      content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response['Content-Disposition'] = "attachment; filename='%s_%s.csv'" % (view.title, date)
     return response
 
 def view_management(request):
