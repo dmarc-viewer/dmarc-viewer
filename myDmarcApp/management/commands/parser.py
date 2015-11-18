@@ -1,5 +1,3 @@
-
-#
 #----------------------------------------------------------------------
 # Copyright (c) 2015, Persistent Objects Ltd http://p-o.co.uk/
 #
@@ -16,6 +14,7 @@ import logging
 import os
 import pytz
 import geoip2.database
+import hashlib
 
 from django.core.management.base import BaseCommand, CommandError
 from myDmarcApp.models import Report, Reporter,\
@@ -75,22 +74,49 @@ class Command(BaseCommand):
 
         try:
             logger.info("Parsing '%s'" % file_name)
+
+            # File extension check
             if not file_name.endswith('.xml'):
                 msg = "Skipping '%s'" % (file_name)
                 logger.info(msg)
                 return False
 
+
+            # with open(file_name) as f:
+            #     # Parse the file into XML Element Tree
+            #     try:
+            #         tree = ET.parse(f)
+            #     except Exception, e:
+            #         msg = "Could not parse file '%s' into tree: %s" % (file_name, e)
+            #         logger.error(msg)
+            #         return False
+
+            #     # Create md5 hash from file content
+            #     hasher = hashlib.md5()
+            #     hasher.update(f.read())
+            
+            # report_hash = hasher.hexdigest()
+
+            # # Check if file already exists
+            # if Report.objects.find(report_hash=report_hash):
+            #     msg = "Skipping duplicate '%s' into tree" % (file_name,)
+            #     logger.info(msg)
+            #     return False
+
+
             # Parse the file into XML Element Tree
             try:
                 tree = ET.parse(file_name)
-                root = tree.getroot()
             except Exception, e:
                 msg = "Could not parse file '%s' into tree: %s" % (file_name, e)
                 logger.error(msg)
                 return False
 
+            root = tree.getroot()
+
             # Create report object
             report                      = Report()
+            #report.report_hash          = report_hash
 
             # Assign report metadata
             report.report_type          = report_type

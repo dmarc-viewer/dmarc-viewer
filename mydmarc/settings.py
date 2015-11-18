@@ -26,6 +26,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+INTERNAL_IPS = (u'::1', u'127.0.0.1')
 
 # Application definition
 
@@ -39,7 +41,9 @@ INSTALLED_APPS = (
     'super_inlines',
     'bootstrap3',
     'djangoformsetjs',
-    'myDmarcApp'
+    'myDmarcApp',
+    'debug_toolbar',
+    'debug_panel'
 )
 
 BOOTSTRAP3 = {
@@ -47,6 +51,7 @@ BOOTSTRAP3 = {
 }
 
 MIDDLEWARE_CLASSES = (
+    'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -55,7 +60,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'myDmarcApp.middleware.BootstrapAjaxMessage'
+    'myDmarcApp.middleware.BootstrapAjaxMessage',
 )
 
 ROOT_URLCONF = 'mydmarc.urls'

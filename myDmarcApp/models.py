@@ -28,9 +28,13 @@ class Report(models.Model):
     # Custom field to easily differ between incoming and outgoing
     report_type             = models.IntegerField(choices = choices.REPORT_TYPE)
     date_created            = models.DateTimeField(auto_now = False, auto_now_add = True)
+
+    # # MD5 hash to detect duplicate reports when parsing
+    # # 
+    # report_hash             = models.CharField(max_length = 32)
     
     # Meta Data 
-    report_id               = models.CharField(max_length = 200, unique = True)
+    report_id               = models.CharField(max_length = 200)
     date_range_begin        = models.DateTimeField()
     date_range_end          = models.DateTimeField()
 
@@ -168,10 +172,9 @@ class View(OrderedModel):
 
         # Combine filters (getQuery) of all Filtersets
         query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
-        return Record.objects.filter(query).distinct().order_by('report__date_range_begin')
+        return Record.objects.filter(query).distinct().order_by('report__date_range_begin') #.values_list('id', flat=True)
         # use this for list comprehension
         # PROBLEM: can't assign filterset label or color if it is all combined
-
 
     def getTableData(self, records=None):
         """If records list or querymanager is specified, use it instead of
@@ -196,7 +199,32 @@ class View(OrderedModel):
                 r.report.date_range_end.strftime('%Y%m%d'),
                 # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
                 r.report.report_id
-                ] for r in records]
+                ] for r in list(records)]
+                
+
+        # XXX LP: This is a huge performance optimization 
+        # More smaller queries instead of one big
+        # result = []
+        # for record_id in records:
+        #     r = Record.objects.get(pk=record_id)
+        #     result.append([r.report.reporter.org_name,
+        #             r.report.domain,
+        #             r.get_dkim_display(),
+        #             r.get_spf_display(),
+        #             r.get_disposition_display(),
+        #             ' '.join([dkim.domain for dkim in r.authresultdkim_set.all()]),
+        #             ' '.join([dkim.get_result_display() for dkim in r.authresultdkim_set.all()]),
+        #             ' '.join([spf.domain for spf in r.authresultspf_set.all()]),
+        #             ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
+        #             r.count,
+        #             r.source_ip,
+        #             r.country_iso_code,
+        #             r.report.date_range_begin.strftime('%Y%m%d'),
+        #             r.report.date_range_end.strftime('%Y%m%d'),
+        #             # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+        #             r.report.report_id])
+
+        # return result
 
     def getTableOrderFields(self):
         return ["report__reporter__org_name",

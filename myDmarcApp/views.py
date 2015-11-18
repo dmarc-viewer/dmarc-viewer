@@ -140,9 +140,9 @@ def order(request):
         for view_id in view_ids:
             views.append(View.objects.get(pk=view_id))
         OrderedModel.order(views)
-        messages.add_message(request, messages.SUCCESS, "Successfully ordered views.")
+        messages.add_message(request, messages.SUCCESS, "Successfully sorted views.")
     except Exception, e:
-        messages.add_message(request, messages.ERROR, "Ordering did not work.")
+        messages.add_message(request, messages.ERROR, "Sorting did not work.")
         raise e
 
     # XXX LP: Make nice ajax messages like in normal templates
@@ -242,7 +242,7 @@ def table_async(request, view_id):
     # Get all (unfiltered) records for this view
     records          = view.getTableRecords()
     records_total    = records.count()
-    records_filtered = records.count()
+    records_filtered = records_total
 
     # Filter records
     if time_filter:
@@ -271,6 +271,8 @@ def table_async(request, view_id):
         records = records.order_by(prefix + order_by[order_idx])
 
     # Create paginator
+    # evaluate db query (list()) here 
+    # records = list(records)
     paginator = Paginator(records, page_length)
     # Get 1-based page index
     page_index = row_index / page_length + 1
