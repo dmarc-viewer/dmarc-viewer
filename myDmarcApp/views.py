@@ -211,7 +211,8 @@ def deep_analysis(request, view_id):
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
             'sidebar_views'         : sidebar_views, 
-            'the_view'              : view
+            'the_view'              : view,
+            'table_head'            : View.getTableHead()
         })
 
 def map_async(request, view_id):
@@ -265,7 +266,7 @@ def table_async(request, view_id):
     order_idx = int(order["column"])
 
     if columns[order_idx]["orderable"]:
-        order_by = view.getTableOrderFields()
+        order_by = View.getTableOrderFields()
 
         prefix = "-" if order["dir"] == "desc" else ""
         records = records.order_by(prefix + order_by[order_idx])

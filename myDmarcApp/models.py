@@ -176,6 +176,27 @@ class View(OrderedModel):
         # use this for list comprehension
         # PROBLEM: can't assign filterset label or color if it is all combined
 
+    @staticmethod
+    def getTableOrderFields():
+        return ["report__reporter__org_name",
+                "report__domain",
+                "dkim",
+                "spf",
+                "disposition",
+                "", # raw dkim domains/results are not ordered
+                "", # raw dkim domains/results are not ordered
+                "count",
+                "source_ip",
+                "country_iso_code",
+                "report__date_range_begin",
+                "report__date_range_end",
+                "report__report_id"]
+
+    @staticmethod
+    def getTableHead():
+        return ["Reporter", "Reportee", "aDKIM", "aSPF", "Disposition", "raw DKIM", "raw SPF",
+                 "msg#", "IP", "Country", "Report Begin", "Report End", "Report ID"]
+
     def getTableData(self, records=None):
         """If records list or querymanager is specified, use it instead of
         records for this view. this can be useful for pagination"""
@@ -188,10 +209,8 @@ class View(OrderedModel):
                 r.get_dkim_display(),
                 r.get_spf_display(),
                 r.get_disposition_display(),
-                ' '.join([dkim.domain for dkim in r.authresultdkim_set.all()]),
-                ' '.join([dkim.get_result_display() for dkim in r.authresultdkim_set.all()]),
-                ' '.join([spf.domain for spf in r.authresultspf_set.all()]),
-                ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
+                ' '.join(["%s (%s)" % (dkim.domain, dkim.get_result_display()) for dkim in r.authresultdkim_set.all()]),
+                ' '.join(["%s (%s)" % (spf.domain, spf.get_result_display()) for spf in r.authresultspf_set.all()]),
                 r.count,
                 r.source_ip,
                 r.country_iso_code,
@@ -226,30 +245,8 @@ class View(OrderedModel):
 
         # return result
 
-    def getTableOrderFields(self):
-        return ["report__reporter__org_name",
-                "report__domain",
-                "dkim",
-                "spf",
-                "disposition",
-                "", # raw dkim domains/results are not ordered
-                "", # raw dkim domains/results are not ordered
-                "", # raw spf  domains/results are not ordered
-                "", # raw spf  domains/results are not ordered
-                "count",
-                "source_ip",
-                "country_iso_code",
-                "report__date_range_begin",
-                "report__date_range_end",
-                "report__report_id"]
-
     def getCsvData(self):
-        csv_head = ["reporter", "domain", "aligned dkim", "aligned spf",
-                    "disposition", "dkim domains", "dkim results",
-                    "spf domains", "spf results", "count", "ip", "country", 
-                    "date_range_begin", "date_range_end", "report id"]
-
-        return [csv_head] + self.getTableData()
+        return [View.getTableHead()] + self.getTableData()
 
     def getLineData(self):
         # There must only one of both exactly one 
