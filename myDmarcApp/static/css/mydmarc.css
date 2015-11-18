@@ -8011,12 +8011,20 @@ body {
 }
 
 #deep-analysis .view-type-table tr td {
+  vertical-align: middle;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
 #deep-analysis .view-type-table tr td:before {
   top: 1px;
+  left: 1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  border: 0;
 }
 
 #deep-analysis #time-quick-filter {
@@ -8025,7 +8033,7 @@ body {
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
- * Deep Analysis
+ * View Management
  */
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
