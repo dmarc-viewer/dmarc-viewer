@@ -5,13 +5,25 @@
         <div>{% bootstrap_field form.id %}</div>
         <div class="filter_label">{% bootstrap_field form.label %}</div>
         <div class="filter_color">{% bootstrap_field form.color %}</div>
-        <div class="filter_report_receiver_domain ">{% bootstrap_field form.report_receiver_domain %}</div>
-        <div class="filter_report_sender">{% bootstrap_field form.report_sender %}</div>
-        <div class="filter_source_ip">{% bootstrap_field form.source_ip %}</div>
-        <div class="filter_raw_spf_domain">{% bootstrap_field form.raw_spf_domain %}</div>
-        <div class="filter_raw_spf_result">{% bootstrap_field form.raw_spf_result %}</div>
-        <div class="filter_raw_dkim_domain">{% bootstrap_field form.raw_dkim_domain %}</div>
-        <div class="filter_raw_dkim_result">{% bootstrap_field form.raw_dkim_result %}</div>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="filter_report_receiver_domain ">{% bootstrap_field form.report_receiver_domain %}</div>
+                <div class="filter_report_sender">{% bootstrap_field form.report_sender %}</div>
+                <div class="filter_source_ip">{% bootstrap_field form.source_ip %}</div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="filter_raw_spf_domain">{% bootstrap_field form.raw_spf_domain %}</div>
+                <div class="filter_raw_spf_result">{% bootstrap_field form.raw_spf_result %}</div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="filter_raw_dkim_domain">{% bootstrap_field form.raw_dkim_domain %}</div>
+                <div class="filter_raw_dkim_result">{% bootstrap_field form.raw_dkim_result %}</div>
+            </div>
+        </div>
         <div class="filter_multiple_dkim">{% bootstrap_field form.multiple_dkim %}</div>
         <div class="filter_aligned_spf_result">{% bootstrap_field form.aligned_spf_result %}</div>
         <div class="filter_aligned_dkim_result">{% bootstrap_field form.aligned_dkim_result %}</div>

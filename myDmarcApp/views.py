@@ -89,7 +89,7 @@ def choices_async(request):
         values = Reporter.objects.filter(
                                     report__report_type=report_type
                                 ).filter(
-                                    email__icontains=query_str
+                                    email__contains=query_str
                                 ).distinct().order_by(
                                     'email'
                                 ).values_list('email')
@@ -97,7 +97,7 @@ def choices_async(request):
         values = Report.objects.filter(
                                     report_type=report_type
                                 ).filter(
-                                    domain__icontains=query_str
+                                    domain__contains=query_str
                                 ).distinct().order_by(
                                     'domain'
                                 ).values_list('domain', flat=True)
@@ -105,7 +105,7 @@ def choices_async(request):
         values = AuthResultDKIM.objects.filter(
                                     record__report__report_type=report_type
                                 ).filter(
-                                    domain__icontains=query_str
+                                    domain__contains=query_str
                                 ).distinct().order_by(
                                     'domain'
                                 ).values_list('domain')
@@ -113,7 +113,7 @@ def choices_async(request):
         values = AuthResultSPF.objects.filter(
                                     record__report__report_type=report_type
                                 ).filter(
-                                    domain__icontains=query_str
+                                    domain__contains=query_str
                                 ).distinct().order_by(
                                     'domain'
                                 ).values_list('domain')

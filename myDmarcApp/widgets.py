@@ -39,6 +39,8 @@ class ColorPickerWidget(TextInput):
     input_type = 'color'
         
     def render(self, name, value, attrs=None):
+        if not value:
+            value = "#006699"
         html = super(ColorPickerWidget, self).render(name, value, attrs)
         js   =  '''<script type="text/javascript">
                     (function($){

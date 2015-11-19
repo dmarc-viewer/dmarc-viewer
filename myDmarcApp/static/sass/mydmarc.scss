@@ -4,7 +4,6 @@
 $dmarc-blue: #006699;
 
 
-
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
  * JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
@@ -302,25 +301,33 @@ h2 {
 }
 
 .btn-important {
-    float: right;
-    margin: 10px 0;
-    width: 200px;
-    border-color: $dmarc-blue;
-    background-color: white;
-    &:hover{
-        background-color: #e6e6e6;
-    }
+   //@extend .btn-primary;
+   float: right;
+   margin: 10px 0;
+   width: 200px;
+   color: $dmarc-blue;
+   font-weight: bold;
+   border-color: $dmarc-blue;
+   background-color: white;
+   &:hover, &:active, &:focus{
+       background-color: $dmarc-blue;
+       color: white;
+   }
     //@extend .clearfix;
 
 }
 
 .description {
-    font-size: 15px;
-    font-style: italic;
-    font-variant: small-caps;
-    color: $dmarc-blue;
-    line-height: 18px;
-    margin-bottom: 20px;
+    @extend .alert;
+    @extend .alert-info;
+    padding: 10px;
+    margin: 5px 0;
+    //font-size: 15px;
+    //font-style: italic;
+    //font-variant: small-caps;
+    //color: $dmarc-blue;
+    //line-height: 18px;
+    //margin-bottom: 20px;
 }
 
 code {

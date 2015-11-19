@@ -50,6 +50,10 @@ BOOTSTRAP3 = {
     'set_required' : False
 }
 
+TEMPLATE_SETTINGS = {
+    "use_minified": False
+}
+
 MIDDLEWARE_CLASSES = (
     'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'myDmarcApp.context.options'
             ],
         },
     },

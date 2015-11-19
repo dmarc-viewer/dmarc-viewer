@@ -5,7 +5,7 @@
     {% load static %}
     {% load bootstrap3 %}
 
-    {% if False %}
+    {% if TEMPLATE_SETTINGS.use_minified %}
         <script src="{% static "js/mydmarc.dist.min.js" %}"></script>
         <link href="{% static "css/mydmarc.dist.min.css" %}" rel="stylesheet">
     {% else %}
