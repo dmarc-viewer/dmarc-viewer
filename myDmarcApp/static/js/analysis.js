@@ -23,11 +23,11 @@ var analysis = {
                 if (type == "disposition"){
                 color = d3.scale.ordinal()
                     .domain(["reject", "quarantine", "none"])
-                    .range(["#CC0000", "#CCCC00", "#00CC00"]);
+                    .range(["#e41a1c", "#ff7f00", "#4daf4a"]);
                 } else {
-                color = d3.scale.ordinal()
+                    color = d3.scale.ordinal()
                     .domain(["fail", "pass"])
-                    .range(["#CC0000", "#00CC00"]);
+                    .range(["#e41a1c", "#4daf4a"]);
                 }
 
                 var arc = d3.svg.arc()

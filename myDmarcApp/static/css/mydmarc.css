@@ -7900,15 +7900,20 @@ body {
   margin-left: -20px;
 }
 
-.nav-sidebar > li > a {
-  padding: 5px 20px 5px 10px;
+.nav-sidebar li:not(:first-child) {
+  border-top: 1px solid #ddd;
 }
 
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav-sidebar li a {
+  color: #006699;
+  padding: 5px 20px;
+}
+
+.nav-sidebar li.active > a,
+.nav-sidebar li.active > a:hover,
+.nav-sidebar li.active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #006699;
 }
 
 .container-margin, #view-editor, #view-management, #overview {
@@ -8070,14 +8075,6 @@ h2 {
   display: none;
 }
 
-.nav-sidebar li a {
-  color: #006699;
-}
-
-.nav-sidebar li.active > a, .nav-sidebar li.active > a:hover {
-  background-color: #006699;
-}
-
 .btn-important {
   float: right;
   margin: 10px 0;
@@ -8114,6 +8111,11 @@ code {
   font-size: 20px;
   line-height: 20px;
   height: 50px;
+}
+
+.anchor {
+  padding-top: 50px;
+  margin-top: -30px;
 }
 
 /*  

@@ -6,29 +6,40 @@
 
 {% block content %}
 <div class="col-sm-3 col-md-2 sidebar">
-    <ul class="nav nav-sidebar nav-tabs">
+    <ul class="nav nav-sidebar">
         {% for topic_id, topic in topics.items %}
-            <li role="presentation"><a href="#{{topic_id}}">{{topic.title}}</a></li>
+            <li {% if forloop.counter == 1 %}class="active"{% endif %} role="presentation"><a href="#{{topic_id}}">{{topic.title}}</a></li>
                 {% for item_id, item in topic.items.items  %}
-                    <li role="presentation" ><a href="#{{item_id}}">{{item.faq}}</a></li>
+                    <li role="presentation"><a href="#{{item_id}}">{{item.faq}}</a></li>
                 {% endfor %}
         {% endfor %}
     </ul>
 </div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {% comment %}
+        
     <h1 class="page-header">Frequently asked questions</h1>
+
+    {% endcomment %}
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
     </div>
     {% for topic_id, topic in topics.items %}
         <div class="faq-container" >
-        <h2 id="{{topic_id}}">{{topic.title}}</h2>
+        <h2 class="anchor" id="{{topic_id}}">{{topic.title}}</h2>
             {% for item_id, item in topic.items.items  %}
-                <h3 id="{{item_id}}">{{item.faq}}</h3>
+                <h3 class="anchor" id="{{item_id}}">{{item.faq}}</h3>
                 {{item.long}}
             {% endfor %}
         </div>
     {% endfor %}
+
+    <script type="text/javascript">
+        $(document).on("click", "#help .nav-sidebar li > a", function(){
+            $(this).closest(".nav-sidebar").find("li").removeClass("active");
+            $(this).closest("li").addClass("active");
+        });
+    </script>
 
 {% endblock %}
