@@ -5,7 +5,7 @@ import views
 
 urlpatterns = [
     # Index, Overview
-    url(r'^$', RedirectView.as_view(pattern_name='overview')),
+    url(r'^$', RedirectView.as_view(pattern_name='overview', permanent=False)),
     url(r'overview/$', views.overview, name='overview'),
     url(r'overview-async/$', views.overview_async, name='overview_async'),
     # Analysis, Data, Export

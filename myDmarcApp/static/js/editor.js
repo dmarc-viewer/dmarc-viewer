@@ -90,7 +90,7 @@ var editor = {
      */
     _xhr: null,
     loadChoices: function(str){
-        if (!str.length) return;
+        if (!str.length || str.length < 3) return;
         editor._xhr && editor._xhr.abort();
         this.load(function(callback) {
             editor._xhr = $.ajax({

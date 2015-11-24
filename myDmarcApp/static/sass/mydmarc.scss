@@ -245,8 +245,14 @@ body {
                 //border-bottom: 0;
             }
         }
+        .dataTables_wrapper {
+            min-height: 200px;
+        }
         .dataTables_processing {
             @extend .loading; 
+            position: absolute;
+            background-color: rgba(255,255,255,0.8);
+            top: 39px;
         }
         .pagination {
             a {

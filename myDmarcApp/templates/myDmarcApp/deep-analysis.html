@@ -114,7 +114,7 @@
             <thead>
                 <tr>
                     {% for th in table_head %}
-                        <th>{{th}}</th>
+                        <th {% if th == "raw DKIM" or th == "raw SPF" %}data-orderable="false"{% endif %}>{{th}}</th>
                     {% endfor %}
                 </tr>
             </thead>

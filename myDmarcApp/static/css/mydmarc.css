@@ -8033,6 +8033,16 @@ body {
   background-color: #006699;
 }
 
+#deep-analysis .view-type-table .dataTables_wrapper {
+  min-height: 200px;
+}
+
+#deep-analysis .view-type-table .dataTables_processing {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  top: 39px;
+}
+
 #deep-analysis .view-type-table .pagination a {
   color: #006699;
 }

@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.cache import cache_page
+
 from forms import *
 from myDmarcApp.models import View, DateRange, OrderedModel, _clone
 from myDmarcApp.help import help_topics
@@ -21,6 +23,7 @@ def overview(request):
 
     return render(request, 'myDmarcApp/overview.html', response)
 
+@cache_page(60 * 60 * 24)
 def overview_async(request):
     report_type = int(request.GET.get("report_type"))
     response = Report.getOverviewSummary(report_type)
@@ -150,7 +153,6 @@ def order(request):
 
 def export_svg(request, view_id):
 
-
     # Get data from client side via POST variables
     svg_data = request.POST.get("svg")
     view_type = request.POST.get("view_type")
@@ -226,7 +228,6 @@ def line_async(request, view_id):
 
     view_type_line_data  = view.getLineData() if view.type_line else []
     return HttpResponse(json.dumps(view_type_line_data), content_type="application/json")
-
 
 def table_async(request, view_id):
     view = View.objects.get(pk=view_id)
