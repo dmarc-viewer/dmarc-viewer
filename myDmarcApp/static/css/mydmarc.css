@@ -7947,6 +7947,11 @@ body {
   border-bottom-left-radius: 3px;
 }
 
+#view-editor .selectize-control .selectize-input [data-value] {
+  background-color: #F5F5F5;
+  background-image: none;
+}
+
 #view-editor .disabled {
   opacity: 0.3;
 }
@@ -8041,6 +8046,7 @@ body {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.8);
   top: 39px;
+  height: 100%;
 }
 
 #deep-analysis .view-type-table .pagination a {

@@ -158,6 +158,11 @@ body {
         @include border-top-radius(3px);
         @include border-bottom-radius(3px);
     }
+   
+    .selectize-control .selectize-input [data-value] {
+        background-color: #F5F5F5;
+        background-image: none;
+    }
 
     .disabled {
         opacity: 0.3;
@@ -253,6 +258,7 @@ body {
             position: absolute;
             background-color: rgba(255,255,255,0.8);
             top: 39px;
+            height: 100%;
         }
         .pagination {
             a {

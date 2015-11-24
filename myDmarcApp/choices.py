@@ -96,10 +96,10 @@ TIME_UNIT_MONTH = 3
 TIME_UNIT_YEAR = 4
 TIME_UNIT = (
     (None, '-----'),
-    (TIME_UNIT_DAY, 'day'),
-    (TIME_UNIT_WEEK, 'week'),
-    (TIME_UNIT_MONTH, 'month'),
-    (TIME_UNIT_YEAR, 'year')
+    (TIME_UNIT_DAY, 'day(s)'),
+    (TIME_UNIT_WEEK, 'week(s)'),
+    (TIME_UNIT_MONTH, 'month(s)'),
+    (TIME_UNIT_YEAR, 'year(s)')
     ) 
 
 DATE_RANGE_TYPE_FIXED = 1
