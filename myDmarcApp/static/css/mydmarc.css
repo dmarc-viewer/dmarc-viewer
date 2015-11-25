@@ -7929,8 +7929,18 @@ body {
   font-weight: normal;
 }
 
+#view-editor #id_dr_type .radio {
+  padding: 0;
+  height: 34px;
+}
+
 #view-editor #id_dr_type .radio label {
+  padding: 0;
   width: 100%;
+}
+
+#view-editor #id_dr_type .radio input {
+  display: none;
 }
 
 #view-editor .form-group {
@@ -7948,7 +7958,8 @@ body {
 }
 
 #view-editor .selectize-control .selectize-input [data-value] {
-  background-color: #F5F5F5;
+  color: whitesmoke;
+  background-color: #006699;
   background-image: none;
 }
 

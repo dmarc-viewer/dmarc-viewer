@@ -132,6 +132,7 @@ body {
         }
     }
 
+
     // Radio Input to Button Group magic :)
     // like a wolf in sheep's clothing
     #id_dr_type {
@@ -140,8 +141,14 @@ body {
         .radio {
             @extend .btn;
             @extend .btn-default;
+            padding: 0;
+            height: 34px;
             label {
-                width:100%;
+                padding: 0;
+                width: 100%;
+            }
+            input {
+                display: none;
             }
         }
     }
@@ -160,7 +167,8 @@ body {
     }
    
     .selectize-control .selectize-input [data-value] {
-        background-color: #F5F5F5;
+        color: whitesmoke;
+        background-color: $dmarc-blue;
         background-image: none;
     }
 
