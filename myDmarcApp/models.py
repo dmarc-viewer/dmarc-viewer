@@ -68,12 +68,19 @@ class Report(models.Model):
             "message_cnt" : Record.objects.filter(report__report_type=report_type).aggregate(cnt=Sum("count"))['cnt'],
             # Query per result aggregated message count for dkim, spf and dispostion
             # Transform result number to display name
-            "dkim"        : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["dkim"])}
-                              for res in Record.objects.filter(report__report_type=report_type).values("dkim").annotate(cnt=Sum("count"))],
-            "spf"         : [{"cnt": res["cnt"], "label": dict(choices.DMARC_RESULT).get(res["spf"])}
-                              for res in Record.objects.filter(report__report_type=report_type).values("spf").annotate(cnt=Sum("count"))],
-            "disposition" : [{"cnt": res["cnt"], "label": dict(choices.DISPOSITION_TYPE).get(res["disposition"])}
-                              for res in Record.objects.filter(report__report_type=report_type).values("disposition").annotate(cnt=Sum("count"))],
+            "dkim"        : [{
+                                "cnt": res["cnt"], 
+                                "label": dict(choices.DMARC_RESULT).get(res["dkim"])
+                            } for res in Record.objects.filter(report__report_type=report_type).values("dkim").annotate(cnt=Sum("count"))],
+
+            "spf"         : [{
+                                "cnt": res["cnt"], 
+                                "label": dict(choices.DMARC_RESULT).get(res["spf"])
+                            } for res in Record.objects.filter(report__report_type=report_type).values("spf").annotate(cnt=Sum("count"))],
+            "disposition" : [{
+                                "cnt": res["cnt"], 
+                                "label": dict(choices.DISPOSITION_TYPE).get(res["disposition"])
+                            } for res in Record.objects.filter(report__report_type=report_type).values("disposition").annotate(cnt=Sum("count"))],
         }
 
 class ReportError(models.Model):
@@ -214,8 +221,8 @@ class View(OrderedModel):
                 r.count,
                 r.source_ip,
                 r.country_iso_code,
-                r.report.date_range_begin.strftime('%Y%m%d'),
-                r.report.date_range_end.strftime('%Y%m%d'),
+                r.report.date_range_begin.strftime('%Y/%m/%d'),
+                r.report.date_range_end.strftime('%Y/%m/%d'),
                 # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
                 r.report.report_id
                 ] for r in list(records)]

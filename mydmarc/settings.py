@@ -42,8 +42,8 @@ INSTALLED_APPS = (
     'bootstrap3',
     'djangoformsetjs',
     'myDmarcApp',
-    'debug_toolbar',
-    'debug_panel'
+    #'debug_toolbar',
+    #'debug_panel'
 )
 
 BOOTSTRAP3 = {
@@ -55,7 +55,7 @@ TEMPLATE_SETTINGS = {
 }
 
 MIDDLEWARE_CLASSES = (
-    'debug_panel.middleware.DebugPanelMiddleware',
+    #'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

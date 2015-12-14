@@ -13,21 +13,22 @@ var analysis = {
             });
         },
         appendPies: function(data, targetSelector) {
+
             ["dkim", "spf", "disposition"].forEach(function(type){
-                var width = 200,
+                var width = 250,
                     height = 200,
                     margin = {top: 50, left: 50},
                     radius = 90;
 
                 var color;
                 if (type == "disposition"){
-                color = d3.scale.ordinal()
-                    .domain(["reject", "quarantine", "none"])
-                    .range(["#e41a1c", "#ff7f00", "#4daf4a"]);
+                    color = d3.scale.ordinal()
+                        .domain(["reject", "quarantine", "none"])
+                        .range(["#e41a1c", "#ff7f00", "#4daf4a"]);
                 } else {
                     color = d3.scale.ordinal()
-                    .domain(["fail", "pass"])
-                    .range(["#e41a1c", "#4daf4a"]);
+                        .domain(["fail", "pass"])
+                        .range(["#e41a1c", "#4daf4a"]);
                 }
 
                 var arc = d3.svg.arc()
@@ -54,16 +55,22 @@ var analysis = {
                    .attr("d", arc)
                    .style("fill", function(d) { return color(d.data.label); });
 
+                // Title
+                if (type == "spf" || type == "dkim")
+                    title = "aligned " + type.toUpperCase();
+                else
+                    title = type.toUpperCase();
                 g.append("text")
                     .attr("transform", "translate(0, -120)")
-                    .text(type.toUpperCase());
+                    .attr("text-anchor", "middle")
+                    .text(title);
                     
                 var lineLegendOptions = {
                     legendItems : data[type].map(function(d){return {color: color(d.label), name: (d.cnt + " " + d.label)} })
                 }
                 g.append("g")
                   .attr("class", "legend")
-                  .attr("transform", "translate(-120, -110)")
+                  .attr("transform", "translate(-160, -100)")
                   .style("font-size", "12px")
                   .call(d3.legend, lineLegendOptions); 
             });
@@ -74,13 +81,17 @@ var analysis = {
         _dataSets : [],
         _mapDataSets: [],
         _width: null,
+        // Country codes from (accessed on 2015/12/14)
+        // https://www.iso.org/obp/ui/#search/code/
+        // we have ISO 3166-1 Alpha 2 stored in the DB (Maxmind)
+        // but need ISO 3166-1 Alpha 3 for datamaps
         _countryCodeMapping: {
-            "AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH", "BW": "BWA", "BR": "BRA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "24": ",CD", "24": ",CG", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GA": "GAB", "22": ",GM", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GR": "GRC", "GD": "GRD", "GT": "GTM", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MR": "MRT", "MU": "MUS", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PL": "POL", "PT": "PRT", "QA": "QAT", "RO": "ROU", "RU": "RUS", "RW": "RWA", "KN": "KNA", "LC": "LCA", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VA": "VAT", "VE": "VEN", "VN": "VNM", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE", "GE": "GEO", "TW": "TWN", "AZ": "AZE", "CY": "CYP", "MD": "MDA", "SO": "SOM", "GE": "GEO", "AU": "AUS", "CX": "CXR", "CC": "CCK", "AU": "AUS", "HM": "HMD", "NF": "NFK", "NC": "NCL", "PF": "PYF", "YT": "MYT", "GP": "GLP", "GP": "GLP", "PM": "SPM", "WF": "WLF", "TF": "ATF", "PF": "PYF", "BV": "BVT", "CK": "COK", "NU": "NIU", "TK": "TKL", "GG": "GGY", "IM": "IMN", "JE": "JEY", "AI": "AIA", "BM": "BMU", "IO": "IOT", "VG": "VGB", "KY": "CYM", "FK": "FLK", "GI": "GIB", "MS": "MSR", "PN": "PCN", "SH": "SHN", "GS": "SGS", "TC": "TCA", "MP": "MNP", "PR": "PRI", "AS": "ASM", "UM": "UMI", "GU": "GUM", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "UM": "UMI", "VI": "VIR", "UM": "UMI", "HK": "HKG", "MO": "MAC", "FO": "FRO", "GL": "GRL", "GF": "GUF", "GP": "GLP", "MQ": "MTQ", "RE": "REU", "AX": "ALA", "AW": "ABW", "AN": "ANT", "SJ": "SJM", "AC": "ASC", "TA": "TAA", "AQ": "ATA", "AQ": "ATA", "CN": "CHN"
+            "AF": "AFG", "AX": "ALA", "AL": "ALB", "DZ": "DZA", "AS": "ASM", "AD": "AND", "AO": "AGO", "AI": "AIA", "AQ": "ATA", "AG": "ATG", "AR": "ARG", "AM": "ARM", "AW": "ABW", "AU": "AUS", "AT": "AUT", "AZ": "AZE", "BS": "BHS", "BH": "BHR", "BD": "BGD", "BB": "BRB", "BY": "BLR", "BE": "BEL", "BZ": "BLZ", "BJ": "BEN", "BM": "BMU", "BT": "BTN", "BO": "BOL", "BQ": "BES", "BA": "BIH", "BW": "BWA", "BV": "BVT", "BR": "BRA", "IO": "IOT", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI", "CV": "CPV", "KH": "KHM", "CM": "CMR", "CA": "CAN", "KY": "CYM", "CF": "CAF", "TD": "TCD", "CL": "CHL", "CN": "CHN", "CX": "CXR", "CC": "CCK", "CO": "COL", "KM": "COM", "CD": "COD", "CG": "COG", "CK": "COK", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB", "CW": "CUW", "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DM": "DMA", "DO": "DOM", "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI", "EE": "EST", "ET": "ETH", "FK": "FLK", "FO": "FRO", "FJ": "FJI", "FI": "FIN", "FR": "FRA", "GF": "GUF", "PF": "PYF", "TF": "ATF", "GA": "GAB", "GM": "GMB", "GE": "GEO", "DE": "DEU", "GH": "GHA", "GI": "GIB", "GR": "GRC", "GL": "GRL", "GD": "GRD", "GP": "GLP", "GU": "GUM", "GT": "GTM", "GG": "GGY", "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HM": "HMD", "VA": "VAT", "HN": "HND", "HK": "HKG", "HU": "HUN", "IS": "ISL", "IN": "IND", "ID": "IDN", "IR": "IRN", "IQ": "IRQ", "IE": "IRL", "IM": "IMN", "IL": "ISR", "IT": "ITA", "JM": "JAM", "JP": "JPN", "JE": "JEY", "JO": "JOR", "KZ": "KAZ", "KE": "KEN", "KI": "KIR", "KP": "PRK", "KR": "KOR", "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN", "LS": "LSO", "LR": "LBR", "LY": "LBY", "LI": "LIE", "LT": "LTU", "LU": "LUX", "MO": "MAC", "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV", "ML": "MLI", "MT": "MLT", "MH": "MHL", "MQ": "MTQ", "MR": "MRT", "MU": "MUS", "YT": "MYT", "MX": "MEX", "FM": "FSM", "MD": "MDA", "MC": "MCO", "MN": "MNG", "ME": "MNE", "MS": "MSR", "MA": "MAR", "MZ": "MOZ", "MM": "MMR", "NA": "NAM", "NR": "NRU", "NP": "NPL", "NL": "NLD", "NC": "NCL", "NZ": "NZL", "NI": "NIC", "NE": "NER", "NG": "NGA", "NU": "NIU", "NF": "NFK", "MP": "MNP", "NO": "NOR", "OM": "OMN", "PK": "PAK", "PW": "PLW", "PS": "PSE", "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL", "PN": "PCN", "PL": "POL", "PT": "PRT", "PR": "PRI", "QA": "QAT", "RE": "REU", "RO": "ROU", "RU": "RUS", "RW": "RWA", "BL": "BLM", "SH": "SHN", "KN": "KNA", "LC": "LCA", "MF": "MAF", "PM": "SPM", "VC": "VCT", "WS": "WSM", "SM": "SMR", "ST": "STP", "SA": "SAU", "SN": "SEN", "RS": "SRB", "SC": "SYC", "SL": "SLE", "SG": "SGP", "SX": "SXM", "SK": "SVK", "SI": "SVN", "SB": "SLB", "SO": "SOM", "ZA": "ZAF", "GS": "SGS", "SS": "SSD", "ES": "ESP", "LK": "LKA", "SD": "SDN", "SR": "SUR", "SJ": "SJM", "SZ": "SWZ", "SE": "SWE", "CH": "CHE", "SY": "SYR", "TW": "TWN", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS", "TG": "TGO", "TK": "TKL", "TO": "TON", "TT": "TTO", "TN": "TUN", "TR": "TUR", "TM": "TKM", "TC": "TCA", "TV": "TUV", "UG": "UGA", "UA": "UKR", "AE": "ARE", "GB": "GBR", "UM": "UMI", "US": "USA", "UY": "URY", "UZ": "UZB", "VU": "VUT", "VE": "VEN", "VN": "VNM", "VG": "VGB", "VI": "VIR", "WF": "WLF", "EH": "ESH", "YE": "YEM", "ZM": "ZMB", "ZW": "ZWE"
         },
         _defaults: {
             defaultFill: "white",
             defaultBorderColor: "darkgrey",
-            defaultBorderWidth: 0.5,
+            defaultBorderWidth: 0.4,
             defaultBorderHoverWidth: 1
         },
         /*
@@ -138,7 +149,7 @@ var analysis = {
 
                     dataSet.data.forEach(function(obj){
                         var color = paletteScale(obj.cnt) || colors[colors.length - 1]
-                        data[analysis.map._countryCodeMapping[obj.country_iso_code]] = { count: obj.cnt, fillKey: color };
+                        data[analysis.map._countryCodeMapping[obj.country_iso_code]] = { count: obj.cnt, fillKey: color, highlightFillColor: color };
                     }); 
 
                     // Create fills and legend labels
@@ -164,9 +175,16 @@ var analysis = {
                     });
 
                     //Create and append button for each dataset
-                    var $mapDataSetBtn = $("<button>", {class: "btn btn-default", 
+                    var $mapDataSetBtn = $("<button>", {
+                                                        class: "btn btn-default", 
                                                         value: idx, 
-                                                        text: dataSet.label});
+                                                        });
+                    $mapDataSetBtn.append($("<span>", {
+                                                        class: "circle",
+                                                        style: "background-color:" + dataSet.color
+                                                      }));
+                    $mapDataSetBtn.append($("<span></span>").text(dataSet.label));
+
                     $(".view-type-map .btn-group").append($mapDataSetBtn);
                 })
 
@@ -185,7 +203,7 @@ var analysis = {
                         popupTemplate: function(geo, data) {
                                         text = geo.properties.name + ": " + 
                                                 (data ? data.count : "no") +
-                                                " messages"
+                                                " mail(s)"
                                         $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
                                         return $hoverInfo.prop('outerHTML');
                                     }
@@ -237,7 +255,7 @@ var analysis = {
             // Update legend (custom legend plugin)
             var mapLegendOptions = {
                 legendItems : data.labels.map(function(item){
-                    return {color : item.color, name: item.name + " msgs"}
+                    return {color : item.color, name: item.name + " mails"}
                 })
             }
             // Remove old and add new legend
@@ -256,7 +274,7 @@ var analysis = {
                 .attr("text-anchor", "middle")
                 .attr("transform", "translate("+ (analysis.map._width / 2) + ", 30)")
                 .style("font-weight", "bold")
-                .text("Messages per country for '"+ label +"'");
+                .text("Mails per country for '"+ label +"'");
         }
     },
     line: {
@@ -267,13 +285,13 @@ var analysis = {
                 top: 40, 
                 right: 60, 
                 bottom: 120, 
-                left: 60
+                left: 80
             },
             marginMini : {
                 top: 430,
                 right: 60,
                 bottom: 20,
-                left: 60
+                left: 80
             }
         },
         init: function(viewId) {
@@ -464,8 +482,8 @@ var analysis = {
         
                 svg.append("text")
                     .attr("class", "y label")
-                    .attr("transform", "rotate(-90)translate(" + (height/2 * -1 ) + ", "+ (analysis.line._defaults.margin.left / 2 - 5)+")")
-                    .text("Message count");
+                    .attr("transform", "rotate(-90)translate(" + (height/2 * -1 ) + ", 25)")
+                    .text("Mail count");
         
                 // Append X Axis for mini chart
                 context.append("g")
@@ -524,7 +542,7 @@ var analysis = {
                     .attr("text-anchor", "middle")
                     .attr("transform", "translate("+ (clientWidth / 2) + ", " + (analysis.line._defaults.margin.top / 2) +")")
                     .style("font-weight", "bold")
-                    .text("Messages over time");
+                    .text("Mails over time");
             });
         }
     },
@@ -532,7 +550,7 @@ var analysis = {
         _api: null,
         _tableTimes: [],
         addDateTimeFilter: function(dateTimes) {
-            var formatDate = d3.time.format("%Y-%m-%d");
+            var formatDate = d3.time.format("%Y/%m/%d");
             $filterContainer = $("#time-quick-filter-date");
             if ($filterContainer)
                 $filterContainer.html(

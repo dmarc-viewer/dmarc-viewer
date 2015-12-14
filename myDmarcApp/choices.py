@@ -105,6 +105,6 @@ TIME_UNIT = (
 DATE_RANGE_TYPE_FIXED = 1
 DATE_RANGE_TYPE_VARIABLE = 2
 DATE_RANGE_TYPE = (
-    (DATE_RANGE_TYPE_FIXED, "fixed"),
-    (DATE_RANGE_TYPE_VARIABLE, "variable")
+    (DATE_RANGE_TYPE_FIXED, "from - to (absolute)"),
+    (DATE_RANGE_TYPE_VARIABLE, "last x ... (dynamic)")
     )

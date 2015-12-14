@@ -26,14 +26,12 @@
 
     <div class="panel-group" id="view-filter-details" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab">
+            <div class="panel-heading collapsed" role="tab" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false">
                 <h4 class="panel-title">
                     Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
                     on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports
-                    <a role="button" data-toggle="collapse" data-parent="#view-filter-details" href="#collapse-filterset-details" aria-expanded="false"> (click for details)
                 </h4>
-                
-                </a>
+                    (click for details)
             </div>
             <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
             <div class="panel-body">
@@ -83,7 +81,11 @@
         Use the time lines mini map to zoom on the time axis.
     </div>
     <div class="view-type-linechart view-type" style="width: 100%">
-        <div class="svg-container"></div>
+        <div class="svg-container">
+            <div id="zoom-help">
+                Click and drag over mini time line to zoom in x axis!
+            </div>
+        </div>
         <div class="export-svg"> 
             <a onClick="analysis.export.svg({{the_view.id}}, 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
         </div>

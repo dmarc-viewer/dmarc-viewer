@@ -122,7 +122,7 @@ pre {
   overflow: auto;
 }
 
-code,
+code, #deep-analysis .view-type-linechart .svg-container #zoom-help,
 kbd,
 pre,
 samp {
@@ -1876,14 +1876,14 @@ address {
   line-height: 1.42857;
 }
 
-code,
+code, #deep-analysis .view-type-linechart .svg-container #zoom-help,
 kbd,
 pre,
 samp {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-code {
+code, #deep-analysis .view-type-linechart .svg-container #zoom-help {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -1921,7 +1921,7 @@ pre {
   border-radius: 4px;
 }
 
-pre code {
+pre code, pre #deep-analysis .view-type-linechart .svg-container #zoom-help, #deep-analysis .view-type-linechart .svg-container pre #zoom-help {
   padding: 0;
   font-size: inherit;
   color: inherit;
@@ -7916,7 +7916,7 @@ body {
   background-color: #006699;
 }
 
-.container-margin, #view-editor, #view-management, #overview {
+.container-margin, #view-editor, #view-management, #overview, #help {
   width: 80%;
   margin: auto;
 }
@@ -7931,10 +7931,10 @@ body {
 
 #view-editor #id_dr_type .radio {
   padding: 0;
-  height: 34px;
 }
 
 #view-editor #id_dr_type .radio label {
+  line-height: 34px;
   padding: 0;
   width: 100%;
 }
@@ -7980,8 +7980,39 @@ body {
  * ---------------------------------------------------------------------------------------------------------------------
  * Deep Analysis
  */
+#deep-analysis #view-filter-details {
+  position: relative;
+}
+
 #deep-analysis #view-filter-details .panel-heading {
+  padding: 10px 25px;
   background-color: transparent;
+}
+
+#deep-analysis #view-filter-details .panel-heading:before {
+  top: 1px;
+  left: 1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  border: 0;
+  background-color: #006699;
+  content: "-";
+  height: 20px;
+  width: 20px;
+  display: block;
+  color: white;
+  text-align: center;
+  line-height: 16px;
+  box-shadow: 0 0 3px #444;
+  box-sizing: content-box;
+  position: absolute;
+}
+
+#deep-analysis #view-filter-details .panel-heading.collapsed:before {
+  content: '+';
 }
 
 #deep-analysis #view-filter-details a {
@@ -7994,17 +8025,6 @@ body {
 
 #deep-analysis #view-filter-details p {
   margin-bottom: 2px;
-}
-
-#deep-analysis #view-filter-details .circle {
-  display: inline-block;
-  margin-right: 10px;
-  width: 16px;
-  height: 16px;
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
 }
 
 #deep-analysis #view-filter-details .panel-body div:not(:last-child) {
@@ -8025,6 +8045,21 @@ body {
   border-bottom: 0pt;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+#deep-analysis .view-type-linechart .svg-container {
+  position: relative;
+}
+
+#deep-analysis .view-type-linechart .svg-container #zoom-help {
+  position: absolute;
+  width: 120px;
+  bottom: 30px;
+  left: 5px;
+}
+
+#deep-analysis .view-type-linechart .svg-container.loading #zoom-help, #deep-analysis .view-type-linechart .view-type-table .svg-container.dataTables_processing #zoom-help, #deep-analysis .view-type-table .view-type-linechart .svg-container.dataTables_processing #zoom-help {
+  display: none;
 }
 
 #deep-analysis .view-type-table tr {
@@ -8088,6 +8123,15 @@ body {
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
+ * Help
+ */
+#help h3 {
+  font-size: 18px;
+  text-decoration: underline;
+}
+
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
  * Miscellaneous
  */
 h1 {
@@ -8122,7 +8166,7 @@ h2 {
   margin: 5px 0;
 }
 
-code {
+code, #deep-analysis .view-type-linechart .svg-container #zoom-help {
   width: 100%;
   display: inline;
 }
@@ -8140,9 +8184,15 @@ code {
   height: 50px;
 }
 
-.anchor {
-  padding-top: 50px;
-  margin-top: -30px;
+.circle {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 /*  

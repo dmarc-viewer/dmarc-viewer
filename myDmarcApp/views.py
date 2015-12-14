@@ -27,7 +27,6 @@ def overview(request):
 def overview_async(request):
     report_type = int(request.GET.get("report_type"))
     response = Report.getOverviewSummary(report_type)
-
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def clone(request, view_id = None):

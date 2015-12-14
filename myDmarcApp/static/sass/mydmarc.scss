@@ -142,8 +142,8 @@ body {
             @extend .btn;
             @extend .btn-default;
             padding: 0;
-            height: 34px;
             label {
+                line-height: 34px;
                 padding: 0;
                 width: 100%;
             }
@@ -194,7 +194,31 @@ body {
 
 #deep-analysis {
     #view-filter-details {
+        position: relative;
         .panel-heading {
+            &:before {
+                top: 1px;
+                left: 1px;
+                @include border-bottom-radius(0);
+                @include border-top-radius(0);
+                border-bottom-right-radius: 10px;
+                border: 0;
+                background-color: $dmarc-blue;
+                content: "-";
+                height: 20px;
+                width: 20px;
+                display: block;
+                color: white;
+                text-align: center;
+                line-height: 16px;
+                box-shadow: 0 0 3px #444;
+                box-sizing: content-box;
+                position: absolute;
+                }
+            &.collapsed:before {
+                content: '+';
+            }
+            padding: 10px 25px;
             background-color: transparent;
         }
         a {
@@ -205,14 +229,6 @@ body {
         }
         p {
             margin-bottom: 2px;
-        }
-        .circle {
-            display: inline-block;
-            margin-right: 10px;
-            width: 16px;
-            height: 16px;
-            @include border-bottom-radius(8px);
-            @include border-top-radius(8px);
         }
         .panel-body {
             div:not(:last-child) {
@@ -234,6 +250,22 @@ body {
             border-bottom: 0pt;
             @include border-bottom-radius(0);
         }
+    }
+    .view-type-linechart {
+        .svg-container {
+            position: relative;
+            #zoom-help {
+                position:absolute;
+                width: 120px;
+                bottom: 30px;
+                left: 5px;
+                @extend code;
+            }
+            &.loading #zoom-help{
+                display: none;
+            }
+        }
+
     }
     .view-type-table {
         tr {
@@ -304,7 +336,17 @@ body {
         text-align: center;
     }
 }
-
+/*  
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Help
+ */
+#help {
+    @extend .container-margin;
+    h3 {
+        font-size: 18px;
+        text-decoration: underline;
+    }
+}
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
@@ -368,11 +410,19 @@ code {
     height: 50px;
 }
 
-.anchor { 
-    padding-top: 50px; 
-    margin-top: -30px;
-    }
+// .anchor { 
+//     padding-top: 50px; 
+//     margin-top: -30px;
+//     }
 
+.circle {
+    display: inline-block;
+    margin-right: 10px;
+    width: 12px;
+    height: 12px;
+    @include border-bottom-radius(6px);
+    @include border-top-radius(6px);
+}
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
  * Loading wheel

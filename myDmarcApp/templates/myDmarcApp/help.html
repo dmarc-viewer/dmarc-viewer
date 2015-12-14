@@ -5,6 +5,8 @@
 {% block site_id %}help{% endblock %}
 
 {% block content %}
+{% comment %}
+Sidebar disabled
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% for topic_id, topic in topics.items %}
@@ -15,8 +17,10 @@
         {% endfor %}
     </ul>
 </div>
+{% endcomment %}
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+<div class="col-sm-12 main">
     {% comment %}
         
     <h1 class="page-header">Frequently asked questions</h1>
@@ -35,11 +39,14 @@
         </div>
     {% endfor %}
 
+{% comment %}
+Sidebar disabled
     <script type="text/javascript">
         $(document).on("click", "#help .nav-sidebar li > a", function(){
             $(this).closest(".nav-sidebar").find("li").removeClass("active");
             $(this).closest("li").addClass("active");
         });
     </script>
+{% endcomment %}
 
 {% endblock %}
