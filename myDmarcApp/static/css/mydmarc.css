@@ -122,7 +122,7 @@ pre {
   overflow: auto;
 }
 
-code, #deep-analysis .view-type-linechart .svg-container #zoom-help,
+code,
 kbd,
 pre,
 samp {
@@ -1876,14 +1876,14 @@ address {
   line-height: 1.42857;
 }
 
-code, #deep-analysis .view-type-linechart .svg-container #zoom-help,
+code,
 kbd,
 pre,
 samp {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-code, #deep-analysis .view-type-linechart .svg-container #zoom-help {
+code {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -1921,7 +1921,7 @@ pre {
   border-radius: 4px;
 }
 
-pre code, pre #deep-analysis .view-type-linechart .svg-container #zoom-help, #deep-analysis .view-type-linechart .svg-container pre #zoom-help {
+pre code {
   padding: 0;
   font-size: inherit;
   color: inherit;
@@ -8052,10 +8052,12 @@ body {
 }
 
 #deep-analysis .view-type-linechart .svg-container #zoom-help {
+  text-align: center;
   position: absolute;
-  width: 120px;
+  width: 90px;
   bottom: 30px;
-  left: 5px;
+  font-size: 10px;
+  font-weight: bold;
 }
 
 #deep-analysis .view-type-linechart .svg-container.loading #zoom-help, #deep-analysis .view-type-linechart .view-type-table .svg-container.dataTables_processing #zoom-help, #deep-analysis .view-type-table .view-type-linechart .svg-container.dataTables_processing #zoom-help {
@@ -8085,7 +8087,13 @@ body {
 }
 
 #deep-analysis .view-type-table .dataTables_wrapper {
+  position: relative;
   min-height: 200px;
+}
+
+#deep-analysis .view-type-table .dataTables_wrapper .table-quick-filter {
+  position: absolute;
+  right: 0;
 }
 
 #deep-analysis .view-type-table .dataTables_processing {
@@ -8103,10 +8111,6 @@ body {
   color: #fff;
   background-color: #006699;
   border-color: #006699;
-}
-
-#deep-analysis #time-quick-filter {
-  margin-bottom: 30px;
 }
 
 /*  
@@ -8166,7 +8170,35 @@ h2 {
   margin: 5px 0;
 }
 
-code, #deep-analysis .view-type-linechart .svg-container #zoom-help {
+.context-help-icon {
+  border: 1px solid #c7254e;
+  background-color: #c7254e;
+  height: 18px;
+  line-height: 18px;
+  width: 18px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.context-help-icon:hover {
+  color: #c7254e;
+  background-color: white;
+}
+
+.context-help-icon:before {
+  content: '?';
+}
+
+.tooltip {
+  position: fixed;
+}
+
+code {
   width: 100%;
   display: inline;
 }

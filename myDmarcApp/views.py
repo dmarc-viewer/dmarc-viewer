@@ -91,10 +91,10 @@ def choices_async(request):
         values = Reporter.objects.filter(
                                     report__report_type=report_type
                                 ).filter(
-                                    email__contains=query_str
+                                    email__icontains=query_str
                                 ).distinct().order_by(
-                                    'email'
-                                ).values_list('email')
+                                    'org_name'
+                                ).values_list('org_name')
     elif choice_type == "reportee":
         values = Report.objects.filter(
                                     report_type=report_type

@@ -389,17 +389,16 @@ class DateRange(ViewFilterField):
 
 
 class ReportSender(FilterSetFilterField):
-    record_field            = "Report.Reporter.email"
+    record_field            = "Report.Reporter.org_name"
     value                   = models.CharField(max_length = 100)
 
 class ReportReceiverDomain(FilterSetFilterField):
-    label                   = "Report Sender Domain"
     record_field            = "Report.domain"
     value                   = models.CharField(max_length = 100)
 
 class SourceIP(FilterSetFilterField):
-    """let's start with simple IP address filtering 
-    and maybe consider CIDR notation later"""
+    """Filters on mail sender IP. Knows v4 and v6.
+    XXX CIDR would be cool """
     record_field            = "source_ip"
     value                   = models.GenericIPAddressField()
 

@@ -77,13 +77,10 @@
     </script>
     {% endif %}
     {% if the_view.type_line %}
-    <div class="description">
-        Use the time lines mini map to zoom on the time axis.
-    </div>
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container">
             <div id="zoom-help">
-                Click and drag over mini time line to zoom in x axis!
+               <span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Click and drag over mini time line to zoom on the x-axis. This will also apply a time filter on the table."></span> zoom
             </div>
         </div>
         <div class="export-svg"> 
@@ -101,15 +98,6 @@
     {% if the_view.type_table %}
     <div class="description">
         The table shows distinct records for all filter sets. If you want to see the records for a specific filter set, please create a view containing only the specific filter set.
-    </div>
-    <div id="time-quick-filter">
-        <div class="description">
-            By selecting a date range in the the line chart only records within the range a shown in the table.
-            {% if not the_view.type_line %}
-                Of course you have to enable the line chart in the <a href="/edit-view/{{the_view.id}}/">view editor</a>.
-            {% endif %}
-         </div>
-        <span id="time-quick-filter-date"></span>
     </div>
     <div class="view-type-table view-type">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">

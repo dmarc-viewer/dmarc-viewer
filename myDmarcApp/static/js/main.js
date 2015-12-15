@@ -23,6 +23,9 @@ $.ajaxSetup({
      } 
 });
 
+$(document).ready(function(){
+    $(".context-help-icon").tooltip();
+})    
 
 var main = {
     showAjaxMessages: function(response) {

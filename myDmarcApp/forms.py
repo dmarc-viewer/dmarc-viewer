@@ -140,11 +140,11 @@ class FilterSetForm(ModelForm):
         super(FilterSetForm, self).__init__(*args, **kwargs)
         self.additional_filter_fields = {
             "report_sender"              : {"load"    : "reporter", # cf. view.choices_async
-                                            "label"   : "Report Sender",
+                                            "label"   : "Reporter",
                                             "class"   : ReportSender,
                                             "type"    : unicode},
             "report_receiver_domain"     : {"load"    : "reportee", # cf. view.choices_async
-                                            "label"   : "Report Receiver Domain", 
+                                            "label"   : "Reportee", 
                                             "class"   : ReportReceiverDomain,
                                             "type"    : unicode},
             "raw_dkim_domain"            : {"load"    : "dkim_domain", # cf. view.choices_async

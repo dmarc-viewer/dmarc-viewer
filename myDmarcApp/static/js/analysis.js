@@ -13,7 +13,20 @@ var analysis = {
             });
         },
         appendPies: function(data, targetSelector) {
+            function _reorder(data, orderLabels) {
+                var orderedData = []
+                orderLabels.forEach(function(orderLabel){
+                    var matches = data.filter(function(e){if (e.label == orderLabel) return true;})
+                    if (matches.length > 0) orderedData.push(matches[0]);
+                })
+                return orderedData;
+            }
+             // Order data for pies, for uniform pie segment order
+            data["dkim"]        = _reorder(data["dkim"], ["pass", "fail"]);
+            data["spf"]         = _reorder(data["spf"], ["pass", "fail"]);
+            data["disposition"] = _reorder(data["disposition"], ["none", "quarantine", "reject"]);
 
+            //draw the pies
             ["dkim", "spf", "disposition"].forEach(function(type){
                 var width = 250,
                     height = 200,
@@ -208,14 +221,14 @@ var analysis = {
                                         return $hoverInfo.prop('outerHTML');
                                     }
                     },
-                    done: function(map) {
-                        //Enable zooming and panning
-                        map.svg.call(d3.behavior.zoom().on("zoom", function(){
-                            //Don't zoom or pan no-resize classed elements (like legend)
-                            map.svg.selectAll("g:not(.no-resize)")
-                                .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                        }));
-                    },
+                    // done: function(map) {
+                    //     //Enable zooming and panning
+                    //     map.svg.call(d3.behavior.zoom().on("zoom", function(){
+                    //         //Don't zoom or pan no-resize classed elements (like legend)
+                    //         map.svg.selectAll("g:not(.no-resize)")
+                    //             .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                    //     }));
+                    // },
                     fills: {defaultFill : analysis.map._defaults.defaultFill}
                 });
 
@@ -551,8 +564,14 @@ var analysis = {
         _tableTimes: [],
         addDateTimeFilter: function(dateTimes) {
             var formatDate = d3.time.format("%Y/%m/%d");
-            $filterContainer = $("#time-quick-filter-date");
-            if ($filterContainer)
+            $dataTableWrapper = $(".dataTables_wrapper");
+            if (analysis.table._api) {
+                $filterContainer = $dataTableWrapper.find(".table-quick-filter");
+                if ($filterContainer.length < 1) {
+                    $filterContainer = $("<div>", {"class": "table-quick-filter"});
+                    $dataTableWrapper.prepend($filterContainer);
+                }
+
                 $filterContainer.html(
                     "Filtering from <strong>" 
                     + formatDate(dateTimes[0]) 
@@ -561,6 +580,7 @@ var analysis = {
 
                 analysis.table._tableTimes = dateTimes;
                 analysis.table._api.ajax.reload();
+            }
         },
         init: function(viewId) {
             analysis.table._api = $('.view-type-table table').DataTable({
