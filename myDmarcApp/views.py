@@ -75,7 +75,10 @@ def edit(request, view_id = None):
                 return redirect("deep_analysis", view_id=view.id)
             return redirect("view_management")
         else:
-            messages.add_message(request, messages.ERROR, "Could not save view.")
+            pass
+            #print "oida", view_form.errors
+            #messages.add_message(request, messages.ERROR, "Could not save view.")
+
 
     return render(request, 'myDmarcApp/view-editor.html', {
             'view_form'               : view_form,

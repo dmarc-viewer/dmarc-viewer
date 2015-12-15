@@ -257,10 +257,8 @@ body {
             #zoom-help {
                 text-align: center;
                 position:absolute;
-                width: 90px;
+                width: 80px;
                 bottom: 30px;
-                font-size: 10px;
-                font-weight: bold;
             }
             &.loading #zoom-help{
                 display: none;
@@ -346,10 +344,6 @@ body {
  */
 #help {
     @extend .container-margin;
-    h3 {
-        font-size: 18px;
-        text-decoration: underline;
-    }
 }
 
 /*  
@@ -362,6 +356,10 @@ h1 {
 h2 {
     font-size: 22px;
 }
+h3 {
+    font-size: 18px;
+    color: darkgrey;
+    }
 .hidden {
     display: none;
 }
@@ -399,25 +397,26 @@ h2 {
 .context-help-icon {
     border: 1px solid #c7254e;
     background-color: #c7254e;
-    height:18px;
-    line-height: 18px;
-    width: 18px;
+    height:16px;
+    line-height: 16px;
+    width: 16px;
     color: white;
     display: inline-block;
     text-align: center;
-    @include border-bottom-radius(10px);
-    @include border-top-radius(10px);
+    font-size: 14px;
+    font-weight: 500;
+    margin: 5px 5px;
+    @include border-bottom-radius(8px);
+    @include border-top-radius(8px);
     &:hover {
         color: #c7254e;
         background-color: white;
     }
     &:before {
-
         content: '?';
     }
 
 }
-
 .tooltip {
     position: fixed;
 }

@@ -176,7 +176,6 @@ class View(OrderedModel):
         return _get_related_managers(self, ViewFilterField)
 
     def getTableRecords(self):
-
         # Combine filters (getQuery) of all Filtersets
         query = reduce(lambda x, y: x | y, [fs.getQuery() for fs in self.filterset_set.all()])
         return Record.objects.filter(query).distinct().order_by('report__date_range_begin') #.values_list('id', flat=True)
@@ -201,13 +200,13 @@ class View(OrderedModel):
 
     @staticmethod
     def getTableHead():
-        return ["Reporter", "Reportee", "aDKIM", "aSPF", "Disposition", "raw DKIM", "raw SPF",
+        return ["Reporter", "Reportee", "aln. DKIM", "aln. SPF", "Disposition", "DKIM result", "SPF result",
                  "msg#", "IP", "Country", "Report Begin", "Report End", "Report ID"]
 
     def getTableData(self, records=None):
-        """If records list or querymanager is specified, use it instead of
-        records for this view. this can be useful for pagination"""
-
+        
+        #If records is specified, use it instead of
+        #this view's entire records. This can be useful for pagination"""
         if records is None:
             records = self.getTableRecords()
 
@@ -223,34 +222,10 @@ class View(OrderedModel):
                 r.country_iso_code,
                 r.report.date_range_begin.strftime('%Y/%m/%d'),
                 r.report.date_range_end.strftime('%Y/%m/%d'),
-                # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
+                # distinct records vs. filter set labled records
+                # fs.label] for fs in self.filterset_set.all() for r in self.getTableRecords()] 
                 r.report.report_id
                 ] for r in list(records)]
-                
-
-        # XXX LP: This is a huge performance optimization 
-        # More smaller queries instead of one big
-        # result = []
-        # for record_id in records:
-        #     r = Record.objects.get(pk=record_id)
-        #     result.append([r.report.reporter.org_name,
-        #             r.report.domain,
-        #             r.get_dkim_display(),
-        #             r.get_spf_display(),
-        #             r.get_disposition_display(),
-        #             ' '.join([dkim.domain for dkim in r.authresultdkim_set.all()]),
-        #             ' '.join([dkim.get_result_display() for dkim in r.authresultdkim_set.all()]),
-        #             ' '.join([spf.domain for spf in r.authresultspf_set.all()]),
-        #             ' '.join([spf.get_result_display() for spf in r.authresultspf_set.all()]),
-        #             r.count,
-        #             r.source_ip,
-        #             r.country_iso_code,
-        #             r.report.date_range_begin.strftime('%Y%m%d'),
-        #             r.report.date_range_end.strftime('%Y%m%d'),
-        #             # fs.label] for fs in self.filterset_set.all() for r in fs.getRecords().distinct()]
-        #             r.report.report_id])
-
-        # return result
 
     def getCsvData(self):
         return [View.getTableHead()] + self.getTableData()

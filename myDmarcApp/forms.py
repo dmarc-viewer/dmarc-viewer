@@ -21,9 +21,9 @@ class ViewForm(ModelForm):
         fields = ['title', 'description', 'enabled', 'type_map', 'type_line', 'type_table']
         labels = {
             "enabled": _("show"),
-            "type_map": _("show map"),
-            "type_line": _("show line chart"),
-            "type_table": _("show table"),
+            "type_map": _("show world map"),
+            "type_line": _("show time line chart"),
+            "type_table": _("show report record table"),
         }
         widgets = {
             'description': Textarea(attrs={'rows': 5}),
@@ -139,40 +139,40 @@ class FilterSetForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FilterSetForm, self).__init__(*args, **kwargs)
         self.additional_filter_fields = {
-            "report_sender"              : {"load"    : "reporter", # cf. view.choices_async
-                                            "label"   : "Reporter",
+            "report_sender"              : {"load"    : "reporter", # cf. view.py - choices_async
+                                            "label"   : "Reporter(s)",
                                             "class"   : ReportSender,
                                             "type"    : unicode},
-            "report_receiver_domain"     : {"load"    : "reportee", # cf. view.choices_async
-                                            "label"   : "Reportee", 
+            "report_receiver_domain"     : {"load"    : "reportee", # cf. view.py - choices_async
+                                            "label"   : "Reportee(s)", 
                                             "class"   : ReportReceiverDomain,
                                             "type"    : unicode},
-            "raw_dkim_domain"            : {"load"    : "dkim_domain", # cf. view.choices_async
-                                            "label"   : "Raw DKIM Domain", 
+            "raw_dkim_domain"            : {"load"    : "dkim_domain", # cf. view.py - choices_async
+                                            "label"   : "DKIM Domain(s)", 
                                             "class"   : RawDkimDomain,
                                             "type"    : unicode},
-            "raw_spf_domain"             : {"load"   : "spf_domain", # cf. view.choices_async
-                                            "label"   : "Raw SPF Domain", 
+            "raw_spf_domain"             : {"load"   : "spf_domain", # cf. view.py - choices_async
+                                            "label"   : "SPF Domain(s)", 
                                             "class"   : RawSpfDomain,
                                             "type"    : unicode},
             "raw_dkim_result"            :  {"choices" : choices.DKIM_RESULT, 
-                                            "label"   : "Raw DKIM Result", 
+                                            "label"   : "DKIM Result(s)", 
                                             "class"   : RawDkimResult,
                                             "type"    : int},
             "raw_spf_result"             : {"choices" : choices.SPF_RESULT, 
-                                            "label"   : "Raw SPF Result", 
+                                            "label"   : "SPF Result(s)", 
                                             "class"   : RawSpfResult,
                                             "type"    : int},
             "aligned_dkim_result"        : {"choices" : choices.DMARC_RESULT, 
-                                            "label"   : "Aligned DKIM Result", 
+                                            "label"   : "Aligned DKIM Result(s)", 
                                             "class"   : AlignedDkimResult,
                                             "type"    : int},
             "aligned_spf_result"         : {"choices" : choices.DMARC_RESULT, 
-                                            "label"   : "Aligned SPF Result", 
+                                            "label"   : "Aligned SPF Result(s)", 
                                             "class"   : AlignedSpfResult,
                                             "type"    : int},
             "disposition"                : {"choices" : choices.DISPOSITION_TYPE, 
-                                            "label"   : "Disposition", 
+                                            "label"   : "Disposition(s)", 
                                             "class"   : Disposition,
                                             "type"    : int}
             }

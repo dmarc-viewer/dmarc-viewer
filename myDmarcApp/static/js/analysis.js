@@ -220,7 +220,7 @@ var analysis = {
                                         $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
                                         return $hoverInfo.prop('outerHTML');
                                     }
-                    },
+                    }, 
                     // done: function(map) {
                     //     //Enable zooming and panning
                     //     map.svg.call(d3.behavior.zoom().on("zoom", function(){

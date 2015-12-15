@@ -15,7 +15,7 @@
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th>Sort</th>
+                <th><span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Change view order in the deep analysis page's side bar by dragging and dropping the arrow icon below."></span></th>
                 <th>Show</th>
                 <th>Title</th>
                 <th>Description</th> 
@@ -25,7 +25,7 @@
         <tbody id="sortableViews">
         {% for view in views %}
             <tr class="view-row" data-id="{{view.id}}">
-                <td class="sort-handle"><span class="glyphicon glyphicon-resize-vertical"></span></td>
+                <td class="sort-handle text-center"><span class="glyphicon glyphicon-resize-vertical"></span></td>
                 <td>{{view.enabled}}</td>
                 <td>{{view.title}}</td>
                 <td >{{view.description}}</td> 

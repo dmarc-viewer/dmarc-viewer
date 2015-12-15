@@ -30,14 +30,14 @@
                 <h4 class="panel-title">
                     Filtering from {% with date=the_view.daterange_set.first.getBeginEnd %} <strong>{{date.0 | date:"Y/n/j"}}</strong> to <strong>{{date.1 | date:"Y/n/j"}}</strong> {% endwith %}
                     on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Click to see what data this view is based on. For each filter set you will see the specified filters."></span>
                 </h4>
-                    (click for details)
+                
             </div>
             <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
             <div class="panel-body">
                 {% for fs in the_view.filterset_set.all %}
                 <div>
-
                     <h5>
                         <span class="circle" style="background-color:{{fs.color}}"></span><span>Filter Set '{{fs.label}}'</span>
                     </h5>
@@ -60,9 +60,10 @@
     </div>
 
     {% if the_view.type_map %}
-    <div class="description">
-        You can switch between defined data sets by using the buttons above the map. Messages are associated with countries by using geoIp. Not all ip addresses are necessarily resolved.
-    </div>
+    <h3 class="text-center">
+        World Map<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Mails are ssociated with countries by using GeoIP (MaxMind) on the Mail Sender IP. There is a separate map for each filter set. Hover over the map to see the mail volume per country."></span>
+    </h3>
+    
     <div class="view-type-map view-type" style="width:100%">
         <div class="btn-group switch-filterset"></div>
         <div class="svg-container" style="position:relative"></div>
@@ -77,10 +78,13 @@
     </script>
     {% endif %}
     {% if the_view.type_line %}
+    <h3 class="text-center">
+        Time Line Chart<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The time line chart shows mail volume per time for each filter set of this view."></span>
+    </h3>
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container">
             <div id="zoom-help">
-               <span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Click and drag over mini time line to zoom on the x-axis. This will also apply a time filter on the table."></span> zoom
+               <span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Click and drag over mini time line to zoom on the x-axis. This will also apply a time filter on the table."></span>
             </div>
         </div>
         <div class="export-svg"> 
@@ -96,9 +100,9 @@
 
 
     {% if the_view.type_table %}
-    <div class="description">
-        The table shows distinct records for all filter sets. If you want to see the records for a specific filter set, please create a view containing only the specific filter set.
-    </div>
+    <h3 class="text-center">
+        DMARC Report Record Table<span class="context-help-icon" data-toggle="tooltip" data-placement="top" title="The table shows DMARC report records merged from all filter sets. Depending on the screen size some columns may be hidden. Then you can display additional data by clicking on the first cell."></span>
+    </h3>
     <div class="view-type-table view-type">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>
