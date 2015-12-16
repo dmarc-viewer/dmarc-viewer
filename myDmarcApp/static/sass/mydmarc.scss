@@ -1,8 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
 @import "bootstrap";
 
 //Variables
 $dmarc-blue: #006699;
-
+$panel-border-radius: 0;
 
 /*  
  * ---------------------------------------------------------------------------------------------------------------------
@@ -12,6 +13,7 @@ $dmarc-blue: #006699;
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
+    font-family: 'Noto Sans', Helvetica, sans-serif;
 }
 /*
  * Top navigation
@@ -41,7 +43,7 @@ body {
         overflow-x: hidden;
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         //background-color: #f5f5f5;
-        border-right: 4px solid #eee;
+        border-right: 2px solid #eee;
     }
 }
 
@@ -221,6 +223,9 @@ body {
             padding: 10px 25px;
             background-color: transparent;
         }
+        .panel-title {
+            line-height:inherit;
+        }
         a {
             font-size: 12px;
         }
@@ -239,7 +244,7 @@ body {
     .view-type {
         margin-bottom: 60px;
         .svg-container {
-            border: 1pt solid grey;
+            border: 1px solid $panel-default-border;
             overflow: hidden;
         }
     }
@@ -325,6 +330,12 @@ body {
 
 #view-management {
     @extend .container-margin;
+    table td {
+
+        &:last-child {
+            min-width:270px;
+        }
+    }
 }
 
 /*  
@@ -402,6 +413,7 @@ h3 {
     width: 16px;
     color: white;
     display: inline-block;
+    vertical-align: top;
     text-align: center;
     font-size: 14px;
     font-weight: 500;
