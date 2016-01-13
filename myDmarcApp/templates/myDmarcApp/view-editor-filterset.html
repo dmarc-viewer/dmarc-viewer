@@ -7,31 +7,70 @@
         <div class="filter_color">{% bootstrap_field form.color %}</div>
         <div class="col-xs-12">
             <div class="row">
-                <div class="filter_report_receiver_domain ">{% bootstrap_field form.report_receiver_domain %}</div>
-                <div class="filter_report_sender">{% bootstrap_field form.report_sender %}</div>
+                <div class="filter_report_receiver_domain ">
+                    {% bootstrap_label form.report_receiver_domain.label label_for=form.report_receiver_domain.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain that requested the report. (cf. 'policy_published.domain' report field)"></span>
+                    {% bootstrap_field form.report_receiver_domain show_label=False %}
+                </div>
+                <div class="filter_report_sender">
+                    {% bootstrap_label form.report_sender.label label_for=form.report_sender.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The name of the organisation that sent the report. (cf. 'report_metadata.org_name' report field)"></span>
+                    {% bootstrap_field form.report_sender show_label=False %}
+                </div>
                 <div class="filter_source_ip">{% bootstrap_field form.source_ip %}</div>
             </div>
         </div>
         <div class="col-xs-12">
             <div class="row">
-                <div class="filter_raw_spf_domain">{% bootstrap_field form.raw_spf_domain %}</div>
-                <div class="filter_raw_spf_result">{% bootstrap_field form.raw_spf_result %}</div>
+                <div class="filter_raw_spf_domain">
+                    {% bootstrap_label form.raw_spf_domain.label label_for=form.raw_spf_domain.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from the SMTP dialogue's 'MAIL FROM' or 'HELO'. (cf. 'record.auth_result.spf.domain' report field)"></span>
+                    {% bootstrap_field form.raw_spf_domain show_label=False %}
+                </div>
+                <div class="filter_raw_spf_result">
+                    {% bootstrap_label form.raw_spf_result.label label_for=form.raw_spf_result.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw SPF authentication result before alignment. (cf. 'record.auth_result.spf.result' report field)"></span>
+                    {% bootstrap_field form.raw_spf_result show_label=False %}
+                </div>
             </div>
         </div>
         <div class="col-xs-12">
             <div class="row">
-                <div class="filter_raw_dkim_domain">{% bootstrap_field form.raw_dkim_domain %}</div>
-                <div class="filter_raw_dkim_result">{% bootstrap_field form.raw_dkim_result %}</div>
+                <div class="filter_raw_dkim_domain">
+                    {% bootstrap_label form.raw_dkim_domain.label label_for=form.raw_dkim_domain.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from a DKIM signature's 'd='-tag. (cf. record.auth_result.dkim.domain' report field)"></span>
+                    {% bootstrap_field form.raw_dkim_domain show_label=False %}
+                </div>
+                <div class="filter_raw_dkim_result">
+                    {% bootstrap_label form.raw_dkim_result.label label_for=form.raw_dkim_result.auto_id %}
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw DKIM authentication result before alignment. (cf. 'record.auth_result.dkim.result' report field)"></span>
+                    {% bootstrap_field form.raw_dkim_result show_label=False %}
+                </div>
             </div>
         </div>
-        <div class="filter_multiple_dkim">{% bootstrap_field form.multiple_dkim %}</div>
-        <div class="filter_aligned_spf_result">{% bootstrap_field form.aligned_spf_result %}</div>
-        <div class="filter_aligned_dkim_result">{% bootstrap_field form.aligned_dkim_result %}</div>
-        <div class="filter_disposition">{% bootstrap_field form.disposition %}</div>  
+        <div class="filter_multiple_dkim">
+            {% bootstrap_field form.multiple_dkim %}
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="This filters for reports of mails that had multiple DKIM signatures. Which is an indicator for indirect mail flow."></span>
+        </div>
+        <div class="filter_aligned_spf_result">
+            {% bootstrap_label form.aligned_spf_result.label label_for=form.aligned_spf_result.auto_id %}
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Passes if the raw SPF result passes and the according 'MAIL FROM'- or 'HELO'- domain aligns with the From: header of the mail. For a DMARC pass one of aligned SPF or aligned DKIM must pass. (cf. 'policy_evaluated.spf' report field)"></span>
+            {% bootstrap_field form.aligned_spf_result show_label=False %}
+        </div>
+        <div class="filter_aligned_dkim_result">
+            {% bootstrap_label form.aligned_dkim_result.label label_for=form.aligned_dkim_result.auto_id %}
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Passes if the raw DKIM result passes and the according 'd='-domain aligns with the From: header of the mail. For a DMARC pass one of aligned SPF or aligned DKIM must pass. (cf. 'policy_evaluated.dkim' report field)"></span>
+            {% bootstrap_field form.aligned_dkim_result show_label=False %}
+        </div>
+        <div class="filter_disposition">
+            {% bootstrap_label form.disposition.label label_for=form.disposition.auto_id %}
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The policy executed, depending on the policy specified by the domain owner and the aligned DMARC result. (cf. 'policy_evaluated.disposition' report field)"></span>
+            {% bootstrap_field form.disposition show_label=False %}
+        </div>  
         <div class="text-right col-xs-12">
             {% bootstrap_field form.DELETE form_group_class="hidden" %}
             <div class="btn-group">
-                <input type="button" class="btn btn-default" onclick="editor.copyFilterSet(this)" value="Copy">
+                <input type="button" class="btn btn-default formset-copy" onclick="editor.copyFilterSet(this)" value="Copy">
                 <input type="button" class="btn btn-danger" data-formset-delete-button value="Delete">
             </div>
         </div>

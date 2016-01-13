@@ -25,7 +25,11 @@ $.ajaxSetup({
 
 $(document).ready(function(){
     $(".context-help-icon").tooltip();
-})    
+})
+
+$(document).on( "click", "[data-formset-add], .formset-copy", function(){
+    $(".context-help-icon").tooltip();
+})
 
 var main = {
     showAjaxMessages: function(response) {

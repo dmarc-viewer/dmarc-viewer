@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'super_inlines',
     'bootstrap3',
     'djangoformsetjs',
-    'myDmarcApp',
+    'myDmarcApp'
     #'debug_toolbar',
     #'debug_panel'
 )

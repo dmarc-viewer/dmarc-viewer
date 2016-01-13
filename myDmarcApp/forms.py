@@ -20,10 +20,10 @@ class ViewForm(ModelForm):
         model = View
         fields = ['title', 'description', 'enabled', 'type_map', 'type_line', 'type_table']
         labels = {
-            "enabled": _("show"),
-            "type_map": _("show world map"),
-            "type_line": _("show time line chart"),
-            "type_table": _("show report record table"),
+            "enabled": _("show in Deep Analysis"),
+            "type_map": _("world map"),
+            "type_line": _("time line chart"),
+            "type_table": _("report record table"),
         }
         widgets = {
             'description': Textarea(attrs={'rows': 5}),

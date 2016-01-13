@@ -7949,6 +7949,18 @@ body {
   margin-bottom: 10px;
 }
 
+#view-editor .filter_multiple_dkim {
+  margin: 10px 0;
+}
+
+#view-editor .filter_multiple_dkim .form-group, #view-editor .filter_multiple_dkim .checkbox {
+  display: inline;
+}
+
+#view-editor .context-help-icon {
+  margin: 3px 5px;
+}
+
 #view-editor [data-formset-form] {
   border: 1pt solid grey;
   padding: 20px 60px;
@@ -8181,20 +8193,20 @@ h3 {
 .context-help-icon {
   border: 1px solid #c7254e;
   background-color: #c7254e;
-  height: 16px;
-  line-height: 16px;
-  width: 16px;
+  height: 14px;
+  line-height: 14px;
+  width: 14px;
   color: white;
   display: inline-block;
   vertical-align: top;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   margin: 5px 5px;
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
 }
 
 .context-help-icon:hover {

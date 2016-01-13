@@ -31,8 +31,16 @@
             <div id="{{view_form.type_map.auto_id}}_container">{% bootstrap_field view_form.type_map %}</div>
             <div id="{{view_form.type_line.auto_id}}_container">{% bootstrap_field view_form.type_line %}</div>
             <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
-            <div id="{{view_form.report_type.auto_id}}_container">{% bootstrap_field view_form.report_type %}</div>
-            <div id="{{view_form.dr_type.auto_id}}_container">{% bootstrap_field view_form.dr_type %}</div>
+            <div id="{{view_form.report_type.auto_id}}_container">
+                {% bootstrap_label view_form.report_type.label label_for=view_form.report_type.auto_id %}
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are those DMARC aggregate reports that you receive, based on mail that was sent with your domain. Outgoing reports are those that you send, based on mail you receive. Switching here will also change the Reportee and Reporter options below in the filter sets."></span>
+                {% bootstrap_field view_form.report_type show_label=False %}
+            </div>
+            <div id="{{view_form.dr_type.auto_id}}_container">
+                {% bootstrap_label view_form.dr_type.label label_for=view_form.dr_type.auto_id %}
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="An absolute time range filters reports having their 'date_range.begin' field in between your specified 'from' and 'to'. A dynamic time range is always related to the current moment."></span>
+                {% bootstrap_field view_form.dr_type show_label=False %}
+            </div>
             <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>
             <div id="{{view_form.end.auto_id}}_container">{% bootstrap_field view_form.end %}</div>
             <div id="{{view_form.quantity.auto_id}}_container">{% bootstrap_field view_form.quantity %}</div>

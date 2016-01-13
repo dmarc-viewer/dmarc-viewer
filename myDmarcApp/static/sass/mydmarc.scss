@@ -159,6 +159,17 @@ body {
         margin-bottom: 10px;
     }
 
+    .filter_multiple_dkim {
+        margin: 10px 0;
+        .form-group, .checkbox {
+            display: inline;
+        }
+    } 
+
+    .context-help-icon {
+        margin: 3px 5px;
+    }
+
     //Filterset border
     [data-formset-form] {
         border: 1pt solid grey;
@@ -408,18 +419,18 @@ h3 {
 .context-help-icon {
     border: 1px solid #c7254e;
     background-color: #c7254e;
-    height:16px;
-    line-height: 16px;
-    width: 16px;
+    height:14px;
+    line-height: 14px;
+    width: 14px;
     color: white;
     display: inline-block;
     vertical-align: top;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     margin: 5px 5px;
-    @include border-bottom-radius(8px);
-    @include border-top-radius(8px);
+    @include border-bottom-radius(7px);
+    @include border-top-radius(7px);
     &:hover {
         color: #c7254e;
         background-color: white;
