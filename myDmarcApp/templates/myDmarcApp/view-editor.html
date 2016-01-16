@@ -33,12 +33,12 @@
             <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
             <div id="{{view_form.report_type.auto_id}}_container">
                 {% bootstrap_label view_form.report_type.label label_for=view_form.report_type.auto_id %}
-                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are those DMARC aggregate reports that you receive, based on mail that was sent with your domain. Outgoing reports are those that you send, based on mail you receive. Switching here will also change the Reportee and Reporter options below in the filter sets."></span>
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are those DMARC aggregate reports that you receive, based on mail that was sent with your domain. Outgoing reports on the other hand are those that you send, based on mail you received. CAUTION: Changing the report type here will change options for fields Reportee(s), Reporter(s), SPF domain(s) and DKIM domains(s) below in the filter set."></span>
                 {% bootstrap_field view_form.report_type show_label=False %}
             </div>
             <div id="{{view_form.dr_type.auto_id}}_container">
                 {% bootstrap_label view_form.dr_type.label label_for=view_form.dr_type.auto_id %}
-                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="An absolute time range filters reports having their 'date_range.begin' field in between your specified 'from' and 'to'. A dynamic time range is always related to the current moment."></span>
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="An absolute time range filters reports having their 'date_range.begin' field in between your specified 'from' and 'to'. A dynamic time range filters the last x days, weeks, months or years always starting at current moment of view inspection."></span>
                 {% bootstrap_field view_form.dr_type show_label=False %}
             </div>
             <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>

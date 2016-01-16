@@ -50,7 +50,7 @@
         </div>
         <div class="filter_multiple_dkim">
             {% bootstrap_field form.multiple_dkim %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="This filters for reports of mails that had multiple DKIM signatures. Which is an indicator for indirect mail flow."></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="This filters for reports of mails that had multiple DKIM signatures. This is an indicator for indirect mail flow."></span>
         </div>
         <div class="filter_aligned_spf_result">
             {% bootstrap_label form.aligned_spf_result.label label_for=form.aligned_spf_result.auto_id %}
@@ -64,7 +64,7 @@
         </div>
         <div class="filter_disposition">
             {% bootstrap_label form.disposition.label label_for=form.disposition.auto_id %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The policy executed, depending on the policy specified by the domain owner and the aligned DMARC result. (cf. 'policy_evaluated.disposition' report field)"></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The policy executed by the mail receiver, depending on the policy specified by the domain owner and the aligned DMARC result evaluated upon mail reception. (cf. 'policy_evaluated.disposition' report field)"></span>
             {% bootstrap_field form.disposition show_label=False %}
         </div>  
         <div class="text-right col-xs-12">
