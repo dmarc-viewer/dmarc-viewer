@@ -379,8 +379,8 @@ h2 {
     font-size: 22px;
 }
 h3 {
-    font-size: 18px;
-    color: darkgrey;
+    font-size: 16px;
+    text-decoration: underline;
     }
 .hidden {
     display: none;
@@ -418,11 +418,11 @@ h3 {
 
 .context-help-icon {
     border: 1px solid #c7254e;
-    background-color: #c7254e;
+    color: #c7254e;
+    background-color: white;
     height:14px;
     line-height: 14px;
     width: 14px;
-    color: white;
     display: inline-block;
     vertical-align: top;
     text-align: center;
@@ -432,13 +432,12 @@ h3 {
     @include border-bottom-radius(7px);
     @include border-top-radius(7px);
     &:hover {
-        color: #c7254e;
-        background-color: white;
+        color: white;
+        background-color: #c7254e;
     }
     &:before {
         content: '?';
     }
-
 }
 .tooltip {
     position: fixed;
@@ -454,10 +453,9 @@ code {
 }
 
 .brand {
-    color: #9d9d9d;
-    float: left;
+    color: white;
     padding: 15px 15px;
-    font-size: 20px;
+    font-size: 22px;
     line-height: 20px;
     height: 50px;
 }
