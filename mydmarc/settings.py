@@ -95,8 +95,8 @@ WSGI_APPLICATION = 'mydmarc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dmarc_django_db',
-        'USER': 'dmarc_django_db',
+        'NAME': 'dmarc_viewer_db',
+        'USER': 'dmarc_viewer_db',
         'HOST': '127.0.0.1'
     }
 }
