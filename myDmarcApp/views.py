@@ -12,7 +12,6 @@ from django.views.decorators.cache import cache_page
 
 from forms import *
 from myDmarcApp.models import View, DateRange, OrderedModel, _clone
-from myDmarcApp.help import help_topics
 
 def overview(request):
     response = {
@@ -303,5 +302,5 @@ def table_async(request, view_id):
 
 
 def help(request):
-    return render(request, 'myDmarcApp/help.html', {"topics": help_topics})
+    return render(request, 'myDmarcApp/help.html')
 
