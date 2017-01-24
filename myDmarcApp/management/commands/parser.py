@@ -2,7 +2,7 @@
 # Copyright (c) 2015, Persistent Objects Ltd http://p-o.co.uk/
 #
 # License: BSD
-# 
+#
 # https://github.com/alan-hicks/django-dmarc/blob/master/dmarc/management/commands/importdmarcreport.py
 # Customized for mydmarc
 #----------------------------------------------------------------------
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             #     # Create md5 hash from file content
             #     hasher = hashlib.md5()
             #     hasher.update(f.read())
-            
+
             # report_hash = hasher.hexdigest()
 
             # # Check if file already exists
@@ -135,7 +135,7 @@ class Command(BaseCommand):
             email                       = node_metadata.findtext('email')
             extra_contact_info          = node_metadata.findtext('extra_contact_info')
             try:
-                reporter = Reporter.objects.get(org_name=org_name, email=email, 
+                reporter = Reporter.objects.get(org_name=org_name, email=email,
                     extra_contact_info=extra_contact_info)
             except ObjectDoesNotExist:
                 reporter = Reporter()
@@ -158,9 +158,9 @@ class Command(BaseCommand):
             # Assign policy published
             node_policy_published   = root.find('policy_published')
             report.domain           = node_policy_published.findtext('domain')
-            report.adkim            = choices.convert(choices.ALIGNMENT_MODE, 
+            report.adkim            = choices.convert(choices.ALIGNMENT_MODE,
                                                         node_policy_published.findtext('adkim'))
-            report.aspf             = choices.convert(choices.ALIGNMENT_MODE, 
+            report.aspf             = choices.convert(choices.ALIGNMENT_MODE,
                                                         node_policy_published.findtext('aspf'))
             report.p                = choices.convert(choices.DISPOSITION_TYPE,
                                                         node_policy_published.findtext('p'))
@@ -203,7 +203,7 @@ class Command(BaseCommand):
                     # Univie special case for anonymised IP addresses
                     if (ip_element.attrib.get('anonymised_ip', '0') == '1'):
                         record.country_iso_code  = ip_element.attrib.get('geoip', '')
-                    else: 
+                    else:
                         record.source_ip         = ip_element.text
                         response                 = geoip_reader.city(record.source_ip)
                         record.country_iso_code  = response.country.iso_code
@@ -211,11 +211,11 @@ class Command(BaseCommand):
                     msg  = "Could not find ISO country code for IP '%s': %s" % (record.source_ip, e)
                     logger.warning(msg)
 
-                
+
                 # Assign record info
                 record.count             = int(node_row.findtext('count'))
                 node_policy_evaluated    = node_row.find('policy_evaluated')
-                record.disposition       = choices.convert(choices.DISPOSITION_TYPE, 
+                record.disposition       = choices.convert(choices.DISPOSITION_TYPE,
                                              node_policy_evaluated.findtext('disposition'))
                 record.dkim              = choices.convert(choices.DMARC_RESULT,
                                              node_policy_evaluated.findtext('dkim'))
@@ -250,7 +250,7 @@ class Command(BaseCommand):
                 # Find authentication results
                 node_auth_results = node_record.find('auth_results')
 
-                
+
                 # DKIM result counter (performance boost for data analysis)
                 dkim_count = 0
                 # Create DKIM authentication result objects
@@ -274,9 +274,9 @@ class Command(BaseCommand):
                     result_spf          = AuthResultSPF()
                     result_spf.record   = record
                     result_spf.domain   = node_spf_result.findtext('domain')
-                    result_spf.scope    = choices.convert(choices.SPF_SCOPE, 
+                    result_spf.scope    = choices.convert(choices.SPF_SCOPE,
                                             node_spf_result.findtext('scope'))
-                    result_spf.result   = choices.convert(choices.SPF_RESULT, 
+                    result_spf.result   = choices.convert(choices.SPF_RESULT,
                                             node_spf_result.findtext('result'))
                     try:
                         result_spf.save()
@@ -291,7 +291,7 @@ class Command(BaseCommand):
                 except Exception, e:
                     msg = "Could not save DMARC record for for report '%s': %s" % (report.report_id, e)
                     logger.warning(msg)
-                    
+
         except Exception, e:
             msg = "Something went wrong while parsing '%s': %s" % (file_name, e)
             logger.error(msg)

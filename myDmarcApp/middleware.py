@@ -10,7 +10,7 @@ class BootstrapAjaxMessage(object):
                     content = json.loads(response.content)
                 except Exception, e:
                     return response
-                                    
+
                 content['ajax_message_block'] = Template(
                             "{% load bootstrap3 %}{% bootstrap_messages messages %}"
                             ).render(Context({"messages": messages.get_messages(request)}))

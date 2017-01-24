@@ -32,7 +32,7 @@
                     on <strong>'{{ the_view.reporttype_set.first.get_value_display }}'</strong> reports
                     <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Click to see what data this view is based on. For each filter set you will see the specified filters."></span>
                 </h4>
-                
+
             </div>
             <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
             <div class="panel-body">
@@ -61,11 +61,11 @@
 
     {% if the_view.type_map %}
     <h2>World Map<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Mails are associated with countries by using GeoIP (MaxMind) on the Mail Sender IP. There is a separate map for each filter set. Hover over the map to see the mail volume per country."></span></h2>
-    
+
     <div class="view-type-map view-type" style="width:100%">
         <div class="btn-group switch-filterset"></div>
         <div class="svg-container" style="position:relative"></div>
-        <div class="export-svg"> 
+        <div class="export-svg">
             <a onClick="analysis.export.svg({{the_view.id}}, 'map', this)" class="btn btn-important" role="button" href="#">Export map as PDF</a>
         </div>
     </div>
@@ -84,7 +84,7 @@
                <span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Click and drag over mini time line to zoom on the x-axis. This will also apply a time filter on the table."></span>
             </div>
         </div>
-        <div class="export-svg"> 
+        <div class="export-svg">
             <a onClick="analysis.export.svg({{the_view.id}}, 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
         </div>
     </div>
@@ -108,7 +108,7 @@
                 </tr>
             </thead>
         </table>
-        <div class="export-csv"> 
+        <div class="export-csv">
             <a onClick="analysis.export.csv({{the_view.id}})" class="btn btn-important" role="button" href="#">Export Table as CSV</a>
         </div>
     </div>

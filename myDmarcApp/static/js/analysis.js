@@ -77,7 +77,7 @@ var analysis = {
                     .attr("transform", "translate(0, -120)")
                     .attr("text-anchor", "middle")
                     .text(title);
-                    
+
                 var lineLegendOptions = {
                     legendItems : data[type].map(function(d){return {color: color(d.label), name: (d.cnt + " " + d.label)} })
                 }
@@ -85,7 +85,7 @@ var analysis = {
                   .attr("class", "legend")
                   .attr("transform", "translate(-160, -100)")
                   .style("font-size", "12px")
-                  .call(d3.legend, lineLegendOptions); 
+                  .call(d3.legend, lineLegendOptions);
             });
         }
     },
@@ -110,7 +110,7 @@ var analysis = {
         /*
          * Creates an array of `n` colors around the baseColor,
          * ranging the HSL lightness value from 0.1 to 0.9
-         * 
+         *
          * cf. "Color Use Guidelines for Mapping and Visualization",
          * Brewer (sequential scheme, one hue)
          */
@@ -137,11 +137,11 @@ var analysis = {
                 if (error || json.length < 1) {
                     console.warn(error);
                     return false;
-                } 
+                }
 
                 analysis.map._dataSets = json;
                 analysis.map._width    = $(".view-type .svg-container").width();
-                
+
                 // Transform server data for map plugin
                 analysis.map._dataSets.forEach(function(dataSet, idx){
 
@@ -163,7 +163,7 @@ var analysis = {
                     dataSet.data.forEach(function(obj){
                         var color = paletteScale(obj.cnt) || colors[colors.length - 1]
                         data[analysis.map._countryCodeMapping[obj.country_iso_code]] = { count: obj.cnt, fillKey: color, highlightFillColor: color };
-                    }); 
+                    });
 
                     // Create fills and legend labels
                     var fills = {
@@ -180,8 +180,8 @@ var analysis = {
                         } );
                     });
 
-                    // Store 
-                    analysis.map._mapDataSets.push({ 
+                    // Store
+                    analysis.map._mapDataSets.push({
                         fills:     fills,
                         labels:    legendLabels,
                         data:      data
@@ -189,8 +189,8 @@ var analysis = {
 
                     //Create and append button for each dataset
                     var $mapDataSetBtn = $("<button>", {
-                                                        class: "btn btn-default", 
-                                                        value: idx, 
+                                                        class: "btn btn-default",
+                                                        value: idx,
                                                         });
                     $mapDataSetBtn.append($("<span>", {
                                                         class: "circle",
@@ -214,13 +214,13 @@ var analysis = {
                         highlightBorderColor:   analysis.map._defaults.defaultBorderColor,
                         highlightBorderWidth:   analysis.map._defaults.defaultBorderHoverWidth,
                         popupTemplate: function(geo, data) {
-                                        text = geo.properties.name + ": " + 
+                                        text = geo.properties.name + ": " +
                                                 (data ? data.count : "no") +
                                                 " mail(s)"
                                         $hoverInfo = $("<div>", {"class": "hoverinfo", "text": text})
                                         return $hoverInfo.prop('outerHTML');
                                     }
-                    }, 
+                    },
                     // done: function(map) {
                     //     //Enable zooming and panning
                     //     map.svg.call(d3.behavior.zoom().on("zoom", function(){
@@ -295,9 +295,9 @@ var analysis = {
         _dataSetsLine : null,
         _defaults : {
             margin : {
-                top: 40, 
-                right: 60, 
-                bottom: 120, 
+                top: 40,
+                right: 60,
+                bottom: 120,
                 left: 80
             },
             marginMini : {
@@ -314,7 +314,7 @@ var analysis = {
                 if (error || json.length < 1) {
                     console.warn(error);
                     return false;
-                }  
+                }
 
                 analysis.line._data = json;
                 // Create date format praser
@@ -364,7 +364,7 @@ var analysis = {
                 // Moving brush in mini chart changes chart domain
                 var brush = d3.svg.brush()
                     .x(xMini)
-                    .on("brush", function() { 
+                    .on("brush", function() {
                         x.domain(brush.empty() ? xMini.domain() : brush.extent());
                         focus.selectAll(".line").attr("d", line);
                         focus.select(".x.axis").call(xAxis);
@@ -384,7 +384,7 @@ var analysis = {
                 var svg = d3.select(".view-type-linechart .svg-container").append("svg")
                     .attr("width", width + analysis.line._defaults.margin.left + analysis.line._defaults.margin.right)
                     .attr("height", height + analysis.line._defaults.margin.top + analysis.line._defaults.margin.bottom);
-        
+
                 //Define a viewport, so that the line does not move over axis
                 //This does not work when exported
                 svg.append("defs").append("clipPath")
@@ -392,22 +392,22 @@ var analysis = {
                   .append("rect")
                     .attr("width", width)
                     .attr("height", clientHeight);
-        
+
                 // Append main chart to svg and place it
                 var focus = svg.append("g")
                     .attr("class", "focus")
                     .attr("transform", "translate(" + analysis.line._defaults.margin.left + "," + analysis.line._defaults.margin.top + ")");
-        
-                // Append overview chart to svg and place it 
+
+                // Append overview chart to svg and place it
                 var context = svg.append("g")
                     .attr("class", "context")
                     .attr("transform", "translate(" + analysis.line._defaults.marginMini.left + "," + analysis.line._defaults.marginMini.top + ")");
-        
+
                 // Create main chart line generator
                 var line = d3.svg.line()
                     .x(function(d) { return x(d.date); })
                     .y(function(d) { return y(d.cnt); });
-        
+
                 // Create overview chart line generator
                 var lineMini = d3.svg.line()
                     .x(function(d) { return xMini(d.date); })
@@ -419,7 +419,7 @@ var analysis = {
                     obj.date = parseDate(obj.date);
                   })
                 })
-        
+
                 //Create 0 data points for days of range that are not in the dataset
                 //data MUST be orderd by date
                 var days = d3.time.day.range(begin, end);
@@ -430,7 +430,7 @@ var analysis = {
                     for (var i = 0; i < days.length; i++) {
                         // + for number cast
                         if ((data_len > j) && (+days[i] == +dataSet.data[j].date)){
-                            cnt = dataSet.data[j].cnt; 
+                            cnt = dataSet.data[j].cnt;
                             j += 1;
                         } else {
                             cnt = 0;
@@ -439,23 +439,23 @@ var analysis = {
                     }
                     dataSet.data = data_tmp
                 });
-        
+
                 x.domain([begin, end]);
-        
+
                 // Get max value by traversing all datasets' data lists
                 y.domain(
-                  [0, d3.max([].concat.apply([], 
+                  [0, d3.max([].concat.apply([],
                     dataSetsLine.map(function(dataSet){
                         return dataSet.data.map(
                             function(d){
                                 return d.cnt;
                             })
                     })))]);
-        
+
                 // Get the domains for x and y values for overview chart
                 xMini.domain(x.domain());
                 yMini.domain(y.domain());
-        
+
                 // Create the actual lines and append to svg
                 dataSetsLine.forEach(function(dataSet, idx) {
                   // for main chart
@@ -471,19 +471,19 @@ var analysis = {
                       .attr("d", lineMini)
                       .attr("stroke", dataSet.color);
                 });
-        
+
                 // Append X Axis for main chart
                 focus.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis);
-        
+
                 // Append Y Axis for main chart
                 focus.append("g")
                     .attr("class", "y axis")
                     .call(yAxis);
-        
-                // prepend gridlines, so they are under the lines 
+
+                // prepend gridlines, so they are under the lines
                 focus.insert("g", ":first-child")
                     .attr("class", "x grid")
                     .attr("transform", "translate(0," + height + ")")
@@ -491,19 +491,19 @@ var analysis = {
                 focus.insert("g", ":first-child")
                     .attr("class", "y grid")
                     .call(yGridLines);
-        
-        
+
+
                 svg.append("text")
                     .attr("class", "y label")
                     .attr("transform", "rotate(-90)translate(" + (height/2 * -1 ) + ", 25)")
                     .text("Mail count");
-        
+
                 // Append X Axis for mini chart
                 context.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + heightMini + ")")
                     .call(xAxisMini);
-        
+
                 // Append the moving window for the mini chart
                 context.append("g")
                     .attr("class", "x brush")
@@ -511,7 +511,7 @@ var analysis = {
                   .selectAll("rect")
                     .attr("y", -6)
                     .attr("height", heightMini + 7);
-        
+
                 // CSS inline hack for SVG export support
                 svg.selectAll(".brush .extent")
                     .style("stroke", "#fff")
@@ -531,7 +531,7 @@ var analysis = {
                     .style("stroke-width", 1)
                     .style("shape-rendering", "crispEdges");
                 svg.selectAll(".grid .tick")
-                    .style("stroke", "#DADADA");    
+                    .style("stroke", "#DADADA");
                 svg.selectAll(".tick text")
                     .style("font-size", "10px")
                 svg.selectAll(".grid path")
@@ -544,12 +544,12 @@ var analysis = {
                     .call(d3.legend, {
                         legendItems : dataSetsLine.map(function(d){
                                                             return {
-                                                                color: d.color, 
+                                                                color: d.color,
                                                                 name: d.label
-                                                            } 
+                                                            }
                                                         })
-                }); 
-        
+                });
+
                 // Add title
                 svg.append("text")
                     .attr("text-anchor", "middle")
@@ -573,9 +573,9 @@ var analysis = {
                 }
 
                 $filterContainer.html(
-                    "Filtering from <strong>" 
-                    + formatDate(dateTimes[0]) 
-                    + "</strong> to <strong>" + 
+                    "Filtering from <strong>"
+                    + formatDate(dateTimes[0])
+                    + "</strong> to <strong>" +
                     formatDate(dateTimes[1]) + "</strong");
 
                 analysis.table._tableTimes = dateTimes;
@@ -591,7 +591,7 @@ var analysis = {
                          data["custom_filters"] = {
                             "time" : analysis.table._tableTimes // Does this newly read variable every time?
                          }
-                         return { 
+                         return {
                             "data" : JSON.stringify(data),
                           };
                     },
@@ -635,7 +635,7 @@ var analysis = {
                 'type': 'hidden',
                 'name': 'csrfmiddlewaretoken',
                 'value': getCookie('csrftoken'),
-            })).submit();  
+            })).submit();
         },
     }
 }

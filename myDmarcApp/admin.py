@@ -28,7 +28,7 @@ class ReportErrorInline(SuperInlineModelAdmin, admin.StackedInline):
     extra = 0
 
 class ReporterAdmin(SuperModelAdmin):
-    model = Reporter 
+    model = Reporter
     list_display = ('org_name', 'email', 'extra_contact_info')
 
 class ReportAdmin(SuperModelAdmin):
@@ -96,7 +96,7 @@ class ViewAdmin(SuperModelAdmin):
 admin.site.register(View, ViewAdmin)
 
 class FilterSetAdmin(SuperModelAdmin):
-    model = FilterSet 
+    model = FilterSet
 
 admin.site.register(FilterSet, FilterSetAdmin)
 admin.site.register(ReportType)

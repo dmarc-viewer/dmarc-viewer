@@ -37,7 +37,7 @@ class MultiSelectWidget(SelectMultiple):
 class ColorPickerWidget(TextInput):
     """Color Picker for html5 input type color, using bootstrap-colorpicker.js as fallback """
     input_type = 'color'
-        
+
     def render(self, name, value, attrs=None):
         if not value:
             value = "#006699"
@@ -58,7 +58,7 @@ class ColorPickerWidget(TextInput):
 class DatePickerWidget(TextInput):
     """bootstrap datepicker"""
     input_type = 'date'
-        
+
     def render(self, name, value, attrs=None):
         html = super(DatePickerWidget, self).render(name, value, attrs)
         js   =  '''<script type="text/javascript">

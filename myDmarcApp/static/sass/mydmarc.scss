@@ -5,7 +5,7 @@
 $dmarc-blue: #006699;
 $panel-border-radius: 0;
 
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
  */
@@ -69,7 +69,7 @@ body {
             background-color: $dmarc-blue;
         }
     }
-} 
+}
 
 
 .container-margin {
@@ -77,7 +77,7 @@ body {
     margin: auto;
 }
 
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Editor
  */
@@ -86,7 +86,7 @@ body {
 
     form label {
         font-weight: normal;
-    } 
+    }
     $viewFilterFormFields:
         (title, 12),
         (description, 12),
@@ -108,9 +108,9 @@ body {
             @extend .col-md-#{$colMd};
             @extend .col-lg-#{$colLg};
         }
-    } 
-  
-    $filterSetContainerFields: 
+    }
+
+    $filterSetContainerFields:
         (label, 8),
         (color, 4),
         (report_receiver_domain, 4),
@@ -124,7 +124,7 @@ body {
         (aligned_dkim_result, 4),
         (aligned_spf_result, 4),
         (disposition, 4);
- 
+
     @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
         .filter_#{$id} {
         @extend .col-xs-#{$colXs};
@@ -164,7 +164,7 @@ body {
         .form-group, .checkbox {
             display: inline;
         }
-    } 
+    }
 
     .context-help-icon {
         margin: 3px 5px;
@@ -178,7 +178,7 @@ body {
         @include border-top-radius(3px);
         @include border-bottom-radius(3px);
     }
-   
+
     .selectize-control .selectize-input [data-value] {
         color: whitesmoke;
         background-color: $dmarc-blue;
@@ -200,7 +200,7 @@ body {
     }
 }
 
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Deep Analysis
  */
@@ -314,7 +314,7 @@ body {
             }
         }
         .dataTables_processing {
-            @extend .loading; 
+            @extend .loading;
             position: absolute;
             background-color: rgba(255,255,255,0.8);
             top: 39px;
@@ -334,7 +334,7 @@ body {
 
 
 }
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * View Management
  */
@@ -349,7 +349,7 @@ body {
     }
 }
 
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Overview
  */
@@ -360,7 +360,7 @@ body {
         text-align: center;
     }
 }
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Help
  */
@@ -368,7 +368,7 @@ body {
     @extend .container-margin;
 }
 
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Miscellaneous
  */
@@ -460,8 +460,8 @@ code {
     height: 50px;
 }
 
-// .anchor { 
-//     padding-top: 50px; 
+// .anchor {
+//     padding-top: 50px;
 //     margin-top: -30px;
 //     }
 
@@ -473,7 +473,7 @@ code {
     @include border-bottom-radius(6px);
     @include border-top-radius(6px);
 }
-/*  
+/*
  * ---------------------------------------------------------------------------------------------------------------------
  * Loading wheel
  */
@@ -490,7 +490,7 @@ code {
   @-webkit-keyframes #{$name} { @content; }
   @-moz-keyframes #{$name} { @content; }
   @-ms-keyframes #{$name} { @content; }
-  @keyframes #{$name} { @content; } 
+  @keyframes #{$name} { @content; }
 }
 
 .selectize-loading .selectize-input {

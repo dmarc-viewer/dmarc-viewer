@@ -30,10 +30,10 @@ class Report(models.Model):
     date_created            = models.DateTimeField(auto_now = False, auto_now_add = True)
 
     # # MD5 hash to detect duplicate reports when parsing
-    # # 
+    # #
     # report_hash             = models.CharField(max_length = 32)
-    
-    # Meta Data 
+
+    # Meta Data
     report_id               = models.CharField(max_length = 200)
     date_range_begin        = models.DateTimeField()
     date_range_end          = models.DateTimeField()
@@ -69,16 +69,16 @@ class Report(models.Model):
             # Query per result aggregated message count for dkim, spf and dispostion
             # Transform result number to display name
             "dkim"        : [{
-                                "cnt": res["cnt"], 
+                                "cnt": res["cnt"],
                                 "label": dict(choices.DMARC_RESULT).get(res["dkim"])
                             } for res in Record.objects.filter(report__report_type=report_type).values("dkim").annotate(cnt=Sum("count"))],
 
             "spf"         : [{
-                                "cnt": res["cnt"], 
+                                "cnt": res["cnt"],
                                 "label": dict(choices.DMARC_RESULT).get(res["spf"])
                             } for res in Record.objects.filter(report__report_type=report_type).values("spf").annotate(cnt=Sum("count"))],
             "disposition" : [{
-                                "cnt": res["cnt"], 
+                                "cnt": res["cnt"],
                                 "label": dict(choices.DISPOSITION_TYPE).get(res["disposition"])
                             } for res in Record.objects.filter(report__report_type=report_type).values("disposition").annotate(cnt=Sum("count"))],
         }
@@ -148,7 +148,7 @@ class OrderedModel(models.Model):
                 self.position = self.__class__.objects.aggregate(Max("position")).get("position__max", 0) + 1
             except Exception, e:
                 self.position = 0 # Default anyways, do this for more explicitness
-                
+
         super(OrderedModel, self).save()
 
     @staticmethod
@@ -204,7 +204,7 @@ class View(OrderedModel):
                  "msg#", "IP", "Country", "Report Begin", "Report End", "Report ID"]
 
     def getTableData(self, records=None):
-        
+
         #If records is specified, use it instead of
         #this view's entire records. This can be useful for pagination"""
         if records is None:
@@ -223,7 +223,7 @@ class View(OrderedModel):
                 r.report.date_range_begin.strftime('%Y/%m/%d'),
                 r.report.date_range_end.strftime('%Y/%m/%d'),
                 # distinct records vs. filter set labled records
-                # fs.label] for fs in self.filterset_set.all() for r in self.getTableRecords()] 
+                # fs.label] for fs in self.filterset_set.all() for r in self.getTableRecords()]
                 r.report.report_id
                 ] for r in list(records)]
 
@@ -231,14 +231,14 @@ class View(OrderedModel):
         return [View.getTableHead()] + self.getTableData()
 
     def getLineData(self):
-        # There must only one of both exactly one 
+        # There must only one of both exactly one
         date_range = DateRange.objects.filter(foreign_key=self.id).first()
         if not date_range:
             raise Exception("You have to specify a date range, you bastard!") # XXX LP Raise proper exception
         begin, end = date_range.getBeginEnd()
 
-        return {'begin': begin.strftime('%Y%m%d'), 
-                'end': end.strftime('%Y%m%d'), 
+        return {'begin': begin.strftime('%Y%m%d'),
+                'end': end.strftime('%Y%m%d'),
                 'data_sets': [{'label': filter_set.label,
                                'color': filter_set.color,
                                'data': list(filter_set.getMessageCountPerDay())} \
@@ -276,13 +276,13 @@ class FilterSet(models.Model):
 
     def getMessageCountPerDay(self):
         # XXX LP: to_char is postgres specific, do we care for db flexibility?
-        
+
         # Needs filter(id__in=distinct_records) workaround because
-        # filter(self.getQuery()) does some db joining which can result in duplicate 
-        # record rows that we can't "distinct()" away when using annotate() 
-        
+        # filter(self.getQuery()) does some db joining which can result in duplicate
+        # record rows that we can't "distinct()" away when using annotate()
+
         # Note: tried to use  Record.objects.filter(self.getQuery()).query
-        # as subquery with .raw()-sql query 
+        # as subquery with .raw()-sql query
         # didn't work because of django quotation bug
         # https://code.djangoproject.com/ticket/17741
 
@@ -294,7 +294,7 @@ class FilterSet(models.Model):
             .annotate(cnt=Sum('count'))\
             .values('date', 'cnt')\
             .order_by('date')
-    
+
     def getMessageCountPerCountry(self):
         distinct_records = Record.objects.filter(self.getQuery()).distinct().values("id")
         return Record.objects.filter(id__in=distinct_records)\
@@ -351,7 +351,7 @@ class DateRange(ViewFilterField):
                 begin = end - relativedelta(years=self.quantity)
             else:
                 raise # XXX LP proper Exception
-            return begin, end        
+            return begin, end
         else:
             raise # XXX LP proper Exception
 
@@ -436,7 +436,7 @@ def _get_related_objects(obj, parent_class=False):
             related object's class must be (a subclass) of type parent_class
     Returns:
         list of related objects
-        
+
     XXX LP maybe use chain from itertools for better performance
 
     """

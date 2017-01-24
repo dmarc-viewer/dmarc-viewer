@@ -1,11 +1,13 @@
+- Refactor name
 - Docstrings and comments
 - exceptions, and messages in view
 - uncomment hash stuff and re-read data with hash
-- Remove pyc from git
 - Remove trailing whitespaces
 - Check for prints, add logger instead
 - Test!!
-- Refactor name
+- Demo files
+- Lisence file
+- github.io (take from thesis)
 
 - bower for frontend deps
   --> update management script for bower update and maxmind IP DB

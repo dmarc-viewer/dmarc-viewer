@@ -96,7 +96,7 @@ class ViewForm(ModelForm):
 
     def save(self):
         view_instance = super(ViewForm, self).save()
-        
+
         # This is actually a one-to-one relationship but modeled with fk (m2o)
         date_range = DateRange.objects.filter(foreign_key=self.instance.id).first()
         if not date_range:
@@ -144,35 +144,35 @@ class FilterSetForm(ModelForm):
                                             "class"   : ReportSender,
                                             "type"    : unicode},
             "report_receiver_domain"     : {"load"    : "reportee", # cf. view.py - choices_async
-                                            "label"   : "Reportee(s)", 
+                                            "label"   : "Reportee(s)",
                                             "class"   : ReportReceiverDomain,
                                             "type"    : unicode},
             "raw_dkim_domain"            : {"load"    : "dkim_domain", # cf. view.py - choices_async
-                                            "label"   : "DKIM Domain(s)", 
+                                            "label"   : "DKIM Domain(s)",
                                             "class"   : RawDkimDomain,
                                             "type"    : unicode},
             "raw_spf_domain"             : {"load"   : "spf_domain", # cf. view.py - choices_async
-                                            "label"   : "SPF Domain(s)", 
+                                            "label"   : "SPF Domain(s)",
                                             "class"   : RawSpfDomain,
                                             "type"    : unicode},
-            "raw_dkim_result"            :  {"choices" : choices.DKIM_RESULT, 
-                                            "label"   : "DKIM Result(s)", 
+            "raw_dkim_result"            :  {"choices" : choices.DKIM_RESULT,
+                                            "label"   : "DKIM Result(s)",
                                             "class"   : RawDkimResult,
                                             "type"    : int},
-            "raw_spf_result"             : {"choices" : choices.SPF_RESULT, 
-                                            "label"   : "SPF Result(s)", 
+            "raw_spf_result"             : {"choices" : choices.SPF_RESULT,
+                                            "label"   : "SPF Result(s)",
                                             "class"   : RawSpfResult,
                                             "type"    : int},
-            "aligned_dkim_result"        : {"choices" : choices.DMARC_RESULT, 
-                                            "label"   : "Aligned DKIM Result(s)", 
+            "aligned_dkim_result"        : {"choices" : choices.DMARC_RESULT,
+                                            "label"   : "Aligned DKIM Result(s)",
                                             "class"   : AlignedDkimResult,
                                             "type"    : int},
-            "aligned_spf_result"         : {"choices" : choices.DMARC_RESULT, 
-                                            "label"   : "Aligned SPF Result(s)", 
+            "aligned_spf_result"         : {"choices" : choices.DMARC_RESULT,
+                                            "label"   : "Aligned SPF Result(s)",
                                             "class"   : AlignedSpfResult,
                                             "type"    : int},
-            "disposition"                : {"choices" : choices.DISPOSITION_TYPE, 
-                                            "label"   : "Disposition(s)", 
+            "disposition"                : {"choices" : choices.DISPOSITION_TYPE,
+                                            "label"   : "Disposition(s)",
                                             "class"   : Disposition,
                                             "type"    : int}
             }
@@ -180,10 +180,10 @@ class FilterSetForm(ModelForm):
         for field_name, field_dict in self.additional_filter_fields.iteritems():
 
             # Creating a typed choice field helps performing built in form clean magic
-            self.fields[field_name]  = MyTypedMultipleChoiceField(coerce=field_dict.get("type"), 
-                                                                required=False, 
-                                                                label=field_dict.get("label"), 
-                                                                choices=field_dict.get("choices", ()), 
+            self.fields[field_name]  = MyTypedMultipleChoiceField(coerce=field_dict.get("type"),
+                                                                required=False,
+                                                                label=field_dict.get("label"),
+                                                                choices=field_dict.get("choices", ()),
                                                                 widget=MultiSelectWidget(**{"load": field_dict.get("load", "")}))
 
             if self.instance.id:
@@ -208,7 +208,7 @@ class FilterSetForm(ModelForm):
         instance = super(FilterSetForm, self).save()
 
         # Add new many-to-one filter fields to a filter set object
-        # remove existing if removed in form 
+        # remove existing if removed in form
         for field_name, field_dict in self.additional_filter_fields.iteritems():
             # Get list of existing filters
             existing_filters = list(field_dict["class"].objects.filter(foreign_key=self.instance.id).values_list('value', flat=True))
@@ -224,7 +224,7 @@ class FilterSetForm(ModelForm):
             # Delete old filters that were deleted in form
             for deleted_filter in existing_filters:
                 field_dict["class"].objects.filter(foreign_key=self.instance.id, value=deleted_filter).delete()
-                    
+
 
         #  update, create or delete source_ip
         source_ip       = SourceIP.objects.filter(foreign_key=self.instance.id).first()
@@ -240,7 +240,7 @@ class FilterSetForm(ModelForm):
             source_ip.value = source_ip_value
             source_ip.save()
 
-        # delete or create multiple dkim only 
+        # delete or create multiple dkim only
         # we don't have to update because we keep only true valued instances
         multiple_dkim       = MultipleDkim.objects.filter(foreign_key=self.instance.id).first()
         multiple_dkim_value = self.cleaned_data["multiple_dkim"]

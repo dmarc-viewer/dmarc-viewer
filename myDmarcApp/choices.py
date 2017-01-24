@@ -100,7 +100,7 @@ TIME_UNIT = (
     (TIME_UNIT_WEEK, 'week(s)'),
     (TIME_UNIT_MONTH, 'month(s)'),
     (TIME_UNIT_YEAR, 'year(s)')
-    ) 
+    )
 
 DATE_RANGE_TYPE_FIXED = 1
 DATE_RANGE_TYPE_VARIABLE = 2

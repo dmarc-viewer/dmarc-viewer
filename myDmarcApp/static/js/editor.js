@@ -1,5 +1,5 @@
 /*
- * Copy a formset by 
+ * Copy a formset by
  */
 var editor = {
     copyFilterSet: function(el) {
@@ -10,7 +10,7 @@ var editor = {
 
         //copy all selects' options
         var $selectsOld = $oldForm.find("select");
-        $newForm.find("select").each(function(idx){ 
+        $newForm.find("select").each(function(idx){
 
             //HTML select
             var optionsHTML = $selectsOld[idx].innerHTML;
@@ -25,7 +25,7 @@ var editor = {
                 oldOptions = $selectsOld[idx].selectize.options;
                 for (optionName in oldOptions) {
                     $selectizeNew.addOption({
-                        text: oldOptions[optionName].text, 
+                        text: oldOptions[optionName].text,
                         value: oldOptions[optionName].value
                     });
                 }
@@ -40,7 +40,7 @@ var editor = {
 
         //copy all inputs' values
         var $inputsOld = $oldForm.find("input");
-        $newForm.find("input").each(function(idx){ 
+        $newForm.find("input").each(function(idx){
             var value = $inputsOld[idx].value;
             if (value)
                 $(this).val(value);
@@ -56,11 +56,11 @@ var editor = {
     },
     /*
      * Toggle Date Range Type
-     * Disable input fields of deslected date range type 
+     * Disable input fields of deslected date range type
      * 1: variable
      * 2: fixed
      * Add/Remove some classes for css
-     * 
+     *
      */
     toggleDateRange: function(){
         //Fixed

@@ -37,8 +37,8 @@
 {% if start_outgoing %}
     <div id="t{{choices.OUTGOING}}-container">
         <div class="text-container" style="display:none">
-            <strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>    
-            foreign domains: <strong id="t{{choices.OUTGOING}}-domain-cnt"></strong>, 
+            <strong>{{ start_outgoing | date:"Y/n/j" }}</strong> to <strong>{% now "Y/n/j" %}</strong>
+            foreign domains: <strong id="t{{choices.OUTGOING}}-domain-cnt"></strong>,
             reports: <strong id="t{{choices.OUTGOING}}-report-cnt"></strong>,
             messages: <strong id="t{{choices.OUTGOING}}-message-cnt"></strong>
         </div>

@@ -69,7 +69,7 @@ def edit(request, view_id = None):
             filter_set_formset.instance = view
             filter_set_formset.save()
             messages.add_message(request, messages.SUCCESS, "Successfully saved view '%s'" % (view.title,))
-           
+
             if request.POST.get("redirect_to_analysis"):
                 return redirect("deep_analysis", view_id=view.id)
             return redirect("view_management")
@@ -137,7 +137,7 @@ def delete(request, view_id):
 def order(request):
     """Gets an orderd list of view ids. Calls OrderedModel static order method
     to save the order to view model. """
-    
+
     try:
         view_ids = json.loads(request.body)
         views = []
@@ -170,7 +170,7 @@ def export_svg(request, view_id):
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = "attachment; filename='%s_%s_%s.pdf'" % (view.title, view_type, date)
 
-    response.write(pdf)     
+    response.write(pdf)
 
     return response
 
@@ -201,7 +201,7 @@ def deep_analysis_first(request):
     view = View.objects.first()
     if not view:
         messages.add_message(request, messages.WARNING, "You should start adding views before you want to use them.")
-        return redirect("view_management") 
+        return redirect("view_management")
     return redirect("deep_analysis", view_id=view.id)
 
 def deep_analysis(request, view_id):
@@ -209,12 +209,12 @@ def deep_analysis(request, view_id):
         view = View.objects.get(pk=view_id)
     except View.DoesNotExist as e:
         messages.add_message(request, messages.WARNING, "The view you were looking for does not exist. Why not choose one from below?")
-        return redirect("view_management")        
+        return redirect("view_management")
 
     sidebar_views = View.objects.filter(enabled='true').values('id', 'title')
 
     return render(request, 'myDmarcApp/deep-analysis.html', {
-            'sidebar_views'         : sidebar_views, 
+            'sidebar_views'         : sidebar_views,
             'the_view'              : view,
             'table_head'            : View.getTableHead()
         })
@@ -258,7 +258,7 @@ def table_async(request, view_id):
             date_range_filter       = date_range_tmp.getRecordFilter()
             records                 = records.filter(date_range_filter)
             records_filtered        = records.count()
-            
+
         except Exception, e:
             pass
 
@@ -275,7 +275,7 @@ def table_async(request, view_id):
         records = records.order_by(prefix + order_by[order_idx])
 
     # Create paginator
-    # evaluate db query (list()) here 
+    # evaluate db query (list()) here
     # records = list(records)
     paginator = Paginator(records, page_length)
     # Get 1-based page index
