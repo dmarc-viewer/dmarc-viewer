@@ -1,6 +1,6 @@
 - Refactor name
 - github.io (take from thesis)
-- License file
+
 - exceptions, and messages in view
 - uncomment hash stuff and re-read data with hash
 - Demo files
