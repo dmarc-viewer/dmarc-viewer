@@ -15,6 +15,6 @@ def join_filter_set_field_values(filter_set_fields, name, join_string = ', ', ge
     return output
 
 
-@register.inclusion_tag('myDmarcApp/view-editor-filterset.html')
+@register.inclusion_tag('website/view-editor-filterset.html')
 def show_filter_set(form):
     return {'form': form}

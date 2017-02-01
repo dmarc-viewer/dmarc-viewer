@@ -128,7 +128,7 @@ class AuthResultSPF(models.Model):
 
 ############################
 """
-MYDMARC VIEW/FILTER MODEL
+DMARC viewer VIEW/FILTER MODEL
 
 Notes:
 - FilterFields that reference same Model Field are ORed
@@ -289,7 +289,7 @@ class FilterSet(models.Model):
         distinct_records = Record.objects.filter(self.getQuery()).distinct().values("id")
         return Record.objects.filter(id__in=distinct_records)\
             .values("report__date_range_begin")\
-            .extra(select={'date': "to_char(\"myDmarcApp_report\".\"date_range_begin\", 'YYYYMMDD')"})\
+            .extra(select={'date': "to_char(\"website_report\".\"date_range_begin\", 'YYYYMMDD')"})\
             .values("date")\
             .annotate(cnt=Sum('count'))\
             .values('date', 'cnt')\

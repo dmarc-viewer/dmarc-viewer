@@ -11,7 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.cache import cache_page
 
 from forms import *
-from myDmarcApp.models import View, DateRange, OrderedModel, _clone
+from website.models import View, DateRange, OrderedModel, _clone
 
 def overview(request):
     response = {
@@ -20,7 +20,7 @@ def overview(request):
             "choices": choices
     }
 
-    return render(request, 'myDmarcApp/overview.html', response)
+    return render(request, 'website/overview.html', response)
 
 @cache_page(60 * 60 * 24)
 def overview_async(request):
@@ -77,7 +77,7 @@ def edit(request, view_id = None):
             messages.add_message(request, messages.ERROR, "Could not save view.")
 
 
-    return render(request, 'myDmarcApp/view-editor.html', {
+    return render(request, 'website/view-editor.html', {
             'view_form'               : view_form,
             'filter_set_formset'      : filter_set_formset
         })
@@ -193,7 +193,7 @@ def export_csv(request, view_id):
     return response
 
 def view_management(request):
-    return render(request, 'myDmarcApp/view-management.html', {'views' : View.objects.all()})
+    return render(request, 'website/view-management.html', {'views' : View.objects.all()})
 
 def deep_analysis_first(request):
     view = View.objects.first()
@@ -211,7 +211,7 @@ def deep_analysis(request, view_id):
 
     sidebar_views = View.objects.filter(enabled='true').values('id', 'title')
 
-    return render(request, 'myDmarcApp/deep-analysis.html', {
+    return render(request, 'website/deep-analysis.html', {
             'sidebar_views'         : sidebar_views,
             'the_view'              : view,
             'table_head'            : View.getTableHead()
@@ -300,5 +300,5 @@ def table_async(request, view_id):
 
 
 def help(request):
-    return render(request, 'myDmarcApp/help.html')
+    return render(request, 'website/help.html')
 

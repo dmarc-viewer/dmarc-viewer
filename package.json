@@ -1,5 +1,5 @@
 {
-  "name": "mydmarc",
+  "name": "dmarc-viewer",
   "version": "1.0.0",
   "description": "A new DMARC Anaylzer",
   "main": "index.js",

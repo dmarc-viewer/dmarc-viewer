@@ -4,7 +4,7 @@
 # License: BSD
 #
 # https://github.com/alan-hicks/django-dmarc/blob/master/dmarc/management/commands/importdmarcreport.py
-# Customized for mydmarc
+# Customized for dmarc_viewer
 #----------------------------------------------------------------------
 
 from __future__ import unicode_literals
@@ -17,23 +17,23 @@ import geoip2.database
 import hashlib
 
 from django.core.management.base import BaseCommand, CommandError
-from myDmarcApp.models import Report, Reporter,\
+from website.models import Report, Reporter,\
      ReportError, Record, PolicyOverrideReason, AuthResultDKIM, AuthResultSPF
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.gis.geos import Point
 
-import myDmarcApp.choices as choices
+import website.choices as choices
 
 logger = logging.getLogger("parser")
-logger.info("Parse DMARC Aggregate Report into MyDMARC DB")
+logger.info("Parse DMARC Aggregate Report into DMARC VIEWER DB")
 
-geoip_reader = geoip2.database.Reader("/Users/topfpflanze/projectsOther/master/mydmarc/myDmarcApp/data/GeoLite2-City.mmdb")
+geoip_reader = geoip2.database.Reader("/Users/lukp/code/dmarc_viewer/website/data/GeoLite2-City.mmdb")
 
 class Command(BaseCommand):
-    """Parses DMARC aggregate reports and writes to myDmarc database."""
+    """Parses DMARC aggregate reports and writes to DMARC VIEWER database."""
 
-    help = "Parses DMARC aggregate reports and writes to myDmarc database."
+    help = "Parses DMARC aggregate reports and writes to DMARC VIEWER database."
 
     def add_arguments(self, parser):
         """Defines the arguments for command line usage."""

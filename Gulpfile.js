@@ -7,11 +7,11 @@ var sourceMaps = require('gulp-sourcemaps');
 
 var config = {
     paths : {
-        sass      : './myDmarcApp/static/sass',
-        css       : './myDmarcApp/static/css',
-        js        : './myDmarcApp/static/js',
-        fonts     : './myDmarcApp/static/fonts',
-        vendor    : './myDmarcApp/static/vendor',
+        sass      : './website/static/sass',
+        css       : './website/static/css',
+        js        : './website/static/js',
+        fonts     : './website/static/fonts',
+        vendor    : './website/static/vendor',
     }
 }
 
@@ -26,7 +26,7 @@ var sassOptions = {
 
 //Create css file from scss
 gulp.task('styles', function() {
-    return gulp.src(config.paths.sass + '/mydmarc.scss')
+    return gulp.src(config.paths.sass + '/dmarc_viewer.scss')
         .pipe(sourceMaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(sourceMaps.write('.'))
@@ -65,7 +65,7 @@ var jsFiles = [
 gulp.task('min-js', function(){
     return gulp.src(jsFiles)
         .pipe(uglifyJs())
-        .pipe(concat('mydmarc.dist.min.js'))
+        .pipe(concat('dmarc_viewer.dist.min.js'))
         .pipe(gulp.dest(config.paths.js));
 });
 
@@ -79,14 +79,14 @@ var cssFiles = [
     config.paths.vendor + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
     config.paths.vendor + '/DataTables-1.10.9/css/dataTables.bootstrap.css',
     config.paths.vendor + '/DataTables-1.10.9/css/responsive.bootstrap.min.css',
-    config.paths.css + '/mydmarc.css'
+    config.paths.css + '/dmarc_viewer.css'
 ]
 
 // Concat and Minify/Uglify CSS
 gulp.task('min-css', function(){
     return gulp.src(cssFiles)
         .pipe(minifyCss())
-        .pipe(concat('mydmarc.dist.min.css'))
+        .pipe(concat('dmarc_viewer.dist.min.css'))
         .pipe(gulp.dest(config.paths.css));
 });
 

@@ -6,8 +6,8 @@
     {% load bootstrap3 %}
 
     {% if TEMPLATE_SETTINGS.use_minified %}
-        <script src="{% static "js/mydmarc.dist.min.js" %}"></script>
-        <link href="{% static "css/mydmarc.dist.min.css" %}" rel="stylesheet">
+        <script src="{% static "js/dmarc_viewer.dist.min.js" %}"></script>
+        <link href="{% static "css/dmarc_viewer.dist.min.css" %}" rel="stylesheet">
     {% else %}
         <script src="{% static "vendor/jquery/jquery-1.11.3.min.js" %}"></script>
         <script src="{% static "vendor/jquery/jquery-migrate-1.2.1.min.js" %}"></script>
@@ -37,7 +37,7 @@
         <link href="{% static "vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" %}" rel="stylesheet">
         <link href="{% static "vendor/DataTables-1.10.9/css/dataTables.bootstrap.css" %}" rel="stylesheet">
         <link href="{% static "vendor/DataTables-1.10.9/css/responsive.bootstrap.min.css" %}" rel="stylesheet">
-        <link href="{% static "css/mydmarc.css" %}" rel="stylesheet">
+        <link href="{% static "css/dmarc_viewer.css" %}" rel="stylesheet">
     {% endif %}
 </head>
 

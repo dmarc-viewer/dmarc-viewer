@@ -6,12 +6,12 @@ from django.forms.models import inlineformset_factory, modelform_factory
 
 from django.forms.widgets import RadioSelect, Textarea
 
-from myDmarcApp.models import Report, Reporter, ReportError, Record, \
+from website.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, ReportType, \
     DateRange, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \
     AlignedDkimResult, AlignedSpfResult, Disposition, MultipleDkim
-from myDmarcApp.widgets import ColorPickerWidget, MultiSelectWidget, DatePickerWidget
+from website.widgets import ColorPickerWidget, MultiSelectWidget, DatePickerWidget
 import choices
 
 class ViewForm(ModelForm):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from super_inlines.admin import SuperInlineModelAdmin, SuperModelAdmin
-from myDmarcApp.models import Report, Reporter, ReportError, Record, \
+from website.models import Report, Reporter, ReportError, Record, \
     PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet, \
     ReportType, DateRange, ViewFilterField, ReportSender, ReportReceiverDomain, \
     SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult, \

@@ -1,4 +1,3 @@
-- Refactor name
 - github.io (take from thesis)
 
 - exceptions, and messages in view
