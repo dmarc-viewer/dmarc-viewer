@@ -1,183 +1,221 @@
-#----------------------------------------------------------------------
-# Copyright (c) 2015, Persistent Objects Ltd http://p-o.co.uk/
-#
-# License: BSD
-#
-# https://github.com/alan-hicks/django-dmarc/blob/master/dmarc/management/commands/importdmarcreport.py
-# Customized for dmarc_viewer
-#----------------------------------------------------------------------
+"""
+<Program Name>
+  parse.py
 
-from __future__ import unicode_literals
-import xml.etree.ElementTree as ET
-from datetime import datetime
-import logging
+<Author>
+  Lukas Puehringer <luk.puehringer@gmail.com>
+
+<Started>
+  June 17, 2015
+
+<Copyright>
+  See LICENSE for licensing information.
+
+<Purpose>
+  Parses DMARC aggregate reports and stores them into dmarc-viewer database
+  See https://tools.ietf.org/html/rfc7489#section-7.2 for the exact format.
+
+  dmarc-viewer differs between incoming and outgoing reports.
+  Incoming reports you receive from foreign domains (reporter) based
+  on e-mail messages, the reporter received, purportedly from you.
+  Outgoing reports on the other hand you send to foreign domains based on
+  e-mail messages that you received, purportedly by them.
+  To better visualize the reports you have specify the report type when
+  using this parser (default is in).
+
+  Maxmind GeoLite2 City db is used to query geo information for IP addresses.
+
+  The parser generates and stores file hashes of the reports to skip reports
+  that are already in the database.
+
+<Usage>
+  ```
+    python manage.py parse \
+      [--type (in|out)] <dmarc-aggregate-report>.xml, ...
+
+  ```
+
+<Disclaimers>
+  This product includes GeoLite2 data created by MaxMind, available from
+  <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+
+  Used ideas from Alan Hick's importdmarcreport.py
+  https://github.com/alan-hicks/django-dmarc/
+
+"""
+
+import xml.etree.ElementTree
+
 import os
+import datetime
+
+import logging
 import pytz
-import geoip2.database
 import hashlib
+import geoip2.database
 
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from website.models import Report, Reporter,\
-     ReportError, Record, PolicyOverrideReason, AuthResultDKIM, AuthResultSPF
-from django.core.exceptions import ObjectDoesNotExist
+from website import choices
+from website.models import (Report, Reporter, ReportError, Record,
+    PolicyOverrideReason, AuthResultDKIM, AuthResultSPF)
 
-import website.choices as choices
-
-logger = logging.getLogger("parser")
-logger.info("Parse DMARC Aggregate Report into DMARC VIEWER DB")
+logger = logging.getLogger("parse")
 
 geoip_reader = geoip2.database.Reader(settings.GEO_LITE2_CITY_DB)
 
 class Command(BaseCommand):
-    """Parses DMARC aggregate reports and writes to DMARC VIEWER database."""
 
-    help = "Parses DMARC aggregate reports and writes to DMARC VIEWER database."
+  help = "Parses DMARC aggregate reports and writes to DMARC VIEWER database."
 
-    def add_arguments(self, parser):
-        """Defines the arguments for command line usage."""
+  def add_arguments(self, parser):
 
-        # One or more file/directory names for aggregate reports
-        parser.add_argument("file_name", nargs="+", type=str)
+    # One or more file/directory names for aggregate reports
+    parser.add_argument("path", nargs="+", type=str,
+        help="File or directory path(s) to DMARC aggregate report(s)")
 
-        # Report type - default is incoming
-        parser.add_argument("--type",
-            action="store",
-            dest="type",
-            default=choices.INCOMING,
-            help="Incoming ("+str(choices.INCOMING)+") or outgoing ("+str(choices.OUTGOING)+") Report")
+    # Report type - default is "in"
+    parser.add_argument("--type",
+        action="store", dest="type", default="in", choices=("in", "out")
+        help="Did you receive the report (in) or did you send it (out)?")
 
     def handle(self, *args, **options):
-        """Entry point for parser. Iterates over file_name arguments."""
+      """Entry point for parser. Iterates over file_name arguments."""
 
-        report_type = options["type"]
-        # Iterate over files/directories
-        for file_name in options["file_name"]:
-            self.iterate(file_name, report_type)
+      if options["type"] == "in":
+        report_type = choices.INCOMING
 
-    def iterate(self, file_name, report_type):
-        """Parses for each file. Recurses if file is directory. """
+      elif options["type"] == "out":
+        report_type = choices.OUTGOING
 
-        if os.path.isfile(file_name):
-            self.parse(file_name, report_type)
-        elif os.path.isdir(file_name):
-            for root, dirs, files in os.walk(file_name):
-                for f in files:
-                    self.iterate(os.path.join(root, f), report_type)
-        else:
-            msg = "Could not find '%s'" % file_name
-            logger.info(msg)
+      # Iterate over files/directories
+      for file_name in options["path"]:
+          self.iterate(file_name, report_type)
 
-    def parse(self, file_name, report_type):
-        """Parses single DMARC aggregate report and stores to db."""
+    def walk(self, path, report_type):
+      """Recursively walk over passed files. """
 
+      if os.path.isfile(path):
+        self.parse(path, report_type)
+
+      elif os.path.isdir(path):
+        for root, dirs, files in os.walk(path):
+          for file in files:
+            self.parse(os.path.join(root, file), report_type)
+
+      else:
+        logger.info("Could not find path '{}'.".format(path))
+
+    def parse(self, path, report_type):
+      """Parses single DMARC aggregate report and stores to db. """
+
+      logger.info("Parsing '{}'".format(path))
+
+      # Skip files that don't end with .xml
+      if not path.endswith(".xml"):
+        logger.info("Skipping '{}' - we only take *.xml files".format(path))
+        return
+
+      # Try parsing XML tree
+      try:
+        with open(path) as file:
+          # Parse the file into XML Element Tree
+          xml_tree = xml.etree.ElementTree.parse(file)
+      except Exception as e:
+        log.error("Could not parse XML tree of report '{0}': {1}"
+            .format(path, e))
+        return
+
+      # We are good, do the md5 hash of the vanilla file too
+      try:
+        with open(path) as file:
+          hasher = hashlib.md5()
+          hasher.update(file.read())
+          file_hash = hasher.hexdigest()
+      except Exception as e:
+        log.error("Could not hash contents of report '{0}': {1}"
+            .format(path, e))
+        return
+
+      # FIXME: verify DMARC schema
+
+      # Skip rest if the file already exists based on the hash
+      if Report.objects.find(report_hash=file_hash):
+        logger.info("Skipping duplicate '{}'... ".format(path))
+        return
+
+      ##############################################################
+      # Translate DMARC aggregate report into dmarc-viewer model...
+      xml_root = xml_tree.getroot()
+
+      # Create report object
+      report = Report()
+      report.report_hash = report_hash
+
+      # Assign report metadata
+      report.report_type = report_type
+      version = root.findtext("version")
+      if version:
+        report.version = float(version)
+
+      node_metadata = root.find("report_metadata")
+      report.report_id = node_metadata.findtext("report_id")
+      report.date_range_begin = datetime.datetime.fromtimestamp(float(
+          node_metadata.find("date_range").findtext("begin")), tz=pytz.utc)
+
+      report.date_range_end = datetime.datetime.fromtimestamp(float(
+          node_metadata.find("date_range").findtext("end")), tz=pytz.utc)
+
+      # Create reporter (or retrieve existing from db)
+      org_name = node_metadata.findtext("org_name")
+      email = node_metadata.findtext("email")
+      extra_contact_info = node_metadata.findtext("extra_contact_info")
+      try:
+        reporter = Reporter.objects.get(org_name=org_name, email=email,
+          extra_contact_info=extra_contact_info)
+      except ObjectDoesNotExist as e:
+        reporter = Reporter()
+        reporter.org_name = org_name
+        reporter.email = email
+        reporter.extra_contact_info = extra_contact_info
+
+        # New reporter has to be stored to db to reference it in report
         try:
-            logger.info("Parsing '%s'" % file_name)
+          reporter.save()
+        except Exception as e:
+          msg = logger.error("In report '{0}' could not save reporter '{1}': {2}"
+              .format(path, org_name, e))
+          return
 
-            # File extension check
-            if not file_name.endswith('.xml'):
-                msg = "Skipping '%s'" % (file_name)
-                logger.info(msg)
-                return False
+      # Assign reporter
+      report.reporter = reporter
 
-
-            # with open(file_name) as f:
-            #     # Parse the file into XML Element Tree
-            #     try:
-            #         tree = ET.parse(f)
-            #     except Exception, e:
-            #         msg = "Could not parse file '%s' into tree: %s" % (file_name, e)
-            #         logger.error(msg)
-            #         return False
-
-            #     # Create md5 hash from file content
-            #     hasher = hashlib.md5()
-            #     hasher.update(f.read())
-
-            # report_hash = hasher.hexdigest()
-
-            # # Check if file already exists
-            # if Report.objects.find(report_hash=report_hash):
-            #     msg = "Skipping duplicate '%s' into tree" % (file_name,)
-            #     logger.info(msg)
-            #     return False
+      # Assign policy published
+      node_policy_published = root.find('policy_published')
+      report.domain = node_policy_published.findtext('domain')
+      report.adkim = choices.convert(choices.ALIGNMENT_MODE,
+          node_policy_published.findtext('adkim'))
+      report.aspf = choices.convert(choices.ALIGNMENT_MODE,
+          node_policy_published.findtext('aspf'))
+      report.p = choices.convert(choices.DISPOSITION_TYPE,
+          node_policy_published.findtext('p'))
+      report.sp = choices.convert(choices.DISPOSITION_TYPE,
+          node_policy_published.findtext('sp'))
+      report.fo = node_policy_published.findtext('fo')
+      pct = node_policy_published.findtext('pct')
+      if pct:
+        report.pct = int(pct)
 
 
-            # Parse the file into XML Element Tree
-            try:
-                tree = ET.parse(file_name)
-            except Exception, e:
-                msg = "Could not parse file '%s' into tree: %s" % (file_name, e)
-                logger.error(msg)
-                return False
-
-            root = tree.getroot()
-
-            # Create report object
-            report                      = Report()
-            #report.report_hash          = report_hash
-
-            # Assign report metadata
-            report.report_type          = report_type
-            version                     = root.findtext('version')
-            if version:
-                report.version          = float(version)
-            node_metadata               = root.find('report_metadata')
-            report.report_id            = node_metadata.findtext('report_id')
-            report.date_range_begin     = datetime.fromtimestamp(float(
-                                            node_metadata.find('date_range').findtext('begin')), tz=pytz.utc)
-            report.date_range_end       = datetime.fromtimestamp(float(
-                                            node_metadata.find('date_range').findtext('end')), tz=pytz.utc)
-
-            # Create or use existing reporter object
-            org_name                    = node_metadata.findtext('org_name')
-            email                       = node_metadata.findtext('email')
-            extra_contact_info          = node_metadata.findtext('extra_contact_info')
-            try:
-                reporter = Reporter.objects.get(org_name=org_name, email=email,
-                    extra_contact_info=extra_contact_info)
-            except ObjectDoesNotExist:
-                reporter = Reporter()
-                reporter.org_name               = org_name
-                reporter.email                  = email
-                reporter.extra_contact_info     = extra_contact_info
-
-                # New reporter has to be stored to db to reference it
-                # in report
-                try:
-                    reporter.save()
-                except Exception, e:
-                    msg = "Could not save reporter '%s': %s" % (org_name, e)
-                    logger.error(msg)
-                    return False
-
-            # Assign reporter
-            report.reporter = reporter
-
-            # Assign policy published
-            node_policy_published   = root.find('policy_published')
-            report.domain           = node_policy_published.findtext('domain')
-            report.adkim            = choices.convert(choices.ALIGNMENT_MODE,
-                                                        node_policy_published.findtext('adkim'))
-            report.aspf             = choices.convert(choices.ALIGNMENT_MODE,
-                                                        node_policy_published.findtext('aspf'))
-            report.p                = choices.convert(choices.DISPOSITION_TYPE,
-                                                        node_policy_published.findtext('p'))
-            report.sp               = choices.convert(choices.DISPOSITION_TYPE,
-                                                        node_policy_published.findtext('sp'))
-            pct                     = node_policy_published.findtext('pct')
-            if pct:
-                report.pct          = int(pct)
-            report.fo               = node_policy_published.findtext('fo')
-
-            # Save report
-            try:
-                report.save()
-            except Exception, e:
-                msg = "Could not save DMARC report for '%s': %s" % (report.report_id, e)
-                logger.error(msg)
-                return False
+      # Store report to db
+      try:
+        report.save()
+      except Exception as e:
+        logger.error("In report '{0}' could not save report"
+            " (report id='{1}': {2}}".format(path, report.report_id, e))
+        return
 
             # Create report error objects
             for node_error in node_metadata.findall('error'):
