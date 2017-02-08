@@ -17,18 +17,18 @@ import geoip2.database
 import hashlib
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+
 from website.models import Report, Reporter,\
      ReportError, Record, PolicyOverrideReason, AuthResultDKIM, AuthResultSPF
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
-from django.contrib.gis.geos import Point
 
 import website.choices as choices
 
 logger = logging.getLogger("parser")
 logger.info("Parse DMARC Aggregate Report into DMARC VIEWER DB")
 
-geoip_reader = geoip2.database.Reader("/Users/lukp/code/dmarc_viewer/website/data/GeoLite2-City.mmdb")
+geoip_reader = geoip2.database.Reader(settings.GEO_LITE2_CITY_DB)
 
 class Command(BaseCommand):
     """Parses DMARC aggregate reports and writes to DMARC VIEWER database."""
