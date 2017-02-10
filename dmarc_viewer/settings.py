@@ -24,6 +24,9 @@ SECRET_KEY = '!xl(p=2@&lysq@-zc73j&)yf#5!f3sq#z8e6s4$(gt$fkxvx1o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+GEO_LITE2_CITY_DB = os.path.join(BASE_DIR, "GeoLite2-City.mmdb")
+
 ALLOWED_HOSTS = []
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
