@@ -1,6 +1,6 @@
 """
 <Program Name>
-    parse.py
+    admin.py
 
 <Author>
     Lukas Puehringer <luk.puehringer@gmail.com>
@@ -12,8 +12,8 @@
     See LICENSE for licensing information.
 
 <Purpose>
-    Registers entire dmarc_viewer model for builtin admin interface.
-    Uses external super_inlines for nested web forms.
+    Registers entire dmarc_viewer model for builtin admin web interface.
+    Uses external package `super_inlines` for nested web forms.
 
 """
 from django.contrib import admin
@@ -54,12 +54,12 @@ class ReportErrorInline(SuperInlineModelAdmin, admin.StackedInline):
 
 class ReporterAdmin(SuperModelAdmin):
     model = Reporter
-    list_display = ('org_name', 'email', 'extra_contact_info')
+    list_display = ("org_name", "email", "extra_contact_info")
 
 
 class ReportAdmin(SuperModelAdmin):
-    list_display = ('report_id', 'date_range_begin', 'date_range_end',
-            'report_type', 'date_created')
+    list_display = ("report_id", "date_range_begin", "date_range_end",
+            "report_type", "date_created")
     inlines = (ReportErrorInline, RecordInline,)
 
 

@@ -217,13 +217,13 @@ class Command(BaseCommand):
         # Assign policy published
         node_policy_published = xml_root.find('policy_published')
         report.domain = node_policy_published.findtext('domain')
-        report.adkim = choices.convert(choices.ALIGNMENT_MODE,
+        report.adkim = choices._string_to_numeric(choices.ALIGNMENT_MODE,
                 node_policy_published.findtext('adkim'))
-        report.aspf = choices.convert(choices.ALIGNMENT_MODE,
+        report.aspf = choices._string_to_numeric(choices.ALIGNMENT_MODE,
                 node_policy_published.findtext('aspf'))
-        report.p = choices.convert(choices.DISPOSITION_TYPE,
+        report.p = choices._string_to_numeric(choices.DISPOSITION_TYPE,
                 node_policy_published.findtext('p'))
-        report.sp = choices.convert(choices.DISPOSITION_TYPE,
+        report.sp = choices._string_to_numeric(choices.DISPOSITION_TYPE,
                 node_policy_published.findtext('sp'))
         report.fo = node_policy_published.findtext('fo')
         pct = node_policy_published.findtext('pct')
@@ -277,11 +277,12 @@ class Command(BaseCommand):
             # Assign record info
             record.count = int(node_row.findtext('count'))
             node_policy_evaluated = node_row.find('policy_evaluated')
-            record.disposition = choices.convert(choices.DISPOSITION_TYPE,
+            record.disposition = choices._string_to_numeric(
+                    choices.DISPOSITION_TYPE,
                     node_policy_evaluated.findtext('disposition'))
-            record.dkim = choices.convert(choices.DMARC_RESULT,
+            record.dkim = choices._string_to_numeric(choices.DMARC_RESULT,
                     node_policy_evaluated.findtext('dkim'))
-            record.spf = choices.convert(choices.DMARC_RESULT,
+            record.spf = choices._string_to_numeric(choices.DMARC_RESULT,
                     node_policy_evaluated.findtext('spf'))
 
             node_identifiers = node_record.find('identifiers')
@@ -304,7 +305,8 @@ class Command(BaseCommand):
                     node_policy_evaluated.findall('reason')):
                 reason = PolicyOverrideReason()
                 reason.record = record
-                reason.type = choices.convert(choices.POLICY_REASON_TYPE,
+                reason.type = choices._string_to_numeric(
+                        choices.POLICY_REASON_TYPE,
                         node_reason.findtext('type'))
                 reason.comment = node_reason.findtext('comment')
 
@@ -329,7 +331,7 @@ class Command(BaseCommand):
                 result_dkim.record = record
                 result_dkim.domain = node_dkim_result.findtext('domain')
                 result_dkim.selector = node_dkim_result.findtext('selector')
-                result_dkim.result = choices.convert(
+                result_dkim.result = choices._string_to_numeric(
                         choices.DKIM_RESULT,
                         node_dkim_result.findtext('result'))
                 result_dkim.human_result = node_dkim_result.findtext(
@@ -348,10 +350,10 @@ class Command(BaseCommand):
                 result_spf = AuthResultSPF()
                 result_spf.record = record
                 result_spf.domain = node_spf_result.findtext('domain')
-                result_spf.scope = choices.convert(choices.SPF_SCOPE,
-                        node_spf_result.findtext('scope'))
-                result_spf.result = choices.convert(choices.SPF_RESULT,
-                        node_spf_result.findtext('result'))
+                result_spf.scope = choices._string_to_numeric(
+                        choices.SPF_SCOPE, node_spf_result.findtext('scope'))
+                result_spf.result = choices._string_to_numeric(
+                        choices.SPF_RESULT, node_spf_result.findtext('result'))
 
                 try:
                     result_spf.save()

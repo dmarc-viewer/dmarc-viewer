@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 
 class MultiSelectWidget(SelectMultiple):
-    """Simple Multi Select using Selectize.js"""
+    """Simple Multi Select using Selectize.js """
 
     def __init__(self, *args, **kwargs):
         self.load = kwargs.pop("load")
@@ -35,7 +35,8 @@ class MultiSelectWidget(SelectMultiple):
 
 
 class ColorPickerWidget(TextInput):
-    """Color Picker for html5 input type color, using bootstrap-colorpicker.js as fallback """
+    """Color Picker for html5 input type color, using
+    bootstrap-colorpicker.js as fallback. """
     input_type = 'color'
 
     def render(self, name, value, attrs=None):
