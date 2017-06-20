@@ -1,17 +1,3 @@
-- github.io (take from thesis)
-
-- exceptions, and messages in view
-- uncomment hash stuff and re-read data with hash
-- Demo files
-- bower for frontend deps
-  --> update management script for bower update and maxmind IP DB
-
-- Docstrings and comments
-- add logger
-
-
-
-
 DMARC viewer
 ------
 DMARC viewer is a Django based web-app that lets you visually analyze DMARC aggregate reports. The tool differs between incoming and outgoing reports. Incoming reports you receive from foreign domains (reporter) based on e-mail messages, the reporter received, purportedly from you. Outgoing reports on the other hand you send to foreign domains based on e-mail messages that you received, purportedly by them. To analyze reports you need to use the provided parser management command and parse your reports into your database.
