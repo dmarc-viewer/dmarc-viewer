@@ -13,7 +13,7 @@ Learn more about DMARC here
 
 Once you have your incoming and outgoing reports, you can feed them into DMARC viewer's database with the following commands:
 ```shell
-python manage.py parser (incoming|outgoing).
+python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/reports) ...
 ```
 
 But before that you have to install the dependencies and setup a database.
