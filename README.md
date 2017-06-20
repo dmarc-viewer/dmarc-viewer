@@ -38,13 +38,25 @@ git clone dmarc-viewer
 #FIXME groom requirements file
 pip install -r requirements.txt
 
-bower update (eg. for maxmind shit)
-
 python manage.py makemigrations
 python manage.py migrate
 
 python manage.py runserver
 ```
+
+## Download Maxmind GeoLite2 City
+
+The dmarc viewer report parser uses [Maxmind's GeoLite2 City](http://geolite.maxmind.com/download/geoip/database) database to
+retrieve geo information for IP addresses.
+Download [`GeoLite2-City.mmdb.gz`](http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz) to the project root (and keep it up to date), to retrieve geo information when parsing your DMARC reports:
+
+```shell
+# In the project root
+wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
+gunzip GeoLite2-City.mmdb.gz
+```
+You can also point the `settings.GEO_LITE2_CITY_DB` to an existing GeoLite2-City db on your system.
+
 
 
 # Install Apache and mod_wsgi
