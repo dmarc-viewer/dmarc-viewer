@@ -27,7 +27,7 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
         GenericRelation)
 from django.db.models.fields.related import ForeignKey
 from django.db.models import Sum, Count, Max
-from django.website import choices
+import choices
 
 
 
@@ -133,7 +133,7 @@ class Record(models.Model):
     # Policy Evaluated
     disposition = models.IntegerField(choices=choices.DISPOSITION_TYPE)
     dkim = models.IntegerField(choices=choices.DMARC_RESULT)
-    spf= = models.IntegerField(choices=choices.DMARC_RESULT)
+    spf = models.IntegerField(choices=choices.DMARC_RESULT)
 
     # Identifiers
     envelope_to = models.CharField(max_length=100, null=True)
@@ -367,7 +367,7 @@ class FilterSet(models.Model):
                 "report__date_range_begin").extra(
                 select={
                     "date" : ("to_char(\"website_report\""
-                            ".\"date_range_begin\", "YYYYMMDD")")
+                            ".\"date_range_begin\", \"YYYYMMDD\")")
                     }
                 ).values("date").annotate(cnt=Sum("count")).values(
                 "date", "cnt").order_by("date")
