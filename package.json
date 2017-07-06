@@ -20,5 +20,17 @@
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1"
+  },
+  "dependencies": {
+    "bootstrap-colorpicker": "^2.5.1",
+    "bootstrap-datepicker": "^1.7.0",
+    "bootstrap-sass": "^3.3.7",
+    "d3": "^4.9.1",
+    "datamaps": "^0.5.8",
+    "datatables.net-responsive-bs": "^2.1.1",
+    "jquery": "^3.2.1",
+    "selectize": "^0.12.4",
+    "sortablejs": "^1.6.0",
+    "topojson": "^3.0.0"
   }
 }
