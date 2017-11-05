@@ -359,14 +359,18 @@ class FilterSet(models.Model):
         # didn't work because of django quotation bug
         # https://code.djangoproject.com/ticket/17741
 
+        # Query returns distinct `Record` ids matching the View's and View's
+        # Filterset's criteria (domains, date range, ...)
         distinct_records = Record.objects.filter(
                 self.getQuery()).distinct().values("id")
 
+
+        # Query retrieves the sum of Records per date for above filtered
+        # Reports, ordered by date in ascending order
         return Record.objects.filter(id__in=distinct_records).values(
                 "report__date_range_begin").extra(
                 select={
-                    "date" : ("to_char(\"website_report\""
-                            ".\"date_range_begin\", \"YYYYMMDD\")")
+                    "date" : ("to_char(website_report.date_range_begin, 'YYYYMMDD')")
                     }
                 ).values("date").annotate(cnt=Sum("count")).values(
                 "date", "cnt").order_by("date")
