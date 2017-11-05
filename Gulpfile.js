@@ -1,3 +1,35 @@
+
+/*****************************************************************
+<File Name>
+    Gulpfile.js
+
+<Author>
+    Lukas Puehringer <luk.puehringer@gmail.com>
+
+<Started>
+    July 22, 2015
+
+<Copyright>
+    See LICENSE for licensing information.
+
+<Purpose>
+    Provides task runners to copy JS, CSS and fonts from `node_modules`
+    to a directory where Django can serve it from and to compile sass into CSS.
+
+    Todo:
+        - Documentation/Usage instructions
+            - Readme's `contribution` section should point here
+
+        - Separate tasks for 3rd party and non-3rd party sources
+            - non-3rd party should not be copied to vendor
+            - watcher only for sass compilation
+
+        - Find a way to include fonts in minified dist script
+
+
+*****************************************************************/
+
+
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
@@ -27,29 +59,28 @@ var sassOptions = {
 
 // All JS files
 var jsFiles = [
-    'node_modules/jquery/src/jquery.js',
+    'node_modules/jquery/dist/jquery.js',
     'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
     'node_modules/sortablejs/Sortable.js',
-    'node_modules/selectize/dist/js/selectize.js',
+    'node_modules/selectize/dist/js/standalone/selectize.js',
     'node_modules/bootstrap-colorpicker/src/js/colorpicker-color.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
-    'node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.js',
-    'node_modules/d3/build/d3.js',
+    'node_modules/datatables.net/js/jquery.dataTables.js',
+    'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+    'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
+    'node_modules/d3/d3.js',
     'node_modules/topojson/dist/topojson.js',
-    '/Users/lukp/code/dmarc_viewer/node_modules/datamaps/src/js/datamaps.js',
-    // We should include this differently, c.f. https://pypi.python.org/pypi/django-formset-js/0.2.0
-    // '../venv/lib/python2.7/site-packages/djangoformsetjs/static/js/jquery.formset.js', //This could be somewhere else
+    'node_modules/datamaps/dist/datamaps.all.js',
     config.paths.js + '/main.js',
     config.paths.js + '/editor.js',
     config.paths.js + '/analysis.js',
     config.paths.js + '/d3.legend.js'];
 
 var cssFiles = [
-    'node_modules/selectize/dist/css/selectize.css',
-    'node_modules/selectize/dist/css/selectize.default.css',
-    'node_modules/selectize/dist/css/selectize.legacy.css',
     'node_modules/selectize/dist/css/selectize.bootstrap3.css',
     'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+    'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+    'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
     'node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.css',
     config.paths.css + '/dmarc_viewer.css'
 ]
