@@ -66,6 +66,7 @@ from website import choices
 from website.models import (Report, Reporter, ReportError, Record,
         PolicyOverrideReason, AuthResultDKIM, AuthResultSPF)
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("parse")
 
 geoip_reader = geoip2.database.Reader(settings.GEO_LITE2_CITY_DB)
@@ -88,9 +89,9 @@ class Command(BaseCommand):
                 default="in", choices=("in", "out"), help=("Did you receive"
                 " the report (in) or did you send it (out)?"))
 
-        parser.add_argument("--univie", dest="univie", default="False",
-                help=("Parse special anonymized format used for"
-                "University of Vienna's outgoing reports"))
+        parser.add_argument("--univie", dest="univie", default=False,
+                action="store_true", help=("Parse special anonymized format "
+                "used for University of Vienna's incoming reports"))
 
     def handle(self, *args, **options):
         """Entry point for parser. Iterates over file_name arguments."""
@@ -108,7 +109,7 @@ class Command(BaseCommand):
 
         # Iterate over files/directories
         for file_name in options["path"]:
-            self.iterate(file_name)
+            self.walk(file_name)
 
     def walk(self, path):
         """Recursively walk over passed files. """
@@ -158,7 +159,7 @@ class Command(BaseCommand):
         # FIXME: verify DMARC schema
 
         # Skip rest if the file already exists based on the hash
-        if Report.objects.find(report_hash=file_hash):
+        if Report.objects.filter(report_hash=file_hash):
             logger.info("{0} Skipping already stored report."
                     .format(log_prefix))
             return
@@ -260,7 +261,7 @@ class Command(BaseCommand):
             # Assign IP and ISO country code (ISO 3166 Alpha-2)
             try:
                 # University of Vienna special case for anonymized IP addresses
-                if UNVIE and REPORT_TYPE == choices.OUTGOING:
+                if UNIVIE and REPORT_TYPE == choices.INCOMING:
                     record.country_iso_code = ip_element.attrib.get(
                             'geoip', '')
                 else:
@@ -299,6 +300,7 @@ class Command(BaseCommand):
             except Exception as e:
                 logger.warning("{0} Could not save record '{1}': {2}"
                         .format(log_prefix, record_idx, e))
+                return
 
             # Create policy override reason objects
             for reason_idx, node_reason in enumerate(
@@ -346,7 +348,8 @@ class Command(BaseCommand):
                             record_idx, e))
 
             # Create SPF authentication result objects
-            for node_spf_result in node_auth_results.findall('spf'):
+            for spf_result_idx, node_spf_result in enumerate(
+                    node_auth_results.findall('spf')):
                 result_spf = AuthResultSPF()
                 result_spf.record = record
                 result_spf.domain = node_spf_result.findtext('domain')
@@ -360,7 +363,7 @@ class Command(BaseCommand):
                 except Exception as e:
                     logger.warning("{0} Could not save SPF auth_result"
                             " '{1}' for record '{2}': {3}"
-                            .format(log_prefix, dkim_result_idx,
+                            .format(log_prefix, spf_result_idx,
                             record_idx, e))
 
             # Assign DKIM results counter to report and re-save

@@ -45,9 +45,8 @@ class Report(models.Model):
     report_type = models.IntegerField(choices=choices.REPORT_TYPE)
     date_created = models.DateTimeField(auto_now=False, auto_now_add=True)
 
-    # # MD5 hash to detect duplicate reports when parsing
-    # #
-    # report_hash             = models.CharField(max_length = 32)
+    # MD5 hash to detect duplicate reports when parsing
+    report_hash = models.CharField(max_length = 32)
 
     # Meta Data
     report_id = models.CharField(max_length=200)
