@@ -45,6 +45,9 @@ INSTALLED_APPS = (
     'bootstrap3',
     'djangoformsetjs',
     'website'
+    # TODO: Add `django-debug-panel` and `django-debug-toolbar` to optional or
+    # developer requirements and add to INSTALLED_APPS and to routes
+    # (dmarc_viewer.urls) if available.
     #'debug_toolbar',
     #'debug_panel'
 )
@@ -105,14 +108,14 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-    }
     # 'default': {
-    #     'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-    #     'LOCATION': '/var/tmp/django_cache',
+    #     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    #     'LOCATION': '127.0.0.1:11211',
     # }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+    }
 }
 
 

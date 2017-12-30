@@ -7,38 +7,31 @@ To receive DMARC reports for you mailing domain(s) just add a simple DNS entry, 
 v=DMARC
 ````
 
-To generate DMARC reports see the manual.
-
-Learn more about DMARC here
-
-Once you have your incoming and outgoing reports, you can feed them into DMARC viewer's database with the following commands:
-```shell
-python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/reports) ...
-```
-
-But before that you have to install the dependencies and setup a database.
+Learn more about DMARC at [dmarc.org](https://dmarc.org/)
 
 # Installation
-Install Python2.7
+## System Dependencies
+- Python2.7
+- [Cairo](https://www.cairographics.org/download/)
+- [Postgres](https://docs.djangoproject.com/en/1.8/ref/databases/#postgresql-note)
 
-# Install Postgres
-https://docs.djangoproject.com/en/1.10/ref/databases/#postgresql-notes
-
+## Create Postgres Database and user
 ```shell
-$ psql -u postgres
+# Assuming `postgres` is th default user
+$ psql -U postgres
 postgres=# CREATE DATABASE dmarc_viewer_db;
 postgres=# CREATE USER dmarc_viewer_db WITH PASSWORD '**** YOU BETTER CHANGE THIS *********';
 postgres=# GRANT ALL PRIVILEGES ON DATABASE dmarc_viewer_db TO dmarc_viewer_db;
 ```
-## Get DMARC viewer
 
+## Clone and install Django app
 ```
+# FIXME update url
 git clone dmarc-viewer
 
-#FIXME groom requirements file
 pip install -r requirements.txt
 
-python manage.py makemigrations
+python manage.py makemigrations website
 python manage.py migrate
 
 python manage.py runserver
@@ -56,6 +49,13 @@ wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
 gunzip GeoLite2-City.mmdb.gz
 ```
 You can also point the `settings.GEO_LITE2_CITY_DB` to an existing GeoLite2-City db on your system.
+
+
+## Parse reports
+Once you have your incoming and outgoing reports, you can feed them into DMARC viewer's database with the following commands:
+```shell
+python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/reports) ...
+```
 
 
 
