@@ -23,7 +23,7 @@
     https://docs.djangoproject.com/en/1.8/topics/http/middleware/
 """
 
-import simplejson as json
+import json
 from django.contrib import messages
 from django.template import Template, Context
 
