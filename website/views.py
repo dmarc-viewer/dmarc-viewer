@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from forms import *
 from website.models import View, DateRange, OrderedModel, _clone
@@ -192,6 +193,7 @@ def export_csv(request, view_id):
     response['Content-Disposition'] = "attachment; filename='%s_%s.csv'" % (view.title, date)
     return response
 
+@ensure_csrf_cookie
 def view_management(request):
     return render(request, 'website/view-management.html', {'views' : View.objects.all()})
 
@@ -202,6 +204,7 @@ def deep_analysis_first(request):
         return redirect("view_management")
     return redirect("deep_analysis", view_id=view.id)
 
+@ensure_csrf_cookie
 def deep_analysis(request, view_id):
     try:
         view = View.objects.get(pk=view_id)

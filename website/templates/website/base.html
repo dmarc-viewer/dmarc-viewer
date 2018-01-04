@@ -5,40 +5,43 @@
     {% load static %}
     {% load bootstrap3 %}
 
-    {% if TEMPLATE_SETTINGS.use_minified %}
-        <script src="{% static "js/dmarc_viewer.dist.min.js" %}"></script>
-        <link href="{% static "css/dmarc_viewer.dist.min.css" %}" rel="stylesheet">
+    {% comment %} The minified and concatenated JS and CSS sources include all
+    3rd party frontend dependencies and are checked into version control.
+    This allows users to run the app without using the frontend toolchain
+    (node/npm/gulp/sass). {% endcomment %}
+    <script src="{% static "dist/dmarc_viewer.dist.npm.js" %}"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.npm.css" %}" rel="stylesheet">
+
+
+    {% comment %} Local sources can be served either as they are or
+    as minified dist versions (default).
+    For development it is useful to set `settings.TEMPLATE_SETTINGS.use_dist`
+    to `False`.
+
+    Take a look at `Gulpfile.js` to see how to install frontend dependencies,
+    compile SCSS to CSS and create new dist files. {% endcomment %}
+
+    {% if TEMPLATE_SETTINGS.use_dist %}
+    <script src="{% static "dist/dmarc_viewer.dist.js" %}"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.css" %}" rel="stylesheet">
+
     {% else %}
-        <script src="{% static "vendor/jquery/jquery-1.11.3.min.js" %}"></script>
-        <script src="{% static "vendor/jquery/jquery-migrate-1.2.1.min.js" %}"></script>
-        <script src="{% static "vendor/bootstrap-sass-3.3.5/assets/javascripts/bootstrap.js" %}"></script>
-        <script src="{% static "vendor/Sortable/Sortable.js" %}"></script>
-        <script src="{% static "vendor/selectize/js/standalone/selectize.min.js" %}"></script>
-        <script src="{% static "vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js" %}"></script>
-        <script src="{% static "vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.js" %}"></script>
-        <script src="{% static "vendor/DataTables-1.10.9/js/jquery.dataTables.js" %}"></script>
-        <script src="{% static "vendor/DataTables-1.10.9/js/dataTables.bootstrap.js" %}"></script>
-        <script src="{% static "vendor/DataTables-1.10.9/js/dataTables.responsive.min.js" %}"></script>
-        <script src="{% static "vendor/d3/d3.js" %}"></script>
-        <script src="{% static "vendor/topojson/topojson.js" %}"></script>
-        <script src="{% static "vendor/datamaps/dist/datamaps.world.js" %}"></script>
-
-        <script src="{% static "js/jquery.formset.js" %}"></script>
-        <script src="{% static "js/main.js" %}"></script>
-        <script src="{% static "js/editor.js" %}"></script>
-        <script src="{% static "js/analysis.js" %}"></script>
-        <script src="{% static "js/d3.legend.js" %}"></script>
-
-        <link href="{% static "vendor/selectize/css/selectize.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/selectize/css/selectize.default.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/selectize/css/selectize.legacy.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/selectize/css/selectize.bootstrap3.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/DataTables-1.10.9/css/dataTables.bootstrap.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/DataTables-1.10.9/css/responsive.bootstrap.min.css" %}" rel="stylesheet">
-        <link href="{% static "css/dmarc_viewer.css" %}" rel="stylesheet">
+    <script src="{% static "js/main.js" %}"></script>
+    <script src="{% static "js/editor.js" %}"></script>
+    <script src="{% static "js/analysis.js" %}"></script>
+    <script src="{% static "js/d3.legend.js" %}"></script>
+    <link href="{% static "css/dmarc_viewer.css" %}" rel="stylesheet">
     {% endif %}
+
+    {% comment %} `djangoformsetjs` is installed as Python dependency to some
+    `site-packages` dir, where it is found by Django's static file loader.
+
+    TODO:
+    Find a good solution to tell the gulp build task (i.e. `min-js`) where
+    to find this file so that we can add it to
+    `dmarc_viewer.dist.min.js` and only load it like below when if
+    `TEMPLATE_SETTINGS.use_dist` is `False`. {% endcomment %}
+    <script src="{% static "js/jquery.formset.js" %}"></script>
 </head>
 
 <body>

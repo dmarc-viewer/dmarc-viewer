@@ -9,13 +9,13 @@ v=DMARC
 
 Learn more about DMARC at [dmarc.org](https://dmarc.org/)
 
-# Installation
-## System Dependencies
+## Installation
+### System Dependencies
 - Python2.7
 - [Cairo](https://www.cairographics.org/download/)
 - [Postgres](https://docs.djangoproject.com/en/1.8/ref/databases/#postgresql-note)
 
-## Create Postgres Database and user
+### Create Postgres Database and user
 ```shell
 # Assuming `postgres` is th default user
 $ psql -U postgres
@@ -24,7 +24,7 @@ postgres=# CREATE USER dmarc_viewer_db WITH PASSWORD '**** YOU BETTER CHANGE THI
 postgres=# GRANT ALL PRIVILEGES ON DATABASE dmarc_viewer_db TO dmarc_viewer_db;
 ```
 
-## Clone and install Django app
+### Clone and install Django app
 ```
 # FIXME update url
 git clone dmarc-viewer
@@ -37,7 +37,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## Download Maxmind GeoLite2 City
+### Download Maxmind GeoLite2 City
 
 The dmarc viewer report parser uses [Maxmind's GeoLite2 City](http://geolite.maxmind.com/download/geoip/database) database to
 retrieve geo information for IP addresses.
@@ -51,7 +51,7 @@ gunzip GeoLite2-City.mmdb.gz
 You can also point the `settings.GEO_LITE2_CITY_DB` to an existing GeoLite2-City db on your system.
 
 
-## Parse reports
+### Parse reports
 Once you have your incoming and outgoing reports, you can feed them into DMARC viewer's database with the following commands:
 ```shell
 python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/reports) ...
@@ -59,10 +59,47 @@ python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/
 
 
 
-# Install Apache and mod_wsgi
+## Install Apache and mod_wsgi
 https://docs.djangoproject.com/en/1.10/topics/install/#install-apache-and-mod-wsgi
 
 
-# Contribute
+## Contribute
 
-TODO
+### Frontend
+Per default all JS and CSS code is served from
+[`website/static/dist`](website/static/dist) (fonts from
+[`website/static/fonts`](website/static/fonts)).
+
+If you want to make changes to frontend code, take a look at
+[`package.json`](package.json), where 3rd party dependencies are defined
+and at [`Gulpfile.js`](Gulpfile.js), which provides task runners to compile
+and build frontend code.
+
+Also set [`settings.TEMPLATE_SETTINGS.use_dist`](dmarc_viewer/settings.py) to
+`False` in order to serve the original local JavaScript files.
+
+Below are the most important commands to handle frontend code, all executed
+from the root of the project:
+
+#### Download dependencies
+Download and install dependencies defined in `package.json` to `node_modules`.
+```shell
+npm install
+```
+#### Auto-compile SCSS
+All custom styles should be written in `website/static/sass`. The command below
+watches the file for changes and automatically creates a new CSS file in
+`website/static/css`.
+```shell
+gulp watch-styles
+```
+
+#### Create new dist files
+Create new dist files after having modified SCSS code (make sure it is
+compiled), local JS code (in [`website/static/js`](website/static/js)) or
+3rd party frontend code (don't modify 3rd party code directly, rather
+add/remove/update via `package.json`).
+
+```shell
+gulp create-dist
+```

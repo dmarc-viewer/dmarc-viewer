@@ -1,5 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+// Include paths are set in Gulpfile.js
 @import "bootstrap";
+@import "_colorpicker.scss";
 
 //Variables
 $dmarc-blue: #006699;
@@ -13,7 +14,7 @@ $panel-border-radius: 0;
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
-    font-family: 'Noto Sans', Helvetica, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 /*
  * Top navigation
@@ -88,14 +89,14 @@ body {
         font-weight: normal;
     }
     $viewFilterFormFields:
-        (title, 12),
-        (description, 12),
-        (enabled, 3, 3),
-        (type_map, 3, 3),
-        (type_table, 3, 3),
-        (type_line, 3, 3),
-        (report_type, 12),
-        (dr_type, 12),
+        (title, 12, 12, 12, 12),
+        (description, 12, 12, 12, 12),
+        (enabled, 3, 3, 3, 3),
+        (type_map, 3, 3, 3, 3),
+        (type_table, 3, 3, 3, 3),
+        (type_line, 3, 3, 3, 3),
+        (report_type, 12, 12, 12, 12),
+        (dr_type, 12, 12, 12, 12),
         (begin, 6, 6, 3, 3),
         (end, 6, 6, 3, 3),
         (quantity, 6, 6, 3, 3),
@@ -125,12 +126,13 @@ body {
         (aligned_spf_result, 4),
         (disposition, 4);
 
-    @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
+    // @each $id, $colXs, $colSm, $colMd, $colLg in $filterSetContainerFields {
+    @each $id, $colXs in $filterSetContainerFields {
         .filter_#{$id} {
         @extend .col-xs-#{$colXs};
-        @extend .col-sm-#{$colSm};
-        @extend .col-md-#{$colMd};
-        @extend .col-lg-#{$colLg};
+        // @extend .col-sm-#{$colSm};
+        // @extend .col-md-#{$colMd};
+        // @extend .col-lg-#{$colLg};
         }
     }
 
