@@ -13,122 +13,191 @@
     See LICENSE for licensing information.
 
 <Purpose>
-    Provides task runners to copy JS, CSS and fonts from `node_modules`
-    to a directory where Django can serve it from and to compile sass into CSS.
+    Frontend dependency task runners to
 
-    Todo:
-        - Documentation/Usage instructions
-            - Readme's `contribution` section should point here
+    - Compile SCSS to CSS (website/static/sass)
+    - Vendorize fonts (node_modules)
+    - Create dist files
+        - 3rd party CSS (node_modules)
+        - 3rd party JS (node_modules)
+        - local CSS (website/static/css)
+        - local JS (website/static/js)
 
-        - Separate tasks for 3rd party and non-3rd party sources
-            - non-3rd party should not be copied to vendor
-            - watcher only for sass compilation
 
-        - Find a way to include fonts in minified dist script
+    3rd party dependencies are defined in `package.json` and can be installed
+    using npm like so:
+
+        npm install
+
+
+    3rd party dependencies are always served from `dist` (the latest minified
+    concatenated version should be checked into vcs).
+    Creating new `dist` files is only necessary when dependencies are
+    updated/added/removed.
+
+    3rd party fonts are served from `website/static/fonts` and are also
+    checked into vcs. (AFAIK there is no obvious way to create a `dist` version
+    from fonts).
+
+    Local frontend code is served either from `dist` (the latest minified
+    concatenated version should be checked into vcs) or non-minified from
+    `website/static/js` and `website/static/css` when the Django setting
+    `settings.TEMPLATE_SETTINGS.use_dist` is `False`
+
+    Change local frontend code in `website/static/js` and
+    `website/static/sass` only (sass code is compiled to css code with an extra
+    task runner).
+
+<Usage>
+    Task runners can be invoked from the command line, e.g.:
+    ```
+    gulp create-dist
+    gulp create-dist-js
+    gulp create-dist-css
+    gulp create-dist-js-node-modules
+    gulp create-dist-css-node-modules
+    gulp copy-fonts
+    gulp compile-scss
+    ```
 
 
 *****************************************************************/
 
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var concat = require('gulp-concat');
-var uglifyJs = require('gulp-uglify');
-var minifyCss = require('gulp-minify-css');
-var sourceMaps = require('gulp-sourcemaps');
 
-var config = {
-    paths : {
-        sass      : 'website/static/sass',
-        css       : 'website/static/css',
-        js        : 'website/static/js',
-        fonts     : 'website/static/fonts',
-        vendor    : 'website/static/vendor',
-    }
+var gulp = require('gulp');
+var gulpSass = require('gulp-sass');
+var gulpConcat = require('gulp-concat');
+var gulpUglifyJs = require('gulp-uglify');
+var gulpCleanCss = require('gulp-clean-css');
+var gulpSourceMaps = require('gulp-sourcemaps');
+
+/*
+ * List of all 3rd party and non-3rd party frontend dependencies, i.e.
+ * CSS/SCSS, JavaScript and fonts.
+ * Note: Requires dependencies installed in `node_modules`.
+ */
+var paths = {
+    css: [
+        'website/static/css/dmarc_viewer.css'
+    ],
+    js: [
+        'website/static/js/main.js',
+        'website/static/js/editor.js',
+        'website/static/js/analysis.js',
+        'website/static/js/d3.legend.js'
+    ],
+    scss: [
+        'website/static/sass/dmarc_viewer.scss'
+    ],
+    scss_node_modules: [
+        'node_modules/bootstrap-sass/assets/stylesheets',
+        'node_modules/bootstrap-colorpicker/src/sass',
+    ],
+    css_node_modules: [
+        'node_modules/selectize/dist/css/selectize.bootstrap3.css',
+        'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+        'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+        'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
+        'node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.css'
+    ],
+    js_node_modules: [
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+        'node_modules/sortablejs/Sortable.js',
+        'node_modules/selectize/dist/js/standalone/selectize.js',
+        'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+        'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
+        'node_modules/datatables.net/js/jquery.dataTables.js',
+        'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+        'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
+        'node_modules/d3/d3.js',
+        'node_modules/topojson/dist/topojson.js',
+        'node_modules/datamaps/dist/datamaps.all.js',
+    ],
+    fonts_node_modules: [
+        'node_modules/bootstrap-sass/assets/fonts/**/*'
+    ]
 }
 
-var sassOptions = {
-  errLogToConsole: true,
-  outputStyle: 'expanded',
-  includePaths: [
-                 config.paths.sass,
-                 'node_modules/bootstrap-sass/assets/stylesheets',
-                 'node_modules/bootstrap-colorpicker/src/sass/',
-             ]
-};
+/*
+ * Helper function to minify and concatenate the files in the passed list of
+ *`src_paths` using the passed `minifier` (e.g. `gulpClassCss` for CSS,
+ * or `gulpUglify` for JS) and writes the resulting file to
+ * "website/static/dist/dmarc_viewer.dist" + `suffix`.
+ */
+function _create_dist(src_paths, minifier, suffix) {
+    return gulp.src(src_paths)
+        .pipe(minifier())
+        .pipe(gulpConcat('dmarc_viewer.dist' + suffix))
+        .pipe(gulp.dest('website/static/dist'));
+}
 
-// All JS files
-var jsFiles = [
-    'node_modules/jquery/dist/jquery.js',
-    'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
-    'node_modules/sortablejs/Sortable.js',
-    'node_modules/selectize/dist/js/standalone/selectize.js',
-    'node_modules/bootstrap-colorpicker/src/js/colorpicker-color.js',
-    'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
-    'node_modules/datatables.net/js/jquery.dataTables.js',
-    'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
-    'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
-    'node_modules/d3/d3.js',
-    'node_modules/topojson/dist/topojson.js',
-    'node_modules/datamaps/dist/datamaps.all.js',
-    config.paths.js + '/main.js',
-    config.paths.js + '/editor.js',
-    config.paths.js + '/analysis.js',
-    config.paths.js + '/d3.legend.js'];
 
-var cssFiles = [
-    'node_modules/selectize/dist/css/selectize.bootstrap3.css',
-    'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-    'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
-    'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
-    'node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.css',
-    config.paths.css + '/dmarc_viewer.css'
-]
-
-//Create css file from scss
-gulp.task('styles', function() {
-    return gulp.src(config.paths.sass + '/dmarc_viewer.scss')
-        .pipe(sourceMaps.init())
-        .pipe(sass(sassOptions).on('error', sass.logError))
-        .pipe(sourceMaps.write('.'))
-        .pipe(gulp.dest(config.paths.css))
+/*
+ * Tasks to minify and concatenate third party and non-third party
+ * CSS and JS, copying them to `static/dist`.
+ * Note: Requires dependencies installed in `node_modules`.
+ */
+gulp.task('create-dist-js', function(){
+    return _create_dist(paths.js, gulpUglifyJs,'.js')
+});
+gulp.task('create-dist-css', function(){
+    return _create_dist(paths.css, gulpCleanCss, '.css')
 });
 
-// Vendorize bootstrap fonts from node_modules
-gulp.task('vendor-fonts', function() {
-    return gulp.src('node_modules/bootstrap-sass/assets/fonts/**/*')
-    .pipe(gulp.dest(config.paths.fonts));
+// TODO: Do we need source maps for third party code? Might be nice
+// for debugging
+gulp.task('create-dist-js-node-modules', function(){
+    return _create_dist(paths.js_node_modules, gulpUglifyJs, '.npm.js')
+});
+gulp.task('create-dist-css-node-modules', function(){
+    return _create_dist(paths.css_node_modules, gulpCleanCss, '.npm.css')
 });
 
-// Vendorize CSS files from node_modules
-gulp.task('vendor-js', function() {
-    return gulp.src(jsFiles)
-    .pipe(gulp.dest(config.paths.vendor));
+/*
+ * Task to copy Bootstraps fonts from `node_modules` to `static/fonts`
+ */
+gulp.task('copy-fonts', function() {
+    return gulp.src(paths.fonts_node_modules)
+        .pipe(gulp.dest('website/static/fonts/'));
 });
 
-// Vendorize CSS files from node_modules
-gulp.task('vendor-css', function() {
-    return gulp.src(cssFiles)
-    .pipe(gulp.dest(config.paths.vendor));
+/*
+ * Copies 3rd party and non-3rd party css, js and fonts to dist.
+ * Note: This does not compile scss, so make sure to run the `compile-scss`
+ * task first if you have changed any scss files and want them in the minified
+ * dist.
+ */
+gulp.task('create-dist', [
+    'copy-fonts',
+    'create-dist-js-node-modules',
+    'create-dist-css-node-modules',
+    'create-dist-js',
+    'create-dist-css'
+    ]
+);
+
+/*
+ * Task to compile SCSS files and copy it to `static/css` (with sourcemap).
+ * Note: `includePaths` define 3rd party SCSS files that are included (by name)
+ * in the main scss file that gets compiled.
+ */
+gulp.task('compile-scss', function() {
+    return gulp.src(paths.scss)
+        .pipe(gulpSourceMaps.init())
+        .pipe(gulpSass({
+            errLogToConsole: true,
+            outputStyle: 'expanded',
+            includePaths: paths.scss_node_modules,
+        }).on('error', gulpSass.logError))
+        .pipe(gulpSourceMaps.write('.'))
+        .pipe(gulp.dest('website/static/css'))
 });
 
-// Concat and Minify/Uglify JS
-gulp.task('min-js', function(){
-    return gulp.src(jsFiles)
-        .pipe(uglifyJs())
-        .pipe(concat('dmarc_viewer.dist.min.js'))
-        .pipe(gulp.dest(config.paths.js));
-});
-
-// Concat and Minify/Uglify CSS
-gulp.task('min-css', function(){
-    return gulp.src(cssFiles)
-        .pipe(minifyCss())
-        .pipe(concat('dmarc_viewer.dist.min.css'))
-        .pipe(gulp.dest(config.paths.css));
-});
-
-//Watch task
-gulp.task('default', function() {
-    return gulp.watch(config.paths.sass + '/**/*.scss', ['styles', 'vendor-fonts', 'vendor-js', 'vendor-css']);
+/*
+ * Watcher task to compile to SCSS to CSS if the main SCSS file changes
+ */
+gulp.task('watch-scss', function() {
+    return gulp.watch(paths.scss, ['compile-scss'])
 });

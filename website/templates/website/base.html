@@ -5,66 +5,43 @@
     {% load static %}
     {% load bootstrap3 %}
 
+    {% comment %} The minified and concatenated JS and CSS sources include all
+    3rd party frontend dependencies and are checked into version control.
+    This allows users to run the app without using the frontend toolchain
+    (node/npm/gulp/sass). {% endcomment %}
+    <script src="{% static "dist/dmarc_viewer.dist.npm.js" %}"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.npm.css" %}" rel="stylesheet">
 
-    {% comment %}
-    The minified and concatened js and css sources include all front-end
-    dependencies and are checked into version control. This allows users
-    to run the app without using the front-end toolchain
-    (node/npm/gulp/sass).
 
-    For debugging it might be helpful to load the original (3rd party)
-    sources. Take a look at `Gulpfile.js` to see how to install the
-    dependencies and copy them from their default location (`node_modules`)
-    to a place where Django can serve them from.
-    {% endcomment %}
+    {% comment %} Local sources can be served either as they are or
+    as minified dist versions (default).
+    For development it is useful to set `settings.TEMPLATE_SETTINGS.use_dist`
+    to `False`.
 
-    {% if TEMPLATE_SETTINGS.use_minified %}
-        <script src="{% static "js/dmarc_viewer.dist.min.js" %}"></script>
-        <link href="{% static "css/dmarc_viewer.dist.min.css" %}" rel="stylesheet">
+    Take a look at `Gulpfile.js` to see how to install frontend dependencies,
+    compile SCSS to CSS and create new dist files. {% endcomment %}
+
+    {% if TEMPLATE_SETTINGS.use_dist %}
+    <script src="{% static "dist/dmarc_viewer.dist.js" %}"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.css" %}" rel="stylesheet">
 
     {% else %}
-        {# 3rd party JS #}
-        <script src="{% static "vendor/jquery.js" %}"></script>
-        <script src="{% static "vendor/bootstrap.js" %}"></script>
-        <script src="{% static "vendor/Sortable.js" %}"></script>
-        <script src="{% static "vendor/selectize.js" %}"></script>
-        <script src="{% static "vendor/colorpicker-color.js" %}"></script>
-        <script src="{% static "vendor/bootstrap-datepicker.js" %}"></script>
-        <script src="{% static "vendor/jquery.dataTables.js" %}"></script>
-        <script src="{% static "vendor/dataTables.bootstrap.js" %}"></script>
-        <script src="{% static "vendor/dataTables.responsive.js" %}"></script>
-        <script src="{% static "vendor/d3.js" %}"></script>
-        <script src="{% static "vendor/topojson.js" %}"></script>
-        <script src="{% static "vendor/datamaps.all.js" %}"></script>
-
-        {# non-3rd party JS #}
-        <script src="{% static "js/main.js" %}"></script>
-        <script src="{% static "js/editor.js" %}"></script>
-        <script src="{% static "js/analysis.js" %}"></script>
-        <script src="{% static "js/d3.legend.js" %}"></script>
-
-        {# 3rd party CSS #}
-        <link href="{% static "vendor/selectize.bootstrap3.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/bootstrap-datepicker3.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/dataTables.bootstrap.css" %}" rel="stylesheet">
-        <link href="{% static "vendor/responsive.bootstrap.css" %}" rel="stylesheet">
-
-        {# non-3rd party CSS (generated using gulp `styles` task ) #}
-        <link href="{% static "css/dmarc_viewer.css" %}" rel="stylesheet">
+    <script src="{% static "js/main.js" %}"></script>
+    <script src="{% static "js/editor.js" %}"></script>
+    <script src="{% static "js/analysis.js" %}"></script>
+    <script src="{% static "js/d3.legend.js" %}"></script>
+    <link href="{% static "css/dmarc_viewer.css" %}" rel="stylesheet">
     {% endif %}
 
-        {% comment %}
-        `djangoformsetjs` is installed as Python dependency to some
-        `site-packages` dir, where it is found by Django's static file loader
+    {% comment %} `djangoformsetjs` is installed as Python dependency to some
+    `site-packages` dir, where it is found by Django's static file loader.
 
-        TODO:
-        Find a good solution to tell the gulp build task (i.e. `min-js`) where
-        to find this file so that we can add it to
-        `dmarc_viewer.dist.min.js` and only load it like below when if
-        `TEMPLATE_SETTINGS.use_minified` is `False`.
-        {% endcomment %}
-        <script src="{% static "js/jquery.formset.js" %}"></script>
-
+    TODO:
+    Find a good solution to tell the gulp build task (i.e. `min-js`) where
+    to find this file so that we can add it to
+    `dmarc_viewer.dist.min.js` and only load it like below when if
+    `TEMPLATE_SETTINGS.use_dist` is `False`. {% endcomment %}
+    <script src="{% static "js/jquery.formset.js" %}"></script>
 </head>
 
 <body>
