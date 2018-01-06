@@ -607,15 +607,18 @@ var analysis = {
     },
     export: {
         svg: function(viewId, type, btn) {
-            var svg_node = $(btn).closest(".view-type").find(".svg-container svg").get(0)
+            var svg_node = $(btn)
+                    .closest(".view-type").find(".svg-container svg").get(0);
+            var svg_string = (new XMLSerializer).serializeToString(svg_node);
+
             $('<form>', {
                 'action': "/export-svg/"+viewId+"/",
                 'target': "_blank",
                 'method': "POST"
             }).append($('<textarea>', {
                 'name': "svg",
-                'value': (new XMLSerializer).serializeToString(svg_node),
-            })).append($('<input>', {
+            }).val(svg_string)
+            ).append($('<input>', {
                 'type': 'hidden',
                 'name': 'view_type',
                 'value': type
