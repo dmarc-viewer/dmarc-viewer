@@ -626,7 +626,7 @@ var analysis = {
                 'type': 'hidden',
                 'name': 'csrfmiddlewaretoken',
                 'value': getCookie('csrftoken'),
-            })).submit();
+            })).hide().appendTo(document.body).submit();
             // One should know that input field text is limited to 512KB length
         },
         csv: function(viewId) {
@@ -638,7 +638,7 @@ var analysis = {
                 'type': 'hidden',
                 'name': 'csrfmiddlewaretoken',
                 'value': getCookie('csrftoken'),
-            })).submit();
+            })).hide().appendTo(document.body).submit().remove();
         },
     }
 }
