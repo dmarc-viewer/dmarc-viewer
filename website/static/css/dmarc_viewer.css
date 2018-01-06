@@ -8118,7 +8118,7 @@ button.close {
  */
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 50px;
+  padding: 50px 0;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
@@ -8375,7 +8375,9 @@ body {
 #deep-analysis .view-type-table .dataTables_processing {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.8);
-  top: 39px;
+  top: 0;
+  left: 0;
+  margin: 0 0;
   height: 100%;
 }
 
