@@ -243,7 +243,8 @@ class FilterSetForm(ModelForm):
         for field_name, field_dict in self.additional_filter_fields.iteritems():
 
             # Creating a typed choice field helps performing built in form clean magic
-            self.fields[field_name] = MyTypedMultipleChoiceField(coerce=field_dict.get("type"),
+            self.fields[field_name] = MyTypedMultipleChoiceField(
+                    coerce=field_dict.get("type"),
                     required=False,
                     label=field_dict.get("label"),
                     choices=field_dict.get("choices", ()),
@@ -252,6 +253,7 @@ class FilterSetForm(ModelForm):
                                 "load": field_dict.get("load", "")
                             }))
 
+            # Add select options already stored to db
             if self.instance.id:
                 self.fields[field_name].initial = field_dict["class"].\
                         objects.filter(foreign_key=self.instance.id).\
