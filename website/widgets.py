@@ -26,6 +26,7 @@ class MultiSelectWidget(SelectMultiple):
                             options.onType = editor.loadChoices;
                             options.load_choice_type = "%(load)s";
                             }
+                        // Also gets called when the widget is cloned
                         $(document).ready(function(){
                             $('#id_%(name)s').selectize(options);
                         });

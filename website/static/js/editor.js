@@ -2,61 +2,86 @@
  * Copy a formset by
  */
 var editor = {
-    copyFilterSet: function(el) {
-        //get the new form and form to copy
-        var $formsetPlugin = $("#filterSetContainer").data("formset"),
-            $oldForm = $(el).closest("[data-formset-form]"),
-            $newForm = $formsetPlugin.addForm();
+    /*
+     * Copy a dmarc viewer filterset using djangoformsetjs' addForm function,
+     * copying the form field values from the formset enclosing the
+     * copy button to the newly added form
+     *
+     */
+    copyFilterSet: function(clickedElement) {
+        //Query the formset container (old and new)
+        var container = "#filterSetContainer";
 
-        //copy all selects' options
-        var $selectsOld = $oldForm.find("select");
-        $newForm.find("select").each(function(idx){
+        // Add one-time listener for the formAdded Event, triggered
+        // at the end of this function
+        // Copying on formAdded Event guarantees that the elements of the new
+        // form have been initialized in the DOM and can be fully used, which
+        // is crucial when copying selectize elements
+        $(document).one("formAdded", container, function(event) {
+            var $newForm = $(event.target);
+            var $oldForm = $(clickedElement)
+                    .closest("[data-formset-form]");
 
-            //HTML select
-            var optionsHTML = $selectsOld[idx].innerHTML;
-            if (optionsHTML)
-                $(this).html(optionsHTML);
+            // Copy plain input fields
+            ["filter_label", "filter_color", "filter_source_ip"].forEach(
+                function(filter_class) {
+                    var selector = "." + filter_class + " input";
+                    $newForm.find(selector).val(
+                        $oldForm.find(selector).val()
+                    );
+                }
+            );
 
-            //Selectize
-            //XXX LP: It would be nice if selectize did this on its own
-            $selectizeNew = $(this)[0].selectize;
-            if ($selectizeNew != 'undefined') {
-                //options - Available options in dropdown - {text: <>, value: <> }
-                oldOptions = $selectsOld[idx].selectize.options;
-                for (optionName in oldOptions) {
-                    $selectizeNew.addOption({
-                        text: oldOptions[optionName].text,
-                        value: oldOptions[optionName].value
+            // Copy select elements
+            ["filter_report_receiver_domain", "filter_report_sender",
+                    "filter_raw_spf_domain", "filter_raw_spf_result",
+                    "filter_raw_dkim_domain", "filter_raw_dkim_result",
+                    "filter_aligned_spf_result", "filter_aligned_dkim_result",
+                    "filter_disposition"].forEach(function(filter_class) {
+
+                var selector = "." + filter_class + " select";
+                var $newSelect = $newForm.find(selector);
+                var $newSelectize = $newSelect[0].selectize;
+
+                var $oldSelect = $oldForm.find(selector);
+                var $oldSelectize = $oldSelect[0].selectize;
+
+                // Copy each option of the select from the source filter set
+                // to the new copied filter set (addOption), and toggle
+                // selection accordingly (addItem), using the selectize API
+                for (var key in $oldSelectize.options) {
+                    var value = $oldSelectize.options[key]["value"];
+                    var text = $oldSelectize.options[key]["text"];
+
+                    // Add dynamically retrieved selectize options
+                    // No-op if the option already exists, e.g. was available
+                    // via <option> element
+                    $newSelectize.addOption({
+                        value: value,
+                        text: text
                     });
+
+                    // Select previously selected items
+                    if ($oldSelectize.items.indexOf(value) != -1) {
+                        $newSelectize.addItem(value, true);
+                    }
+                    $newSelectize.refreshItems();
                 }
 
-                //items - selected options in input -  <value>
-                oldItems   = $selectsOld[idx].selectize.items;
-                oldItems.forEach(function(item){
-                    $selectizeNew.addItem(item);
-                });
-            }
+                // Copy vanilla checkbox
+                var selector = "." + "filter_multiple_dkim input";
+                $newForm.find(selector).prop("checked",
+                        $oldForm.find(selector).is(":checked"));
+            });
         });
 
-        //copy all inputs' values
-        var $inputsOld = $oldForm.find("input");
-        $newForm.find("input").each(function(idx){
-            var value = $inputsOld[idx].value;
-            if (value)
-                $(this).val(value);
-
-            //Checkboxes
-            if ($(this).attr("type") == "checkbox")
-                $(this).attr('checked', $inputsOld[idx].checked)
-
-        });
-
-        //XXX Add support for other form elements (textarea, radio, ...)
-        return $newForm;
+        // Add new empty formset to DOM, which triggers above listener to copy
+        // the fields from the old formset, whose copy button was clicked
+        $(container).data("formset").addForm();
     },
     /*
      * Toggle Date Range Type
-     * Disable input fields of deslected date range type
+     * Disable input fields of deselected date range type
      * 1: variable
      * 2: fixed
      * Add/Remove some classes for css
