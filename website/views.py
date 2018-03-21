@@ -56,27 +56,45 @@ def edit(request, view_id = None):
         view = None
 
     # Create Forms and formsets
-    view_form               = ViewForm(data=data, instance = view)
-    filter_set_formset      = FilterSetFormSet(data=data, instance = view)
+    view_form = ViewForm(data=data, instance=view)
+    filter_set_formset = FilterSetFormSet(data=data, instance=view)
+
+    # Calculate the number of (remaining) filter sets after this request
+    # We use this value for additional (non) form validation,
+    # i.e. we require at least one filter set on the view.
+    # NOTE: Alternatively, we could have FilterSetFormSet's clean method do
+    # this automatically by passing min_num=1 and validate_min=True to
+    # inlineformset_factory, which might be cleaner but would make it more
+    # complicated to customize the error message, see formset.non_form_errors()
+    real_filter_set_count = (filter_set_formset.total_form_count()
+            - len(filter_set_formset.deleted_forms))
 
     if request.method == 'POST':
-        valid = False
-        if view_form.is_valid():
-            if filter_set_formset.is_valid():
-                valid = True
+        # Only save if view and filter sets are valid and there is a filter set
+        if (view_form.is_valid() and filter_set_formset.is_valid() and
+                real_filter_set_count):
 
-        if valid:
-            view = view_form.save()
             filter_set_formset.instance = view
             filter_set_formset.save()
-            messages.add_message(request, messages.SUCCESS, "Successfully saved view '%s'" % (view.title,))
+            messages.add_message(request, messages.SUCCESS,
+                    "Successfully saved view '%s'" % (view.title,))
 
             if request.POST.get("redirect_to_analysis"):
                 return redirect("deep_analysis", view_id=view.id)
-            return redirect("view_management")
-        else:
-            messages.add_message(request, messages.ERROR, "Could not save view.")
 
+            return redirect("view_management")
+
+        elif not real_filter_set_count:
+            messages.add_message(request, messages.ERROR,
+                "You have to add at least one filter set to create a view."
+                " Or create multiple filter sets to compare different aspects"
+                " of your report data. ")
+
+        else:
+            messages.add_message(request, messages.ERROR,
+                    "Could not save view.")
+
+    print filter_set_formset.non_form_errors()
 
     return render(request, 'website/view-editor.html', {
             'view_form'               : view_form,
