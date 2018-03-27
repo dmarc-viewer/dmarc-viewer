@@ -57,7 +57,7 @@ BOOTSTRAP3 = {
 }
 
 TEMPLATE_SETTINGS = {
-    "use_dist": False
+    "use_dist": True
 }
 
 MIDDLEWARE_CLASSES = (
