@@ -73,7 +73,7 @@ def edit(request, view_id = None):
         # Only save if view and filter sets are valid and there is a filter set
         if (view_form.is_valid() and filter_set_formset.is_valid() and
                 real_filter_set_count):
-
+            view = view_form.save()
             filter_set_formset.instance = view
             filter_set_formset.save()
             messages.add_message(request, messages.SUCCESS,
@@ -93,8 +93,6 @@ def edit(request, view_id = None):
         else:
             messages.add_message(request, messages.ERROR,
                     "Could not save view.")
-
-    print filter_set_formset.non_form_errors()
 
     return render(request, 'website/view-editor.html', {
             'view_form'               : view_form,
