@@ -1,0 +1,253 @@
+[
+{
+  "fields": {
+    "type_line": true,
+    "description": "Show how much of the mail sent with my domain fails DMARC checks, based on aligned DKIM and SPF results taken from incoming reports, compared to the total mail volume. If the DMARC failing portion seems indeed illegitimate, I might be ready to add a restrictive DMARC policy (quarantine or reject) to my DNS.",
+    "title": "Am I DMARC ready?",
+    "enabled": true,
+    "type_map": true,
+    "position": 9,
+    "type_table": true
+  },
+  "model": "website.view",
+  "pk": 1
+},
+{
+  "fields": {
+    "type_line": true,
+    "description": "Show received mail that was purportedly spoofed, i.e. failed aligned DKIM and SPF checks (DMARC fail), and mail that I have rejected or placed under quarantine, all based on the information taken from outgoing DMARC aggregate reports.",
+    "title": "Who sent me spoofed mail and how did I react?",
+    "enabled": true,
+    "type_map": true,
+    "position": 10,
+    "type_table": true
+  },
+  "model": "website.view",
+  "pk": 2
+},
+{
+  "fields": {
+    "type_line": true,
+    "description": "Show mail sent with my domain by a subset of raw DKIM results (neutral vs. temperror vs. permerror) as per incoming aggregate reports. Any other result than pass, will make the aligned DKIM result fail.",
+    "title": "Raw DKIM results",
+    "enabled": true,
+    "type_map": true,
+    "position": 11,
+    "type_table": true
+  },
+  "model": "website.view",
+  "pk": 3
+},
+{
+  "fields": {
+    "color": "#ffd479",
+    "multiple_dkim": null,
+    "label": "All Mail",
+    "view": 1
+  },
+  "model": "website.filterset",
+  "pk": 1
+},
+{
+  "fields": {
+    "color": "#ff2600",
+    "multiple_dkim": null,
+    "label": "DMARC Fail",
+    "view": 1
+  },
+  "model": "website.filterset",
+  "pk": 2
+},
+{
+  "fields": {
+    "color": "#ff9300",
+    "multiple_dkim": null,
+    "label": "Disposition Quarantine",
+    "view": 2
+  },
+  "model": "website.filterset",
+  "pk": 3
+},
+{
+  "fields": {
+    "color": "#0433ff",
+    "multiple_dkim": null,
+    "label": "Dispostion Reject",
+    "view": 2
+  },
+  "model": "website.filterset",
+  "pk": 4
+},
+{
+  "fields": {
+    "color": "#ff2600",
+    "multiple_dkim": null,
+    "label": "Aligned Fail",
+    "view": 2
+  },
+  "model": "website.filterset",
+  "pk": 5
+},
+{
+  "fields": {
+    "color": "#ff2600",
+    "multiple_dkim": null,
+    "label": "permerror",
+    "view": 3
+  },
+  "model": "website.filterset",
+  "pk": 6
+},
+{
+  "fields": {
+    "color": "#ff9300",
+    "multiple_dkim": null,
+    "label": "temperror",
+    "view": 3
+  },
+  "model": "website.filterset",
+  "pk": 7
+},
+{
+  "fields": {
+    "color": "#00fdff",
+    "multiple_dkim": null,
+    "label": "neutral",
+    "view": 3
+  },
+  "model": "website.filterset",
+  "pk": 8
+},
+{
+  "fields": {
+    "value": 1,
+    "foreign_key": 1
+  },
+  "model": "website.reporttype",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 2
+  },
+  "model": "website.reporttype",
+  "pk": 2
+},
+{
+  "fields": {
+    "value": 1,
+    "foreign_key": 3
+  },
+  "model": "website.reporttype",
+  "pk": 3
+},
+{
+  "fields": {
+    "begin": "2018-01-01T00:00:00Z",
+    "end": "2018-01-07T00:00:00Z",
+    "foreign_key": 1,
+    "dr_type": 1,
+    "unit": null,
+    "quantity": null
+  },
+  "model": "website.daterange",
+  "pk": 1
+},
+{
+  "fields": {
+    "begin": "2018-01-01T00:00:00Z",
+    "end": "2018-01-07T00:00:00Z",
+    "foreign_key": 2,
+    "dr_type": 1,
+    "unit": null,
+    "quantity": null
+  },
+  "model": "website.daterange",
+  "pk": 2
+},
+{
+  "fields": {
+    "begin": "2018-01-01T00:00:00Z",
+    "end": "2018-01-07T00:00:00Z",
+    "foreign_key": 3,
+    "dr_type": 1,
+    "unit": null,
+    "quantity": null
+  },
+  "model": "website.daterange",
+  "pk": 3
+},
+{
+  "fields": {
+    "value": 7,
+    "foreign_key": 6
+  },
+  "model": "website.rawdkimresult",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": 6,
+    "foreign_key": 7
+  },
+  "model": "website.rawdkimresult",
+  "pk": 2
+},
+{
+  "fields": {
+    "value": 5,
+    "foreign_key": 8
+  },
+  "model": "website.rawdkimresult",
+  "pk": 3
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 2
+  },
+  "model": "website.aligneddkimresult",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 5
+  },
+  "model": "website.aligneddkimresult",
+  "pk": 2
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 2
+  },
+  "model": "website.alignedspfresult",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 5
+  },
+  "model": "website.alignedspfresult",
+  "pk": 2
+},
+{
+  "fields": {
+    "value": 2,
+    "foreign_key": 3
+  },
+  "model": "website.disposition",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": 3,
+    "foreign_key": 4
+  },
+  "model": "website.disposition",
+  "pk": 2
+}
+]
