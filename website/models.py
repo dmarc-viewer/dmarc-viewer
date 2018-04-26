@@ -446,7 +446,7 @@ class DateRange(ViewFilterField):
                 })
 
     def __str__(self):
-        return "{0} - {1}".format(self.getBeginEnd())
+        return "{0} - {1}".format(*self.getBeginEnd())
 
 
 class ReportSender(FilterSetFilterField):
