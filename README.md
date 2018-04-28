@@ -57,6 +57,15 @@ Once you have your incoming and outgoing reports, you can feed them into DMARC v
 python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/reports) ...
 ```
 
+### Import Analysis Views
+
+Use this command to create some basic 'analysis views' that you can use to
+analyze your data. The loaded views can easily be modified and extended via the
+web interface on the 'view management' page.
+
+```
+python manage.py loadviews
+```
 
 
 ## Install Apache and mod_wsgi
