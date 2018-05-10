@@ -43,9 +43,9 @@ def import_views_from_json(filepath):
         the following command:
 
         ```
-        python manage.py dumpdata website.View website.FilterSet \
+        python manage.py dumpdata --indent 2 website.View website.FilterSet \
             website.ReportType website.DateRange website.ReportSender \
-            website.ReportReceiverDomain website.SourceIP website.RawDkimDomain
+            website.ReportReceiverDomain website.SourceIP website.RawDkimDomain \
             website.RawDkimResult website.MultipleDkim website.RawSpfDomain \
             website.RawSpfResult website.AlignedDkimResult \
             website.AlignedSpfResult website.Disposition > demo/views.json
