@@ -228,7 +228,7 @@ def deep_analysis(request, view_id):
         messages.add_message(request, messages.WARNING, "The view you were looking for does not exist. Why not choose one from below?")
         return redirect("view_management")
 
-    sidebar_views = View.objects.filter(enabled='true').values('id', 'title')
+    sidebar_views = View.objects.filter(enabled=True).values('id', 'title')
 
     return render(request, 'website/deep-analysis.html', {
             'sidebar_views'         : sidebar_views,
