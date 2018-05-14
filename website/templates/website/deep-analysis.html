@@ -74,13 +74,10 @@
     </script>
     {% endif %}
     {% if the_view.type_line %}
-    <h2>Time Line Chart<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The time line chart shows mail volume per time for each filter set of this view."></span></h2>
+    <h2>Time Line Chart<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The time line chart shows mail volume per time for each filter set of this view. Click and drag over the mini time line below to zoom on the x-axis. This will also apply a time filter on the table."></span></h2>
 
     <div class="view-type-linechart view-type" style="width: 100%">
         <div class="svg-container">
-            <div id="zoom-help">
-               <span class="context-help-icon" data-toggle="tooltip" data-placement="right" title="Click and drag over mini time line to zoom on the x-axis. This will also apply a time filter on the table."></span>
-            </div>
         </div>
         <div class="export-svg">
             <a onClick="analysis.export.svg({{the_view.id}}, 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
@@ -95,7 +92,7 @@
 
 
     {% if the_view.type_table %}
-    <h2>DMARC Report Record Table<span class="context-help-icon" data-toggle="tooltip" data-placement="top" title="The table shows DMARC report records merged from all filter sets. Depending on the screen size some columns may be hidden. Then you can display additional data by clicking on the first cell."></span></h2>
+    <h2>DMARC Report Record Table<span class="context-help-icon" data-toggle="tooltip" data-placement="top" title="The table shows DMARC report records merged from all filter sets. Depending on the screen size some columns may be hidden. You can display additional data by clicking on the first cell."></span></h2>
     <div class="view-type-table view-type">
         <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>

@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
-    <h1 class="page-header">View Editor<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="In the view editor you can configure a single view (report time range, report types, analysis types, ...) that should be displayed on the Deep Analysis page. You can create different filter sets to compare different aspects of your report data."></span></h1>
+    <h1 class="page-header">View Editor<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="In the view editor you can configure a single view (report time range, report types, analysis types, etc.) that should be displayed on the Deep Analysis page. You can create different filter sets to compare different aspects of your report data."></span></h1>
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
     </div>
@@ -30,12 +30,12 @@
             <div id="{{view_form.type_table.auto_id}}_container">{% bootstrap_field view_form.type_table %}</div>
             <div id="{{view_form.report_type.auto_id}}_container">
                 {% bootstrap_label view_form.report_type.label label_for=view_form.report_type.auto_id %}
-                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are those DMARC aggregate reports that you receive, based on mail that was sent with your domain. Outgoing reports on the other hand are those that you send, based on mail you received. CAUTION: Changing the report type here will change options for fields Reportee(s), Reporter(s), SPF domain(s) and DKIM domains(s) below in the filter set."></span>
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are  DMARC reports that you receive based on mail that was sent with your domain. Outgoing reports on the other hand are reports that you send based on mail you received. CAUTION: Changing the report type here will change the available options for 'Reportee(s)', 'Reporter(s)', 'SPF domain(s)' and 'DKIM domains(s)' fields in the existing filter sets of this view."></span>
                 {% bootstrap_field view_form.report_type show_label=False %}
             </div>
             <div id="{{view_form.dr_type.auto_id}}_container">
                 {% bootstrap_label view_form.dr_type.label label_for=view_form.dr_type.auto_id %}
-                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="An absolute time range filters reports having their 'date_range.begin' field in between your specified 'from' and 'to'. A dynamic time range filters the last x days, weeks, months or years always starting at current moment of view inspection."></span>
+                <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="You can filter reports using absolute ('from' - 'to') or dynamic (e.g. last 10 days) time ranges. The 'begin' timestamp found in a report's metadata section is used when applying this filter."></span>
                 {% bootstrap_field view_form.dr_type show_label=False %}
             </div>
             <div id="{{view_form.begin.auto_id}}_container">{% bootstrap_field view_form.begin %}</div>

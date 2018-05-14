@@ -15,7 +15,7 @@
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
     </div>
-<h2>Incoming reports</h2>
+<h2>Incoming Reports<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Incoming reports are reports that you receive from foreign domains based on e-mail messages the reporter received purportedly from you."></span></h2>
 {% if start_incoming %}
     <div id="t{{choices.INCOMING}}-container">
         <div class="text-container" style="display:none">
@@ -33,7 +33,7 @@
     No incoming reports so far. Start parsing reports...
 {% endif %}
 
-<h2>Outgoing reports</h2>
+<h2>Outgoing Reports<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Outgoing reports are reports that you send to foreign domains based on e-mail messages that you received purportedly from them."></span></h2>
 {% if start_outgoing %}
     <div id="t{{choices.OUTGOING}}-container">
         <div class="text-container" style="display:none">

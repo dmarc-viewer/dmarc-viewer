@@ -1,6 +1,6 @@
 {% load bootstrap3 %}
 <div data-formset-form>
-    <h4>Filter Set<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="A filter set returns a part of your report data by combining and applying the configured filter fields. Filter fields of different types are combined by logical 'and', whereas filter fields of one kind with multiple selections are combined by locial 'or'. That is, if you select 'pass' as aligned SPF result and 'pass' as aligned DKIM result, only report data with both passing SPF and passing DKIM alignment results is returned. Whereas, if you select 'pass' and 'fail' as aligned SPF result, any report data with passing or failing SPF alignment results is returned."></span></h4>
+    <h4>Filter Set<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="A filter set returns a part of your report data by combining and applying the selected filter fields. The values from filter fields of different types are combined by logical 'and', whereas the values from filter fields with multiple selections are combined by logical 'or'. That is, if you select 'pass' as aligned SPF result and 'pass' as aligned DKIM result, only report data with both passing SPF and passing DKIM alignment results is returned, whereas, if you select 'temperror' and 'permerror' as (raw) DKIM results, report data with a DKIM result of 'temperror' or 'permerror' is returned."></span></h4>
 
 
     <div class="row">
@@ -11,12 +11,12 @@
             <div class="row">
                 <div class="filter_report_receiver_domain ">
                     {% bootstrap_label form.report_receiver_domain.label label_for=form.report_receiver_domain.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain that requested the report. (cf. 'policy_published.domain' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain that requested the report, as per the 'domain' field in a report's 'policy_published' section."></span>
                     {% bootstrap_field form.report_receiver_domain show_label=False %}
                 </div>
                 <div class="filter_report_sender">
                     {% bootstrap_label form.report_sender.label label_for=form.report_sender.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The name of the organisation that sent the report. (cf. 'report_metadata.org_name' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The name of the organization that sent the report, as per the 'org_name' field in a report's 'report_metadata' section."></span>
                     {% bootstrap_field form.report_sender show_label=False %}
                 </div>
                 <div class="filter_source_ip">{% bootstrap_field form.source_ip %}</div>
@@ -26,12 +26,12 @@
             <div class="row">
                 <div class="filter_raw_spf_domain">
                     {% bootstrap_label form.raw_spf_domain.label label_for=form.raw_spf_domain.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from the SMTP dialogue's 'MAIL FROM' or 'HELO'. (cf. 'record.auth_result.spf.domain' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from the SMTP dialog's 'MAIL FROM' or 'HELO' commands, as per the 'domain' field in a report's SPF 'auth_result' section."></span>
                     {% bootstrap_field form.raw_spf_domain show_label=False %}
                 </div>
                 <div class="filter_raw_spf_result">
                     {% bootstrap_label form.raw_spf_result.label label_for=form.raw_spf_result.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw SPF authentication result before alignment. (cf. 'record.auth_result.spf.result' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw SPF authentication result before alignment as per the 'result' field of a report's SPF 'auth_result' section."></span>
                     {% bootstrap_field form.raw_spf_result show_label=False %}
                 </div>
             </div>
@@ -40,33 +40,33 @@
             <div class="row">
                 <div class="filter_raw_dkim_domain">
                     {% bootstrap_label form.raw_dkim_domain.label label_for=form.raw_dkim_domain.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from a DKIM signature's 'd='-tag. (cf. record.auth_result.dkim.domain' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The domain from a DKIM signature's 'd=' tag, as per the 'domain' field in a report's DKIM 'auth_result' section."></span>
                     {% bootstrap_field form.raw_dkim_domain show_label=False %}
                 </div>
                 <div class="filter_raw_dkim_result">
                     {% bootstrap_label form.raw_dkim_result.label label_for=form.raw_dkim_result.auto_id %}
-                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw DKIM authentication result before alignment. (cf. 'record.auth_result.dkim.result' report field)"></span>
+                    <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The raw DKIM authentication result before alignment, as per the 'result' field in a report's DKIM 'auth_result' section."></span>
                     {% bootstrap_field form.raw_dkim_result show_label=False %}
                 </div>
             </div>
         </div>
         <div class="filter_multiple_dkim">
             {% bootstrap_field form.multiple_dkim %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="This filters for reports of mails that had multiple DKIM signatures. This is an indicator for indirect mail flow."></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="If checked, it filters for reports of e-mails that had multiple DKIM signatures. Note: This is an indicator for indirect mail flow, e.g. forwarding or mailing lists."></span>
         </div>
         <div class="filter_aligned_spf_result">
             {% bootstrap_label form.aligned_spf_result.label label_for=form.aligned_spf_result.auto_id %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Passes if the raw SPF result passes and the according 'MAIL FROM'- or 'HELO'- domain aligns with the From: header of the mail. For a DMARC pass one of aligned SPF or aligned DKIM must pass. (cf. 'policy_evaluated.spf' report field)"></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="SPF alignment passes if the raw SPF result passes and the according 'MAIL FROM'- or 'HELO'- domain aligns with the 'From:' header of the e-mail. For a DMARC 'pass' one of aligned SPF or aligned DKIM must pass. The value corresponds to the 'spf' field in a report's 'policy_evaluated' section."></span>
             {% bootstrap_field form.aligned_spf_result show_label=False %}
         </div>
         <div class="filter_aligned_dkim_result">
             {% bootstrap_label form.aligned_dkim_result.label label_for=form.aligned_dkim_result.auto_id %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="Passes if the raw DKIM result passes and the according 'd='-domain aligns with the From: header of the mail. For a DMARC pass one of aligned SPF or aligned DKIM must pass. (cf. 'policy_evaluated.dkim' report field)"></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="DKIM alignment passes if the raw DKIM result passes and the according 'd=' domain aligns with the 'From:' header of the e-mail. For a DMARC 'pass' one of aligned SPF or aligned DKIM must pass. The value corresponds to the 'dkim' field in a report's 'policy_evaluated' section."></span>
             {% bootstrap_field form.aligned_dkim_result show_label=False %}
         </div>
         <div class="filter_disposition">
             {% bootstrap_label form.disposition.label label_for=form.disposition.auto_id %}
-            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The policy executed by the mail receiver, depending on the policy specified by the domain owner and the aligned DMARC result evaluated upon mail reception. (cf. 'policy_evaluated.disposition' report field)"></span>
+            <span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="The disposition is the policy applied by the mail receiver, depending on the policy specified by the domain owner and the aligned DMARC result evaluated upon mail reception. The value corresponds to the 'disposition' field in a report's 'policy_evaluated' section."></span>
             {% bootstrap_field form.disposition show_label=False %}
         </div>
         <div class="text-right col-xs-12">
