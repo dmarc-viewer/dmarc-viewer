@@ -27,6 +27,8 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
         GenericRelation)
 from django.db.models.fields.related import ForeignKey
 from django.db.models import Sum, Count, Max
+from django.db.models.functions import TruncDay
+
 import choices
 
 
@@ -295,7 +297,10 @@ class View(OrderedModel):
                 {
                     "label" : filter_set.label,
                     "color" : filter_set.color,
-                    "data" : list(filter_set.getMessageCountPerDay())
+                    "data" : [{
+                        "cnt": row["cnt"],
+                        "date": row["date"].strftime("%Y%m%d")
+                    } for row in filter_set.getMessageCountPerDay()],
                 } for filter_set in self.filterset_set.all()
             ]
         }
@@ -347,8 +352,6 @@ class FilterSet(models.Model):
             return Q()
 
     def getMessageCountPerDay(self):
-        # XXX LP: to_char is postgres specific, do we care for db flexibility?
-
         # Needs filter(id__in=distinct_records) workaround because
         # filter(self.getQuery()) does some db joining which can result in
         # duplicate record rows that we can't "distinct()" away when using
@@ -365,15 +368,13 @@ class FilterSet(models.Model):
                 self.getQuery()).distinct().values("id")
 
 
-        # Query retrieves the sum of Records per date for above filtered
+        # Query retrieves the sum of Records per day for above filtered
         # Reports, ordered by date in ascending order
         return Record.objects.filter(id__in=distinct_records).values(
-                "report__date_range_begin").extra(
-                select={
-                    "date" : ("to_char(website_report.date_range_begin, 'YYYYMMDD')")
-                    }
-                ).values("date").annotate(cnt=Sum("count")).values(
-                "date", "cnt").order_by("date")
+                "report__date_range_begin").annotate(
+                date=TruncDay("report__date_range_begin"),
+                cnt=Sum("count")).values("date", "cnt").order_by("date")
+
 
     def getMessageCountPerCountry(self):
         distinct_records = Record.objects.filter(
