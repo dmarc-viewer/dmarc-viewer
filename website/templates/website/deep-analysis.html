@@ -35,26 +35,24 @@
 
             </div>
             <div id="collapse-filterset-details" class="panel-collapse collapse" role="tabpanel">
-            <div class="panel-body">
-                {% for fs in the_view.filterset_set.all %}
-                <div>
-                    <h5>
-                        <span class="circle" style="background-color:{{fs.color}}"></span><span>Filter Set '{{fs.label}}'</span>
-                    </h5>
-                    <p>{% join_filter_set_field_values fs.reportsender_set.all "Report Sender Email" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.reportreceiverdomain_set.all "Report Receiver Domain" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.sourceip_set.all "Mail Sender Source IP" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.aligneddkimresult_set.all "Aligned DKIM Result" " or " True %}</p>
-                    <p>{% join_filter_set_field_values fs.alignedspfresult_set.all "Aligend SPF Result" " or " True %}</p>
-                    <p>{% join_filter_set_field_values fs.disposition_set.all "Disposition" " or " True %}</p>
-                    <p>{% join_filter_set_field_values fs.rawdkimdomain_set.all "Raw DKIM Domain" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.rawdkimresult_set.all "Raw DKIM Result" " or " True %}</p>
-                    <p>{% join_filter_set_field_values fs.multipledkim_set.all "Multiple DKIM Only" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.rawspfdomain_set.all "Raw SPF Domain" " or " %}</p>
-                    <p>{% join_filter_set_field_values fs.rawspfresult_set.all  "Raw SPF Result" " or " True %}</p>
+                <div class="panel-body">
+                    {% for filter_set in the_view.filterset_set.all %}
+                    <div>
+                        <p>
+                            <span class="circle" style="background-color:{{filter_set.color}}"></span><span class="filter-set-name">{{filter_set.label}}</span>
+                        </p>
+                        {% get_filter_set_field_tuples filter_set as filter_set_field_tuples  %}
+                        {% for name, filter_set_fields, get_display in filter_set_field_tuples %}
+                        {% join_filter_set_field_values filter_set_fields get_display as joined_filter_set_field_vals %}
+                        {% if joined_filter_set_field_vals %}
+                        <p>
+                            <span class=field-name>{{ name }}: </span><span>{{ joined_filter_set_field_vals }}</span>
+                        </p>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
             </div>
         </div>
     </div>

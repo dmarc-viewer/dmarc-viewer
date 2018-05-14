@@ -207,6 +207,7 @@ body {
 #deep-analysis {
     #view-filter-details {
         position: relative;
+        margin-bottom: 60px;
         .panel-heading {
             &:before {
                 top: 1px;
@@ -239,16 +240,22 @@ body {
         a {
             font-size: 12px;
         }
-        h5 {
-            margin: 0;
-        }
         p {
             margin-bottom: 2px;
+            &:not(:first-child) {
+                margin-left: 22px;
+            }
         }
         .panel-body {
             div:not(:last-child) {
                 margin-bottom: 15px;
             }
+        }
+        .filter-set-name {
+            text-decoration: underline;
+        }
+        .field-name {
+            font-weight: bold;
         }
     }
     .view-type {
