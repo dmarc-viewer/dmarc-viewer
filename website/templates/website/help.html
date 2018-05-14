@@ -12,30 +12,101 @@
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
     </div>
-    <h2 id="{{topic_id}}">How does DMARC work?</h2>
+    <h2 id="{{topic_id}}">What does the general DMARC work flow look like?</h2>
     <div class="row">
         <div class="col-sm-6">
-            The sending mail server signs the e-mail with the private key, inserts the DKIM signature to the header, and sends the e-mail. After performing pre-acceptance tests the receiving mail server verifies the signature (DKIM) and the envelope from or helo domain (SPF) using DNS. SPF and DKIM results are then checked if they align with the "mail from" header of the e-mail. If none of both results align DMARC produces a fail. The receiving mail server then applies the DMARC policy published in the sending domain's DMARC DNS entry according to the evaluated aligned DMARC result. Possible policies are NONE - the sending domain owner requests no specific action, QUARANTINE - depending on the capabilities of the mail receiver, this can mean "place into spam folder", "scrutinize with additional intensity", and/or "flag as suspicious" and "reject". If the DMARC evaluation passes or the sending domain owner has requested a none policy, the mail is passed on to post acceptance tests and eventually delivered to the receiver mailbox. <br>
-            In case of quarantine and reject, and if the sending domain owner has requested this in his DMARC DNS record, the receiving mail server has to immediately send a failure report to the sending domain owner. <br>
-            In all cases, and if the sending domain owner has requested this in his DMARC DNS record, the receiving mail server has to temporarily store the DMARC evaluation results in order to later send an aggregate report, containing all DMARC evaluation results for the respective domain and aggregation interval, which is typically a day.<br>
+            A sending mail server signs an e-mail with a private key to create
+            a <strong>DKIM</strong> signature, which is added to the e-mail
+            header. The receiving mail server verifies this signature and
+            whether the sender IP address matches the <strong>SPF</strong>
+            entry of the <i>"envelope from"</i> or <i>"helo"</i> domain.
+            Allowed public key (DKIM) and IP addresses (SPF) are available via
+            <strong>DNS</strong>. The raw SPF and DKIM results are then checked
+            for <strong>alignment</strong> with the <i>"mail from"</i> header
+            of the e-mail. <strong>DMARC</strong> evaluation fails, if none of
+            the two results pass and align. Based on the DMARC evaluation
+            result and the DMARC policy published in the sender domain's DNS, a
+            policy is applied. The applied policy is called
+            <strong>disposition</strong> and can be one of
+            <strong>none</strong>, <i>i.e. the sending domain owner requests no
+            specific action</i>, <strong>quarantine</strong>, <i>i.e. "place
+            into spam folder", "scrutinize with additional intensity", and/or
+            "flag as suspicious"</i>, or <strong>reject</strong>, <i>i.e.
+            reject the e-mail</i>. If DMARC evaluation passes or the sending
+            domain owner has requested a none policy, the mail is passed on to
+            post acceptance tests and eventually delivered to the  mailbox. If
+            requested by the mail sender domain, the receiving mail server has
+            to immediately send a failure report in case of disposition
+            quarantine or reject. If requested by the mail sender domain, the
+            receiving mail server has to temporarily store the DMARC evaluation
+            results in order to later send an aggregate report. Aggregate
+            reports contain all DMARC evaluation results for the corresponding
+            domain and aggregation interval, typically a day.
         </div>
         <div class="col-sm-6 text-center">
             <img id="dmarc-diagram" src="{% static "img/dmarc_flow.png" %}">
         </div>
     </div>
-    <h2 id="{{topic_id}}">How to use this tool?</h2>
+    <h2 id="{{topic_id}}">How does &lt;dmarc&sol;&gt; viewer work?</h2>
     <div class="row">
         <div class="col-sm-12">
-            <h3 id="{{item_id}}">What is this tool all about?</h3>
-            This tool lets you visually analyze DMARC aggregate reports. The tool differs between incoming and outgoing reports. Incoming reports you receive from foreign domains (reporter) based on e-mail messages, the reporter received, purportedly from you. Outgoing reports on the other hand you send to foreign domains based on e-mail messages that you received, purportedly by them. To analyze reports you need to use the provided parser management command and parse your reports into your database.
+            <h3 id="{{item_id}}">What kind of reports can I analyze?</h3>
+            This tool lets you visually analyze DMARC aggregate reports. The
+            tool differs between <strong>incoming</strong> and
+            <strong>outgoing</strong> reports. Incoming reports are reports
+            that you receive from foreign domains based on e-mail messages the
+            reporter received purportedly from you. Outgoing reports on the
+            other hand are reports that you send to foreign domains based on
+            e-mail messages that you received purportedly from them. To analyze
+            reports you need to import your reports using the provided
+            <strong>parsing management command</strong>. Since DMARC itself
+            does not distinguish between incoming and outgoing reports, you
+            should to tell the parser which type of reports your are importing.
+            This makes analyzing your reports easier.
+
             <h3 id="{{item_id}}">What is on the Overview page?</h3>
-            The Overview page shows general information about all incoming and outgoing reports to give you an idea about what is stored in your database. For both report types it shows the date ranges for which you have reports stored. These dates are based on the date range attribute of reports and can be faulty. Additionally it shows you the total amount of report receiver domains, reports and messages for incoming and outgoing reports. Also you can compare aligned DKIM, aligned SPF and evaluated DMARC disposition for all messages of both report types.
+            The <strong>Overview</strong> page shows general information about
+            all incoming and outgoing reports to give you an idea about what is
+            stored in your database. For both report types it shows the date
+            ranges for which you have reports stored. These dates are based on
+            the date range attribute of reports and can be faulty.
+            Additionally, it shows you the total amount of report receiver
+            domains, reports and messages for incoming and outgoing reports and
+            lets you compare aligned DKIM, aligned SPF and evaluated DMARC
+            disposition for all messages of both report types.
+
             <h3 id="{{item_id}}">Where can I get detailed analysis views?</h3>
-            The Deep Analysis page is the heart of the tool. Currently 3 analysis types are supported. A map - showing where messages came from, a time line - showing when messages came, and a table - showing DMARC records from DMARC reports. You can fully control what data, i.e. what reports are displayed by generating analysis views in the View Management section. On top of a view, you see its title and description, a list of the applied filters and the analysis types. Btw. you can also export your views (charts as PDF, table as CSV).
+            The <strong>Deep Analysis</strong> page is the heart of the tool.
+            Currently three analysis types are supported. A
+            <strong>map</strong>, showing where messages came from, a
+            <strong>time line</strong> chart, showing when messages came, and a
+            <strong>table</strong>, giving you details about the DMARC reports.
+            You can fully control what data is displayed by creating and
+            configuring analysis views using a <strong>View Editor</strong>.
+
             <h3 id="{{item_id}}">How can I manage my views?</h3>
-            On the View Management page you can create, edit, clone, delete and sort the views for your Deep Analysis page. By dragging the arrow handles (left) you can move views up and down, which will be reflected in the Deep Analysis sidebar. By clicking "Add View", or "Edit" on a particular view you will enter the View Editor, this is where you control what data a view is based on.
+            On the <strong>View Management</strong> page you can create, edit,
+            clone, delete and sort the views for your <strong>Deep
+            Analysis</strong> page.
+
             <h3 id="{{item_id}}">How exactly do I create or edit a view?</h3>
-            In the View Editor, reached from the Deep Analysis or View Management page, you can define what data is seen in that view. Each view has to be given a title and a description to immediately understand what you are looking at when you check out the view in the Deep Analysis section. Furthermore you can control if the view is displayed in the Deep Analysis sidebar at all. You can also enable and disable the various view types (map, table, line chart). Next thing is to decide whether this view should be based on incoming or outgoing reports and what time range you want data to be displayed for. After you have filled out the general view info and filters you can define your filter sets. You will need at least one filter set to display any data at all in the view. Creating multiple filter sets is especially useful if you want to compare two or more data sets in the line chart, e.g. DKIM passes vs. DKIM fails. The map type shows each data set separately within a view and the table type merges all records of all data sets. Next to a label and a color for the filter set, you can apply filters basically on all properties of a DMARC report.
+            You can open the <strong>View Editor</strong> via the <strong>View
+            Management</strong> page by creating or editing an existing view.
+            There you can define what data should be seen in a
+            <strong>view</strong>. Each view has to be given a title and a
+            description, so that you immediately understand what you are
+            looking at when you check out your views on the <strong>Deep
+            Analysis</strong> page. You can also control if the view is
+            displayed in the Deep Analysis sidebar at all or enable and disable
+            individual analysis types, i.e. map, line chart, table. Views
+            display either <strong>incoming</strong> or
+            <strong>outgoing</strong> reports for a given time range. By
+            creating <strong>filter sets</strong> you can define filters for
+            all attributes found in DMARC reports. You need to create at least
+            one filter set to display any data. Creating multiple filter sets
+            is especially useful, if you want to compare multiple aspects of
+            your report data.
+
         </div>
     </div>
 </div>
