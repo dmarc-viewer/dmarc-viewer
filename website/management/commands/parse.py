@@ -12,8 +12,13 @@
     See LICENSE for licensing information.
 
 <Purpose>
-    Parses DMARC aggregate reports and stores them into dmarc-viewer database
-    See https://tools.ietf.org/html/rfc7489#section-7.2 for the exact format.
+    Parses DMARC aggregate reports and stores them into dmarc viewer database.
+    The parser expects the DMARC aggregate report schema version 0.1 as defined
+    in https://tools.ietf.org/html/rfc7489#appendix-C. However, strict schema
+    validation is not performed.
+
+    NOTE: Above schema differs slightly from the DMARC aggregate report schema
+    version 0.1 as defined in https://dmarc.org/dmarc-xml/0.1/rua.xsd.
 
     dmarc-viewer differs between incoming and outgoing reports.
 
@@ -226,6 +231,7 @@ class Command(BaseCommand):
                 node_policy_published.findtext('p'))
         report.sp = choices._string_to_numeric(choices.DISPOSITION_TYPE,
                 node_policy_published.findtext('sp'))
+        # Field not in https://dmarc.org/dmarc-xml/0.1/rua.xsd
         report.fo = node_policy_published.findtext('fo')
         pct = node_policy_published.findtext('pct')
         if pct:
@@ -290,6 +296,7 @@ class Command(BaseCommand):
             if node_identifiers is not None:
                 record.envelope_to = node_identifiers.findtext(
                         'envelope_to')
+                # Field not in https://dmarc.org/dmarc-xml/0.1/rua.xsd
                 record.envelope_from = node_identifiers.findtext(
                         'envelope_from')
                 record.header_from = node_identifiers.findtext(
@@ -332,6 +339,7 @@ class Command(BaseCommand):
                 result_dkim = AuthResultDKIM()
                 result_dkim.record = record
                 result_dkim.domain = node_dkim_result.findtext('domain')
+                # Field not in https://dmarc.org/dmarc-xml/0.1/rua.xsd
                 result_dkim.selector = node_dkim_result.findtext('selector')
                 result_dkim.result = choices._string_to_numeric(
                         choices.DKIM_RESULT,
@@ -353,6 +361,7 @@ class Command(BaseCommand):
                 result_spf = AuthResultSPF()
                 result_spf.record = record
                 result_spf.domain = node_spf_result.findtext('domain')
+                # Field not in https://dmarc.org/dmarc-xml/0.1/rua.xsd
                 result_spf.scope = choices._string_to_numeric(
                         choices.SPF_SCOPE, node_spf_result.findtext('scope'))
                 result_spf.result = choices._string_to_numeric(
