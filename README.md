@@ -5,7 +5,7 @@ DMARC viewer is a Django based web-app that lets you visually analyze DMARC aggr
 To receive DMARC reports for you mailing domain(s) just add a simple DNS entry, e.g.:
 ```shell
 v=DMARC
-````
+```
 
 Learn more about DMARC at [dmarc.org](https://dmarc.org/)
 
@@ -59,14 +59,31 @@ python manage.py parse [--type (in|out)] (<dmarc-aggregate-report>.xml | dir/to/
 
 ### Import Analysis Views
 
-Use this command to create some basic 'analysis views' that you can use to
-analyze your data. The loaded views can easily be modified and extended via the
-web interface on the 'view management' page.
-
+Use this command to load some pre-generated 'views' to jump right into
+analyzing your DMARC reports. The imported views can easily be modified and
+extended via the web interface on the 'view management' page.
 ```
-python manage.py loadviews
+python manage.py loadviews demo/views.json
 ```
 
+### Demo Reports
+If you don't have DMARC aggregate reports at hand but want to try out DMARC
+viewer, you can use the following snippet to generate demo DMARC aggregate
+reports for three domains, i.e. "your" domain and two "foreign" domains, which
+makes four daily report exchanges, i.e. two that you send (outgoing) and two
+that you receive (incoming) per day, over a whole year (2017).
+```
+# Install DMARC demo data scripts
+git clone https://github.com/lukpueh/dmarc-demo-data
+pip install -r dmarc-demo-data/requirements.txt
+
+# Generate demo data
+(cd dmarc-demo-data && python demo_reports.py)
+
+# Parse demo data into DB
+python manage.py parse --type in dmarc-demo-data/reports/incoming
+python manage.py parse --type out dmarc-demo-data/reports/outgoing
+```
 
 ## Install Apache and mod_wsgi
 https://docs.djangoproject.com/en/1.10/topics/install/#install-apache-and-mod-wsgi
