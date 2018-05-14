@@ -8189,6 +8189,7 @@ body {
  */
 #view-editor form label {
   font-weight: normal;
+  margin: 5px 0;
 }
 
 #view-editor #id_dr_type .radio {
@@ -8215,10 +8216,6 @@ body {
 
 #view-editor .filter_multiple_dkim .form-group, #view-editor .filter_multiple_dkim .checkbox {
   display: inline;
-}
-
-#view-editor .context-help-icon {
-  margin: 3px 5px;
 }
 
 #view-editor [data-formset-form] {
@@ -8256,6 +8253,7 @@ body {
  */
 #deep-analysis #view-filter-details {
   position: relative;
+  margin-bottom: 60px;
 }
 
 #deep-analysis #view-filter-details .panel-heading {
@@ -8297,16 +8295,24 @@ body {
   font-size: 12px;
 }
 
-#deep-analysis #view-filter-details h5 {
-  margin: 0;
-}
-
 #deep-analysis #view-filter-details p {
   margin-bottom: 2px;
 }
 
+#deep-analysis #view-filter-details p:not(:first-child) {
+  margin-left: 22px;
+}
+
 #deep-analysis #view-filter-details .panel-body div:not(:last-child) {
   margin-bottom: 15px;
+}
+
+#deep-analysis #view-filter-details .filter-set-name {
+  text-decoration: underline;
+}
+
+#deep-analysis #view-filter-details .field-name {
+  font-weight: bold;
 }
 
 #deep-analysis .view-type {
@@ -8428,6 +8434,10 @@ h3 {
   text-decoration: underline;
 }
 
+h4 {
+  line-height: inherit;
+}
+
 .hidden, #view-editor .disabled .help-block {
   display: none;
 }
@@ -8449,26 +8459,26 @@ h3 {
 
 .description {
   padding: 10px;
-  margin: 5px 0;
+  margin: 0 0 20px;
 }
 
 .context-help-icon {
   border: 1px solid #c7254e;
   color: #c7254e;
   background-color: white;
-  height: 14px;
-  line-height: 14px;
-  width: 14px;
+  height: 22px;
+  line-height: 22px;
+  width: 22px;
   display: inline-block;
-  vertical-align: top;
   text-align: center;
-  font-size: 12px;
+  font-size: 16.5px;
   font-weight: 500;
-  margin: 5px 5px;
-  border-bottom-right-radius: 7px;
-  border-bottom-left-radius: 7px;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
+  vertical-align: top;
+  margin: 0 11px;
+  border-bottom-right-radius: 11px;
+  border-bottom-left-radius: 11px;
+  border-top-right-radius: 11px;
+  border-top-left-radius: 11px;
 }
 
 .context-help-icon:hover {
@@ -8481,6 +8491,7 @@ h3 {
 }
 
 .tooltip {
+  font-size: 16.5px;
   position: fixed;
 }
 
