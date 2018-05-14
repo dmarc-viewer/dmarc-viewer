@@ -87,6 +87,7 @@ body {
 
     form label {
         font-weight: normal;
+        margin: 5px 0;
     }
     $viewFilterFormFields:
         (title, 12, 12, 12, 12),
@@ -166,10 +167,6 @@ body {
         .form-group, .checkbox {
             display: inline;
         }
-    }
-
-    .context-help-icon {
-        margin: 3px 5px;
     }
 
     //Filterset border
@@ -385,7 +382,10 @@ h2 {
 h3 {
     font-size: 16px;
     text-decoration: underline;
-    }
+}
+h4 {
+    line-height: inherit;
+}
 .hidden {
     display: none;
 }
@@ -411,30 +411,25 @@ h3 {
     @extend .alert;
     @extend .alert-info;
     padding: 10px;
-    margin: 5px 0;
-    //font-size: 15px;
-    //font-style: italic;
-    //font-variant: small-caps;
-    //color: $dmarc-blue;
-    //line-height: 18px;
-    //margin-bottom: 20px;
+    margin: 0 0 20px;
 }
 
+$help-icon-size: 22px;
 .context-help-icon {
     border: 1px solid #c7254e;
     color: #c7254e;
     background-color: white;
-    height:14px;
-    line-height: 14px;
-    width: 14px;
+    height: $help-icon-size;
+    line-height: $help-icon-size;
+    width: $help-icon-size;
     display: inline-block;
-    vertical-align: top;
     text-align: center;
-    font-size: 12px;
+    font-size: $help-icon-size * 3/4;
     font-weight: 500;
-    margin: 5px 5px;
-    @include border-bottom-radius(7px);
-    @include border-top-radius(7px);
+    vertical-align: top;
+    margin: 0 $help-icon-size/2;
+    @include border-bottom-radius($help-icon-size/2);
+    @include border-top-radius($help-icon-size/2);
     &:hover {
         color: white;
         background-color: #c7254e;
@@ -444,6 +439,7 @@ h3 {
     }
 }
 .tooltip {
+    font-size: $help-icon-size * 3/4;;
     position: fixed;
 }
 
