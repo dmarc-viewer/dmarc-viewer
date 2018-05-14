@@ -10,12 +10,9 @@
 
 {% block content %}
 <div class="col-sm-12 col-md-12 main">
-    <h1 class="page-header">View Editor</h1>
+    <h1 class="page-header">View Editor<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="In the view editor you can configure a single view (report time range, report types, analysis types, ...) that should be displayed on the Deep Analysis page. You can create different filter sets to compare different aspects of your report data."></span></h1>
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
-    </div>
-    <div class="description">The data for a view is retrieved by applying the below chosen filter. Different filter fields are ANDed together whereas filter fields of one kind with multiple selections are ORed together.<br>
-    <strong>Eg: </strong> <code>find reports where report_type = incoming AND (reporter = google.com OR reporter = yahoo.com) </code>
     </div>
     <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
          {% csrf_token %}

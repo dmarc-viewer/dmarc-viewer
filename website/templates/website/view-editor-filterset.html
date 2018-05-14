@@ -1,6 +1,8 @@
 {% load bootstrap3 %}
 <div data-formset-form>
-    <h4>Filter Set</h4>
+    <h4>Filter Set<span class="context-help-icon" data-toggle="tooltip" data-placement="bottom" title="A filter set returns a part of your report data by combining and applying the configured filter fields. Filter fields of different types are combined by logical 'and', whereas filter fields of one kind with multiple selections are combined by locial 'or'. That is, if you select 'pass' as aligned SPF result and 'pass' as aligned DKIM result, only report data with both passing SPF and passing DKIM alignment results is returned. Whereas, if you select 'pass' and 'fail' as aligned SPF result, any report data with passing or failing SPF alignment results is returned."></span></h4>
+
+
     <div class="row">
         <div>{% bootstrap_field form.id %}</div>
         <div class="filter_label">{% bootstrap_field form.label %}</div>
