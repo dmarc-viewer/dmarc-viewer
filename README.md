@@ -117,7 +117,7 @@ All custom styles should be written in `website/static/sass`. The command below
 watches the file for changes and automatically creates a new CSS file in
 `website/static/css`.
 ```shell
-gulp watch-styles
+gulp watch-scss
 ```
 
 #### Create new dist files
@@ -127,5 +127,8 @@ compiled), local JS code (in [`website/static/js`](website/static/js)) or
 add/remove/update via `package.json`).
 
 ```shell
+# Optionally compile the latest dmarc viewer stylesheets
+gulp compile-scss
+# Create minified and concatenated JS/CSS dist
 gulp create-dist
 ```
