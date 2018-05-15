@@ -40,8 +40,7 @@
     ```
 
     More info at:
-    https://docs.djangoproject.com/en/1.8/ref
-        /templates/api/#subclassing-context-requestcontext
+    https://docs.djangoproject.com/en/1.11/ref/templates/api/#writing-your-own-context-processors
 
 """
 from django.conf import settings

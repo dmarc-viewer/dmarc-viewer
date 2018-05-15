@@ -13,7 +13,7 @@ Learn more about DMARC at [dmarc.org](https://dmarc.org/)
 ### System Dependencies
 - Python2.7
 - [Cairo](https://www.cairographics.org/download/)
-- [Postgres](https://docs.djangoproject.com/en/1.8/ref/databases/#postgresql-note)
+- [Postgres](https://docs.djangoproject.com/en/1.11/ref/databases/#postgresql-notes)
 
 ### Create Postgres Database and user
 ```shell
@@ -86,7 +86,8 @@ python manage.py parse --type out dmarc-demo-data/reports/outgoing
 ```
 
 ## Install Apache and mod_wsgi
-https://docs.djangoproject.com/en/1.10/topics/install/#install-apache-and-mod-wsgi
+https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modwsgi/
+TODO: Add deployment instructions
 
 
 ## Contribute

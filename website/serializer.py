@@ -51,8 +51,8 @@ def import_views_from_json(filepath):
             website.AlignedSpfResult website.Disposition > demo/views.json
         ```
 
-        See https://docs.djangoproject.com/en/1.8/howto/initial-data/ and
-        https://docs.djangoproject.com/en/1.8/topics/serialization/ for more
+        See https://docs.djangoproject.com/en/1.11/howto/initial-data/ and
+        https://docs.djangoproject.com/en/1.11/topics/serialization/ for more
         infos about fixtures and serialization.
 
     <Arguments>
