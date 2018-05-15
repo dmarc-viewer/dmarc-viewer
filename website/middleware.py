@@ -20,20 +20,22 @@
 
 
     More info at
-    https://docs.djangoproject.com/en/1.8/topics/http/middleware/
-"""
+    https://docs.djangoproject.com/en/1.11/topics/http/middleware/
 
+"""
 import json
 from django.contrib import messages
 from django.template import Template, Context
 
-class BootstrapAjaxMessage(object):
-    def process_response(self, request, response):
-        if request.is_ajax() and response["Content-Type"] in \
-                ["application/javascript", "application/json"]:
 
+def ajax_bootstrap_message(get_response):
+    def middleware(request):
+        response = get_response(request)
+        if (request.is_ajax() and response["Content-Type"]
+                in ["application/javascript", "application/json"]):
             try:
                 content = json.loads(response.content)
+
             except Exception as e:
                 return response
 
@@ -47,4 +49,7 @@ class BootstrapAjaxMessage(object):
                     )
 
             response.content = json.dumps(content)
+
         return response
+
+    return middleware

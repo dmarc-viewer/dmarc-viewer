@@ -60,8 +60,7 @@ TEMPLATE_SETTINGS = {
     "use_dist": True
 }
 
-MIDDLEWARE_CLASSES = (
-    #'debug_panel.middleware.DebugPanelMiddleware',
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,8 +69,14 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'website.middleware.BootstrapAjaxMessage',
-)
+    'website.middleware.ajax_bootstrap_message'
+]
+
+# TODO: Needs an upgrade?
+# https://docs.djangoproject.com/en/1.11/topics/http/middleware/#upgrading-pre-django-1-10-style-middleware
+# MIDDLEWARE_CLASSES = (
+    #'debug_panel.middleware.DebugPanelMiddleware',
+# )
 
 ROOT_URLCONF = 'dmarc_viewer.urls'
 
