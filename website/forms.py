@@ -260,9 +260,8 @@ class FilterSetForm(ModelForm):
                         values_list("value", flat=True)
 
                 if not field_dict.get("choices"):
-                    self.fields[field_name].choices = \
-                        [(value, value) \
-                        for value in self.fields[field_name].initial]
+                    self.fields[field_name].choices = [(value, value)
+                            for value in self.fields[field_name].initial]
 
         # These are extra because they are one-to-one ergo no MultipleChoiceField
         self.fields["source_ip"] = GenericIPAddressField(required=False,
