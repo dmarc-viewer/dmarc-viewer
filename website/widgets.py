@@ -11,13 +11,16 @@ class MultiSelectWidget(SelectMultiple):
         self.load = kwargs.pop("load")
         super(MultiSelectWidget, self).__init__(*args, **kwargs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
+
+        # If the widget loads choices dynamically we add a custom class
         if self.load:
-        html = super(MultiSelectWidget, self).render(name, value, attrs)
             if not isinstance(attrs, dict):
                 attrs = {}
             attrs["class"] = attrs.get("class", "") + " selectize-dynamic"
 
+        html = super(MultiSelectWidget, self).render(name, value, attrs,
+                renderer)
         js   =  '''<script type="text/javascript">
                     (function($){
                         var options = {
@@ -41,10 +44,11 @@ class ColorPickerWidget(TextInput):
     bootstrap-colorpicker.js as fallback. """
     input_type = 'color'
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if not value:
             value = "#006699"
-        html = super(ColorPickerWidget, self).render(name, value, attrs)
+        html = super(ColorPickerWidget, self).render(name, value, attrs,
+                renderer)
         js   =  '''<script type="text/javascript">
                     (function($){
                         $(document).ready(function(){
@@ -62,8 +66,9 @@ class DatePickerWidget(TextInput):
     """bootstrap datepicker"""
     input_type = 'date'
 
-    def render(self, name, value, attrs=None):
-        html = super(DatePickerWidget, self).render(name, value, attrs)
+    def render(self, name, value, attrs=None, renderer=None):
+        html = super(DatePickerWidget, self).render(name, value, attrs,
+                renderer)
         js   =  '''<script type="text/javascript">
                     (function($){
                         $(document).ready(function(){
