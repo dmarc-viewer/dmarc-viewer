@@ -13,10 +13,11 @@ class MultiSelectWidget(SelectMultiple):
 
     def render(self, name, value, attrs=None):
         if self.load:
-            attrs = {
-                "class" : "selectize-dynamic"
-            }
         html = super(MultiSelectWidget, self).render(name, value, attrs)
+            if not isinstance(attrs, dict):
+                attrs = {}
+            attrs["class"] = attrs.get("class", "") + " selectize-dynamic"
+
         js   =  '''<script type="text/javascript">
                     (function($){
                         var options = {
