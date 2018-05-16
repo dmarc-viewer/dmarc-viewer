@@ -59,6 +59,8 @@ BOOTSTRAP3 = {
     'set_required' : False
 }
 
+# This dict is available in any templates via a custom context processor.
+# See `website.context` for more info
 TEMPLATE_SETTINGS = {
     "use_dist": True
 }
@@ -146,6 +148,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
