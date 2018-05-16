@@ -1,18 +1,35 @@
+"""
+<Program Name>
+    widgets.py
+
+<Author>
+    Lukas Puehringer <luk.puehringer@gmail.com>
+
+<Started>
+    August, 2015
+
+<Copyright>
+    See LICENSE for licensing information.
+
+<Purpose>
+    Custom widgets to be used with django's model form magic, i.e. to create
+    auto-forms based on the model. See website.forms for more infos.
+
+"""
 from django import forms
 from django.forms.widgets import SelectMultiple, TextInput
 from django.utils.safestring import mark_safe
 
 
-
 class MultiSelectWidget(SelectMultiple):
-    """Simple Multi Select using Selectize.js """
+    """Multi Select Widget using Selectize.js. If `load` is passed, selectize
+    receives extra options to load select options dynamically. """
 
     def __init__(self, *args, **kwargs):
         self.load = kwargs.pop("load")
         super(MultiSelectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, renderer=None):
-
         # If the widget loads choices dynamically we add a custom class
         if self.load:
             if not isinstance(attrs, dict):
@@ -40,8 +57,8 @@ class MultiSelectWidget(SelectMultiple):
 
 
 class ColorPickerWidget(TextInput):
-    """Color Picker for html5 input type color, using
-    bootstrap-colorpicker.js as fallback. """
+    """Color Picker for HTML5 input type color, using bootstrap-colorpicker.js
+    as fallback. """
     input_type = 'color'
 
     def render(self, name, value, attrs=None, renderer=None):
@@ -63,7 +80,7 @@ class ColorPickerWidget(TextInput):
 
 
 class DatePickerWidget(TextInput):
-    """bootstrap datepicker"""
+    """Bootstrap Datepicker Widget """
     input_type = 'date'
 
     def render(self, name, value, attrs=None, renderer=None):
