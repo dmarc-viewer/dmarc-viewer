@@ -143,7 +143,6 @@ def choices_async(request):
 
 def delete(request, view_id):
     # XXX: Add try catch
-    # XXX: Add ask confirm in Javascript
     view = View.objects.get(pk=view_id)
     view.delete()
     messages.add_message(request, messages.SUCCESS, "Successfully deleted view '%s'" % (view.title,))
@@ -164,7 +163,6 @@ def order(request):
         messages.add_message(request, messages.ERROR, "Sorting did not work.")
         raise e
 
-    # XXX LP: Make nice ajax messages like in normal templates
     return HttpResponse(json.dumps({}), content_type="application/json")
 
 def export_svg(request, view_id):

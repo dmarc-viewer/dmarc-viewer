@@ -34,10 +34,12 @@
                         <a class="btn btn-default" role="button" href="/deep-analysis/{{view.id}}/">Show</a>
                         <a class="btn btn-default" role="button" href="/edit-view/{{view.id}}/">Edit</a>
                         <a class="btn btn-default" role="button" href="/clone-view/{{view.id}}/">Clone</a>
-                        <a class="btn btn-danger"  role="button" href="/delete-view/{{view.id}}/">Delete</a>
+                        <a href="" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-{{view.id}}">
+                        <span class="glyphicon glyphicon-trash" title="Delete View"></span><span class="hidden-xs icon-text"></span></a>
                     </div>
                 </td>
             </tr>
+            {% include 'website/_confirm-modal.html' %}
         {% endfor %}
         </tbody>
     </table>

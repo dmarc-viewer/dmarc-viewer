@@ -1,0 +1,17 @@
+<div class="modal fade" id="confirm-delete-{{view.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                <h3 class="modal-title">Delete <i>'{{view.title}}'</i></h3>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure? This can't be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-block btn-danger" role="button" href="/delete-view/{{view.id}}/" onCLick="$('confirm-delete-{{view.id}}').modal('hide')">Yes, delete!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
