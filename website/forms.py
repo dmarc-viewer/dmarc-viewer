@@ -255,9 +255,10 @@ class FilterSetForm(ModelForm):
 
             # Add select options already stored to db
             if self.instance.id:
-                self.fields[field_name].initial = field_dict["class"].\
-                        objects.filter(foreign_key=self.instance.id).\
-                        values_list("value", flat=True)
+                self.fields[field_name].initial = list(
+                        field_dict["class"].objects.filter(
+                        foreign_key=self.instance.id).values_list(
+                        "value", flat=True))
 
                 if not field_dict.get("choices"):
                     self.fields[field_name].choices = [(value, value)
