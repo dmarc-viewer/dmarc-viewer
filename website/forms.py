@@ -12,14 +12,17 @@
     See LICENSE for licensing information.
 
 <Purpose>
-    TODO:
-        - Purpose
-        - class and function docstrings
-        - comments
+    Configure analysis view model forms and form fields for the view editor.
+
+    See https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/ for
+    more information on creating forms from models.
+
+    This module defines custom `ModelForm` subclasses for `View` and
+    `FilterSet` objects and extends constructor, and `clean` and `save` methods
+    to make use of Django's awesome form magic, like creating HTML form fields
+    from model fields, or input validation/sanitization.
 
 """
-
-
 from django.utils.translation import gettext as _
 from django.forms import (ModelForm, ValidationError, ChoiceField,
         MultipleChoiceField, TypedMultipleChoiceField, CharField,
@@ -27,17 +30,29 @@ from django.forms import (ModelForm, ValidationError, ChoiceField,
         BooleanField)
 from django.forms.models import inlineformset_factory, modelform_factory
 from django.forms.widgets import RadioSelect, Textarea
+
 from website.models import (Report, Reporter, ReportError, Record,
         PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet,
         ReportType, DateRange, ReportSender, ReportReceiverDomain,
         SourceIP, RawDkimDomain, RawDkimResult, RawSpfDomain, RawSpfResult,
         AlignedDkimResult, AlignedSpfResult, Disposition, MultipleDkim)
 from website.widgets import (ColorPickerWidget, MultiSelectWidget,
-    DatePickerWidget)
+        DatePickerWidget)
 from website import choices
 
+
+
+
 class ViewForm(ModelForm):
+    """ModelForm used to manage creating and editing of `View` objects using
+    HTML web forms.
+    See https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/
+    """
+
+
     class Meta:
+        """Use Meta class to configure default form fields for `View`
+        attributes. """
         model = View
         fields = ["title", "description", "enabled", "type_map", "type_line",
                 "type_table"]
@@ -51,12 +66,18 @@ class ViewForm(ModelForm):
             "description": Textarea(attrs={"rows": 5}),
         }
 
+
     def __init__(self, *args, **kwargs):
+        """Custom model form constructor to account for custom related objects,
+        i.e. instances of (subclasses of) `ViewFilterField`. """
         super(ViewForm, self).__init__(*args, **kwargs)
+
+        # Initialize form field for related `ReportType` object
         self.fields["report_type"] = ChoiceField(label="Report Type",
                 choices=choices.REPORT_TYPE, required=True)
 
-        # Initialize all fields for date range
+        # Initialize form fields for related `DateRange` object, assigning
+        # custom date picker widgets
         self.fields["dr_type"] = TypedChoiceField(label="Report Date Range",
                 choices=choices.DATE_RANGE_TYPE, coerce=int,
                 widget=RadioSelect())
@@ -69,11 +90,15 @@ class ViewForm(ModelForm):
         self.fields["end"] = DateTimeField(label="", required=False,
                 widget=DatePickerWidget())
 
-        # Set default for date range type
+        # Set default form value for `DateRange`'s date range type field
         self.fields["dr_type"].initial = choices.DATE_RANGE_TYPE_FIXED
 
-        # If this form is already bound to a view, add the data from the model
+        # Fill form with existing `ViewFilterField` data if any. Unbound forms,
+        # i.e. forms without data, don't have an instance id.
         if self.instance.id:
+            # Note, there can at most be one `DateRange` and one `ReportType`
+            # object on a view. See `models.ViewFilterField`'s docstring for
+            # more info.
             for date_range in DateRange.objects.filter(
                     foreign_key=self.instance.id):
                 self.fields["dr_type"].initial = date_range.dr_type
@@ -92,19 +117,27 @@ class ViewForm(ModelForm):
                     foreign_key=self.instance.id):
                 self.fields["report_type"].initial = report_type.value
 
+
     def clean(self):
+        """Custom model form validation/sanitization method, to account for
+        custom related objects, i.e. instances of (subclasses of)
+        `ViewFilterField`. """
         cleaned_data = super(ViewForm, self).clean()
+
+        # Fetch pre-sanitized `DateRange` data and perform custom validation
         dr_type = cleaned_data.get("dr_type")
         begin = cleaned_data.get("begin")
         end = cleaned_data.get("end")
         quantity = cleaned_data.get("quantity")
         unit = cleaned_data.get("unit")
 
-        # Only one of both pairs (fixed or variable) should ever be specified
+        # 1) Validate exclusiveness
+        # `DateRange` objects can carry either a fixed (i.e. "from to begin"),
+        # or a dynamic (i.e. "last <n> days/etc.") date range, but not both.
         only_one_msg = _("Specify either fixed or variable time range!")
-        if (((dr_type == choices.DATE_RANGE_TYPE_FIXED) and
+        if ((dr_type == choices.DATE_RANGE_TYPE_FIXED and
                 (unit or quantity)) or
-                ((dr_type == choices.DATE_RANGE_TYPE_VARIABLE) and
+                (dr_type == choices.DATE_RANGE_TYPE_VARIABLE and
                 (begin or end))):
             self.add_error("begin",
                     ValidationError(only_one_msg, code="required"))
@@ -115,7 +148,7 @@ class ViewForm(ModelForm):
             self.add_error("quantity",
                     ValidationError(only_one_msg, code="required"))
 
-        # If the user wants fixed ranges begin and end must be specified
+        # 2a) Validate fixed date range
         required_msg = _("This field is required.")
         if dr_type == choices.DATE_RANGE_TYPE_FIXED:
             if not begin:
@@ -125,7 +158,7 @@ class ViewForm(ModelForm):
                 self.add_error("end",
                         ValidationError(required_msg, code="required"))
 
-        # Ff the user wants variable ranges unit and quantity must be specified
+        # 2b) Validate custom date range
         if dr_type == choices.DATE_RANGE_TYPE_VARIABLE:
             if not unit:
                 self.add_error("unit",
@@ -136,42 +169,65 @@ class ViewForm(ModelForm):
 
         return cleaned_data
 
+
     def save(self):
+        """Custom model form create/update method, to account for custom
+        related objects, i.e. instances of (subclasses of) `ViewFilterField`.
+        This method is called after `clean`.
+        """
         view_instance = super(ViewForm, self).save()
 
-        # This is actually a one-to-one relationship but modeled with fk (m2o)
+        # There can at most be one `DateRange` object on a view. See
+        # `models.ViewFilterField`'s docstring for more info.
         date_range = DateRange.objects.filter(
                 foreign_key=self.instance.id).first()
 
+        # Create if does not exist
         if not date_range:
             date_range = DateRange(foreign_key=self.instance)
 
+        # Assign values
         date_range.dr_type = self.cleaned_data["dr_type"]
         date_range.unit = self.cleaned_data["unit"] or None
         date_range.quantity = self.cleaned_data["quantity"]
         date_range.begin = self.cleaned_data["begin"]
         date_range.end = self.cleaned_data["end"]
 
+        # Persist in DB
         date_range.save()
 
-        # This is actually a one-to-one relationship but modeled with fk (m2o)
+        # There can at most be one `ReportType` object on a view. See
+        # `models.ViewFilterField`'s docstring for more info.
         report_type = ReportType.objects.filter(
                 foreign_key=self.instance.id).first()
+
+        # Create if does not exist
         if not report_type:
             report_type = ReportType(foreign_key=self.instance)
         report_type.value = self.cleaned_data["report_type"]
+
+        # Persist in DB
         report_type.save()
 
         return view_instance
 
-class MyTypedMultipleChoiceField(TypedMultipleChoiceField):
-    """A TypedMultipleChoiceField without real validation.
-    Enables dynamic adding of choices on client side.
-    We need this because we add some choices with ajax.
+
+
+class AsyncTypedMultipleChoiceField(TypedMultipleChoiceField):
+    """Custom `TypedMultipleChoiceField` used for multiselect form fields whose
+    options are retrieved dynamically so that already selected fields are
+    available on the client in forms, whose validation failed for some other
+    reason. Using a "typed" choice field helps performing built-in Django form
+    clean magic.
     """
+
+
     def validate(self, values):
-        """Add new values to choices list. To show them again in client if
-        view is invalid. """
+        """Add selected options (`values`) to list of options (`choices`) to
+        make them available in the form that is presented to the user to fix
+        (other) invalid fields. This method is called by the corresponding
+        field's `clean` method.
+        """
         for value in values:
             for choice_tuple in self.choices:
                 if value == choice_tuple[0]:
@@ -180,30 +236,58 @@ class MyTypedMultipleChoiceField(TypedMultipleChoiceField):
         return True
 
 
+
 class FilterSetForm(ModelForm):
+    """ModelForm used to manage creating and editing of `FilteSet` objects
+    using HTML web forms.
+    See https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/
+    """
+
+
+    class Meta:
+        """Use Meta class to configure default form fields for `FilterSet`
+        attributes. """
+        model = FilterSet
+        fields = ["label", "color"]
+        widgets = {"color": ColorPickerWidget}
+
+
     def __init__(self, *args, **kwargs):
+        """Custom model form constructor to account for custom related objects,
+        i.e. instances of (subclasses of) `FilterSetFilterField`. """
         super(FilterSetForm, self).__init__(*args, **kwargs)
-        self.additional_filter_fields = {
+
+        # Define all filter set filter fields for which we want form fields
+        # The "choice" field contains the list of available options.
+        # Multiselect form fields that load their choices asynchronously define
+        # a "load" value, used to identify the DMARC aggregate report field
+        # from which the options should be loaded.
+        # See `views.choices_async` and `widgets.MultiSelectWidget`
+        # The "label" value is used as text for the corresponding HTML label
+        # element, "class" identifies the corresponding model class (subclass
+        # of `FilterSetFilterField`), and "type" defines the allowed type of
+        # the form value, used for Django's auto sanitization/type coercion.
+        self.multiselect_filter_fields = {
             "report_sender" : {
-                "load" : "reporter", # cf. view.py - choices_async
+                "load" : "reporter",
                 "label" : "Reporter(s)",
                 "class" : ReportSender,
                 "type" : unicode
             },
             "report_receiver_domain" : {
-                "load" : "reportee", # cf. view.py - choices_async
+                "load" : "reportee",
                 "label" : "Reportee(s)",
                 "class" : ReportReceiverDomain,
                 "type" : unicode
             },
             "raw_dkim_domain" : {
-                "load" : "dkim_domain", # cf. view.py - choices_async
+                "load" : "dkim_domain",
                 "label" : "DKIM Domain(s)",
                 "class" : RawDkimDomain,
                 "type" : unicode
             },
             "raw_spf_domain" : {
-                "load" : "spf_domain", # cf. view.py - choices_async
+                "load" : "spf_domain",
                 "label" : "SPF Domain(s)",
                 "class" : RawSpfDomain,
                 "type" : unicode},
@@ -239,11 +323,9 @@ class FilterSetForm(ModelForm):
             }
         }
 
-        # Initialize additional multiple choice filter set fields.
-        for field_name, field_dict in self.additional_filter_fields.iteritems():
-
-            # Creating a typed choice field helps performing built in form clean magic
-            self.fields[field_name] = MyTypedMultipleChoiceField(
+        # Initialize `FilterSetFilterField` form fields from dict defined above
+        for field_name, field_dict in self.multiselect_filter_fields.iteritems():
+            self.fields[field_name] = AsyncTypedMultipleChoiceField(
                     coerce=field_dict.get("type"),
                     required=False,
                     label=field_dict.get("label"),
@@ -253,23 +335,33 @@ class FilterSetForm(ModelForm):
                                 "load": field_dict.get("load", "")
                             }))
 
-            # Add select options already stored to db
+            # If the corresponding model objects already exists (i.e. on edit)
+            # the selected options should also be shown as selected in the form
             if self.instance.id:
                 self.fields[field_name].initial = list(
                         field_dict["class"].objects.filter(
                         foreign_key=self.instance.id).values_list(
                         "value", flat=True))
 
+                # For multiselect fields that load their options asynchronously
+                # we have to add already selected options to the field's
+                # choices attribute
                 if not field_dict.get("choices"):
                     self.fields[field_name].choices = [(value, value)
                             for value in self.fields[field_name].initial]
 
-        # These are extra because they are one-to-one ergo no MultipleChoiceField
+
+        # Define additional non-multiselect filter set filter field form fields
+        # Currently, there can at most be one `SourceIP` and one `MultipleDkim`
+        # object on a filter set. See `models.FilterSetFilterField`'s docstring
+        # for more info about why these filters have their own class and aren't
+        # attributes of a `FilterSet` object.
         self.fields["source_ip"] = GenericIPAddressField(required=False,
                 label="Mail Sender IP")
         self.fields["multiple_dkim"] = BooleanField(required=False,
                 label="Multiple DKIM only")
 
+        # Fill fields with existing data if any
         if self.instance.id:
             source_ip_initial = SourceIP.objects.filter(
                     foreign_key=self.instance.id).values_list(
@@ -285,38 +377,52 @@ class FilterSetForm(ModelForm):
             if len(multiple_dkim_initial):
                 self.fields["multiple_dkim"].initial = multiple_dkim_initial[0]
 
-    def save(self, commit=True):
 
+    def save(self, commit=True):
+        """Custom model form create/update method, to account for custom
+        related objects, i.e. instances of (subclasses of)
+        `FilterSetFilterField`.
+        """
         instance = super(FilterSetForm, self).save()
 
-        # Add new many-to-one filter fields to a filter set object
-        # remove existing if removed in form
-        for field_name, field_dict in self.additional_filter_fields.iteritems():
-            # Get list of existing filters
+        # Create or delete subclasses of `FilterSetFilterField` corresponding
+        # to a given multiselect form field.
+        for field_name, field_dict in self.multiselect_filter_fields.iteritems():
+            # Get existing filter values
             existing_filters = list(field_dict["class"].objects.filter(
                     foreign_key=self.instance.id).values_list(
                     "value", flat=True))
 
+            # Iterate over posted filter values
             for filter_value in self.cleaned_data[field_name]:
-                # Save new filters
+                # Create new object if posted value does not exist yet
                 if filter_value not in existing_filters:
                     new_filter = field_dict["class"]()
                     new_filter.foreign_key = self.instance
                     new_filter.value = filter_value
                     new_filter.save()
+
+                # Remove from list of existing filters otherwise
+                # Remaining existing filters will be deleted below
                 else:
                     existing_filters.remove(filter_value)
-            # Delete old filters that were deleted in form
+
+            # Delete remaining objects whose corresponding value was not
+            # posted, i.e. deleted on the client side
             for deleted_filter in existing_filters:
                 field_dict["class"].objects.filter(
                         foreign_key=self.instance.id,
-                        value=deleted_filter).delete()
+                        value=deleted_filter
+                        ).delete()
 
 
-        #  update, create or delete source_ip
+        # Create, update or delete corresponding `SourceIP` object
+        # Currently, there can at most be one `SourceIP` object on a filter
+        # set. See `models.FilterSetFilterField`'s docstring for more info.
         source_ip = SourceIP.objects.filter(
                 foreign_key=self.instance.id).first()
         source_ip_value = self.cleaned_data["source_ip"]
+
         if source_ip and not source_ip_value:
             source_ip.delete()
 
@@ -329,8 +435,10 @@ class FilterSetForm(ModelForm):
             source_ip.value = source_ip_value
             source_ip.save()
 
-        # delete or create multiple dkim only
-        # we don"t have to update because we keep only true valued instances
+        # Delete or create corresponding `MultipleDkim` object
+        # There is no need to update because we only keep true valued
+        # instances. There can at most be one `MultipleDkim` object on a filter
+        # set. See `models.FilterSetFilterField`'s docstring for more info.
         multiple_dkim = MultipleDkim.objects.filter(
                 foreign_key=self.instance.id).first()
         multiple_dkim_value = self.cleaned_data["multiple_dkim"]
@@ -345,10 +453,9 @@ class FilterSetForm(ModelForm):
 
         return instance
 
-    class Meta:
-        model = FilterSet
-        fields = ["label", "color"]
-        widgets = {"color": ColorPickerWidget}
 
+
+# Create an inline formset to be used in the `edit` view
+# https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/#inline-formsets
 FilterSetFormSet = inlineformset_factory(
         View, FilterSet, form=FilterSetForm, can_delete=True, extra=0)
