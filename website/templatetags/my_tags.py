@@ -31,8 +31,3 @@ def get_filter_set_field_tuples(filter_set):
         ("Raw DKIM Result", filter_set.rawdkimresult_set.all, True),
         ("Multiple DKIM Only", filter_set.multipledkim_set.all, False),
     ]
-
-
-@register.inclusion_tag('website/view-editor-filterset.html')
-def show_filter_set(form):
-    return {'form': form}

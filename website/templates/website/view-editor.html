@@ -49,8 +49,7 @@
 
                 <div data-formset-body>
                     {% for filter_set_form in filter_set_formset%}
-
-                        {% show_filter_set filter_set_form %}
+                        {% include "website/view-editor-filterset.html" with form=filter_set_form %}
                     {% endfor %}
                     <!-- New forms will be inserted in here -->
                 </div>
@@ -60,7 +59,7 @@
                 any scripts -->
                 <script type="form-template" data-formset-empty-form>
                     {% escapescript %}
-                        {% show_filter_set filter_set_formset.empty_form %}
+                        {% include "website/view-editor-filterset.html" with form=filter_set_formset.empty_form %}
                     {% endescapescript %}
                 </script>
                 <div class="text-right">
