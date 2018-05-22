@@ -11,8 +11,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from forms import *
-from website.models import View, DateRange, OrderedModel, _clone
+from website.forms import ViewForm, FilterSetFormSet
+from website.models import (View, DateRange, Report, Reporter, AuthResultDKIM,
+        AuthResultSPF, OrderedModel, _clone)
+from website import choices
+
 
 def overview(request):
     response = {
