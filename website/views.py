@@ -316,6 +316,6 @@ def table_async(request, view_id):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
-def help(request):
+def help_page(request):
     return render(request, 'website/help.html')
 

@@ -55,5 +55,5 @@ urlpatterns = [
     url(r'choices-async/$', views.choices_async, name='choices_async'),
 
     #Help, FAQ
-    url(r'help/$', views.help, name='help')
+    url(r'help/$', views.help_page, name='help')
 ]
