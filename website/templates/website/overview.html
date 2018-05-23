@@ -26,7 +26,7 @@
         <div class="charts-container"></div>
     </div>
     <script type="text/javascript">
-        analysis.overview.init({{choices.INCOMING}});
+        analysis.overview.init({{choices.INCOMING}}, "{% url 'overview_async' %}");
     </script>
 {% else %}
     No incoming reports so far. Start parsing reports...
@@ -44,7 +44,7 @@
         <div class="charts-container"></div>
     </div>
         <script type="text/javascript">
-            analysis.overview.init({{choices.OUTGOING}});
+            analysis.overview.init({{choices.OUTGOING}}, "{% url 'overview_async' %}");
         </script>
 {% else %}
     No outgoing reports so far. Start parsing reports...

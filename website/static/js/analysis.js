@@ -1,8 +1,8 @@
 var analysis = {
     overview: {
-        init: function(type) {
+        init: function(type, action) {
             $("#t"+ type +"-container").addClass("loading");
-            $.get( "/overview-async/", { "report_type": type }, function(data) {
+            $.get(action, { "report_type": type }, function(data) {
                 analysis.overview.appendPies(data, "#t"+ type +"-container .charts-container");
                 $("#t"+ type +"-domain-cnt").html(data.domain_cnt);
                 $("#t"+ type +"-report-cnt").html(data.report_cnt);
@@ -129,10 +129,9 @@ var analysis = {
         /*
          * Draw map
          */
-        init: function(viewId) {
-
+        init: function(action) {
             $(".view-type-map .svg-container").addClass("loading");
-            d3.json("/map-async/" + viewId + "/", function(error, json) {
+            d3.json(action, function(error, json) {
                 $(".view-type-map .svg-container").removeClass("loading");
                 if (error || json.length < 1) {
                     console.warn(error);
@@ -307,9 +306,9 @@ var analysis = {
                 left: 80
             }
         },
-        init: function(viewId) {
+        init: function(action) {
             $(".view-type-linechart .svg-container").addClass("loading");
-            d3.json("/line-async/" + viewId + "/", function(error, json) {
+            d3.json(action, function(error, json) {
                 $(".view-type-linechart .svg-container").removeClass("loading");
                 if (error || json.length < 1) {
                     console.warn(error);
@@ -582,10 +581,10 @@ var analysis = {
                 analysis.table._api.ajax.reload();
             }
         },
-        init: function(viewId) {
+        init: function(action) {
             analysis.table._api = $('.view-type-table table').DataTable({
                 "ajax" : {
-                    url  : "/table-async/" + viewId + "/",
+                    url  : action,
                     type : "POST",
                     data: function (data) {
                          data["custom_filters"] = {
@@ -606,13 +605,13 @@ var analysis = {
         }
     },
     export: {
-        svg: function(viewId, type, btn) {
+        svg: function(action, type, btn) {
             var svg_node = $(btn)
                     .closest(".view-type").find(".svg-container svg").get(0);
             var svg_string = (new XMLSerializer).serializeToString(svg_node);
 
             $('<form>', {
-                'action': "/export-svg/"+viewId+"/",
+                'action': action,
                 'target': "_blank",
                 'method': "POST"
             }).append($('<textarea>', {
@@ -629,9 +628,9 @@ var analysis = {
             })).hide().appendTo(document.body).submit();
             // One should know that input field text is limited to 512KB length
         },
-        csv: function(viewId) {
+        csv: function(action) {
             $('<form>', {
-                'action': "/export-csv/"+viewId+"/",
+                'action': action,
                 'target': "_blank",
                 'method': "POST"
             }).append($('<input>', {

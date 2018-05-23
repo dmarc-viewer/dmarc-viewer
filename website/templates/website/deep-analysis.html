@@ -63,12 +63,12 @@
         <div class="btn-group switch-filterset"></div>
         <div class="svg-container" style="position:relative"></div>
         <div class="export-svg">
-            <a onClick="analysis.export.svg({{the_view.id}}, 'map', this)" class="btn btn-important" role="button" href="#">Export map as PDF</a>
+            <a onClick="analysis.export.svg('{% url 'export_svg' the_view.id %}', 'map', this)" class="btn btn-important" role="button" href="#">Export map as PDF</a>
         </div>
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
-        analysis.map.init({{the_view.id}});
+        analysis.map.init("{% url 'map_async' the_view.id %}");
     })
     </script>
     {% endif %}
@@ -79,12 +79,12 @@
         <div class="svg-container">
         </div>
         <div class="export-svg">
-            <a onClick="analysis.export.svg({{the_view.id}}, 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
+            <a onClick="analysis.export.svg('{% url 'export_svg' the_view.id %}', 'line-chart', this)" href="#" class="btn btn-important" role="button">Export line chart as PDF</a>
         </div>
     </div>
     <script type="text/javascript">
     $(document).ready(function(){
-        analysis.line.init({{the_view.id}});
+        analysis.line.init("{% url 'line_async' the_view.id %}");
     })
     </script>
     {% endif %}
@@ -103,12 +103,12 @@
             </thead>
         </table>
         <div class="export-csv">
-            <a onClick="analysis.export.csv({{the_view.id}})" class="btn btn-important" role="button" href="#">Export Table as CSV</a>
+            <a onClick="analysis.export.csv('{% url 'export_csv' the_view.id %}')" class="btn btn-important" role="button" href="#">Export Table as CSV</a>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
-            analysis.table.init({{the_view.id}});
+            analysis.table.init("{% url 'table_async' the_view.id %}");
         });
     </script>
     {% endif %}
