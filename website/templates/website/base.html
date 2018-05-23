@@ -58,10 +58,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="{% if 'overview' in request.path %} active {% endif %}"><a href="/overview/">Overview</a></li>
-            <li class="{% if 'deep-analysis' in request.path %} active {% endif %}"><a href="/deep-analysis/">Deep Analysis</a></li>
-            <li class="{% if 'view-management' in request.path %} active {% endif %}"><a href="/view-management/">View Management</a></li>
-            <li class="{% if 'help' in request.path %} active {% endif %}"><a href="/help/">Help</a></li>
+            <li class="{% if 'overview' in request.path %} active {% endif %}"><a href="{% url 'overview' %}">Overview</a></li>
+            <li class="{% if 'deep-analysis' in request.path %} active {% endif %}"><a href="{% url 'deep_analysis_first' %}">Deep Analysis</a></li>
+            <li class="{% if 'view-management' in request.path %} active {% endif %}"><a href="{% url 'view_management' %}">View Management</a></li>
+            <li class="{% if 'help' in request.path %} active {% endif %}"><a href="{% url 'help' %}">Help</a></li>
           </ul>
         </div>
       </div>

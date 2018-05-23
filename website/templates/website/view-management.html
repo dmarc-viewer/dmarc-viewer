@@ -31,10 +31,10 @@
                 <td >{{view.description}}</td>
                 <td align="right">
                     <div class="btn-group">
-                        <a class="btn btn-default" role="button" href="/deep-analysis/{{view.id}}/">Show</a>
-                        <a class="btn btn-default" role="button" href="/edit-view/{{view.id}}/">Edit</a>
-                        <a class="btn btn-default" role="button" href="/clone-view/{{view.id}}/">Clone</a>
-                        <a href="" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-{{view.id}}">
+                        <a class="btn btn-default" role="button" href="{% url 'deep_analysis' view.id %}">Show</a>
+                        <a class="btn btn-default" role="button" href="{% url 'edit_view' view.id %}">Edit</a>
+                        <a class="btn btn-default" role="button" href="{% url 'clone_view' view.id %}">Clone</a>
+                        <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-{{view.id}}">
                         <span class="glyphicon glyphicon-trash" title="Delete View"></span><span class="hidden-xs icon-text"></span></a>
                     </div>
                 </td>
@@ -59,7 +59,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: /order-views/,
+                    url: "{% url 'order_views' %}",
                     data:  JSON.stringify(view_id_list),
                     contentType: "application/json",
                     success: function(response){
@@ -72,7 +72,7 @@
     </script>
     <div class="row">
         <div class="col-xs-12 text-right">
-            <a class="btn btn-important" role="button" href="/add-view/">Add View</a>
+            <a class="btn btn-important" role="button" href="{% url "add_view" %}">Add View</a>
         </div>
     </div>
 </div>

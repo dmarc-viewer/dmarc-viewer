@@ -12,7 +12,7 @@
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
     {% for view in sidebar_views %}
-        <li {% if view.id == the_view.id %}class="active"{% endif %}><a href="/deep-analysis/{{view.id}}/">{{view.title}}</a></li>
+        <li {% if view.id == the_view.id %}class="active"{% endif %}><a href="{% url 'deep_analysis' view.id %}">{{view.title}}</a></li>
     {% endfor %}
     </ul>
 </div>
@@ -112,6 +112,6 @@
         });
     </script>
     {% endif %}
-    <a class="btn btn-important" role="button" href="/edit-view/{{the_view.id}}/">Edit View</a>
+    <a class="btn btn-important" role="button" href="{% url 'edit_view' the_view.id %}">Edit View</a>
 </div>
 {% endblock %}

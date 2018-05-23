@@ -14,7 +14,7 @@
     <div class="bootstrap-messages-container">
         {% bootstrap_messages %}
     </div>
-    <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}/edit-view/{{view_form.instance.id}}/{% else %}/add-view/{% endif %}" class="form">
+    <form id="viewFilterForm" method='post' action="{% if view_form.instance.id %}{% url 'edit_view' view_form.instance.id %}{% else %}{% url 'add_view' %}{% endif %}" class="form">
          {% csrf_token %}
          {% load formset_tags %}
         <div class="btn-group right">
