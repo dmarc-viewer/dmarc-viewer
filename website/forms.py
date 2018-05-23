@@ -30,6 +30,7 @@ from django.forms import (ModelForm, ValidationError, ChoiceField,
         BooleanField)
 from django.forms.models import inlineformset_factory, modelform_factory
 from django.forms.widgets import RadioSelect, Textarea
+from django.urls import reverse
 
 from website.models import (Report, Reporter, ReportError, Record,
         PolicyOverrideReason, AuthResultDKIM, AuthResultSPF, View, FilterSet,
@@ -324,6 +325,9 @@ class FilterSetForm(ModelForm):
         }
 
         # Initialize `FilterSetFilterField` form fields from dict defined above
+        # The keyword arguments passed to the `MultiSelectWidget` constructor
+        # are only relevant for multiselect elements that load their options
+        # dynamically.
         for field_name, field_dict in self.multiselect_filter_fields.iteritems():
             self.fields[field_name] = AsyncTypedMultipleChoiceField(
                     coerce=field_dict.get("type"),
@@ -332,7 +336,8 @@ class FilterSetForm(ModelForm):
                     choices=field_dict.get("choices", ()),
                     widget=MultiSelectWidget(
                             **{
-                                "load": field_dict.get("load", "")
+                                "load": field_dict.get("load", ""),
+                                "action": reverse("choices_async")
                             }))
 
             # If the corresponding model objects already exists (i.e. on edit)

@@ -23,10 +23,12 @@ from django.utils.safestring import mark_safe
 
 class MultiSelectWidget(SelectMultiple):
     """Multi Select Widget using Selectize.js. If `load` is passed, selectize
-    receives extra options to load select options dynamically. """
+    receives extra options to load select options dynamically from the
+    passed `action` url. """
 
     def __init__(self, *args, **kwargs):
         self.load = kwargs.pop("load")
+        self.action = kwargs.pop("action")
         super(MultiSelectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, renderer=None):
@@ -45,6 +47,7 @@ class MultiSelectWidget(SelectMultiple):
                         };
                         if (%(load)r){
                             options.onType = editor.loadChoices;
+                            options.load_action = "%(action)s";
                             options.load_choice_type = "%(load)s";
                             }
                         // Also gets called when the widget is cloned
@@ -52,7 +55,9 @@ class MultiSelectWidget(SelectMultiple):
                             $('#id_%(name)s').selectize(options);
                         });
                     })('django' in window && django.jQuery ? django.jQuery: jQuery);
-                </script>''' % {'load' : self.load, 'name': name}
+                </script>''' % {'load' : self.load, 'name': name,
+                        'action': self.action}
+
         return  mark_safe("%s %s" % (html, js))
 
 

@@ -119,7 +119,7 @@ var editor = {
         editor._xhr && editor._xhr.abort();
         this.load(function(callback) {
             editor._xhr = $.ajax({
-                url: '/choices-async/',
+                url: this.settings.load_action,
                 data: {
                     report_type : $("[name='report_type']").val(),
                     choice_type : this.settings.load_choice_type,
