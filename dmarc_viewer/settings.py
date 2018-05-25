@@ -22,15 +22,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!xl(p=2@&lysq@-zc73j&)yf#5!f3sq#z8e6s4$(gt$fkxvx1o'
+SECRET_KEY = os.environ["DMARC_VIEWER_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.environ.get("DMARC_VIEWER_DEBUG", False)
 
 GEO_LITE2_CITY_DB = os.path.join(BASE_DIR, "GeoLite2-City.mmdb")
 
-ALLOWED_HOSTS = []
+# Whitelist host/domain names to prevent HTTP Host header attacks
+# https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-ALLOWED_HOSTS
+# NOTE: Override the setting here if you want to whitelist multiple names,
+# if you only have one, you can also use the environment variable
+allowed_host = os.environ.get("DMARC_VIEWER_ALLOWED_HOSTS")
+ALLOWED_HOSTS = list(allowed_host) if allowed_host else []
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = (u'::1', u'127.0.0.1')
@@ -113,6 +117,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dmarc_viewer_db',
         'USER': 'dmarc_viewer_db',
+        'PASSWORD': os.environ.get("DMARC_VIEWER_DB_KEY", ""),
         'HOST': '127.0.0.1'
     }
 }
@@ -148,6 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = "/var/www/dmarc_viewer/static/"
 
 LOGGING = {
     'version': 1,
