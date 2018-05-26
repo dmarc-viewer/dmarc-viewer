@@ -6,10 +6,10 @@ viewer` database.
 ## Install Maxmind GeoLite2
 `DMARC viewer`'s report parser uses the [Maxmind's GeoLite2
 City](http://geolite.maxmind.com/download/geoip/database) database to retrieve
-geo information for IP addresses. Download [`GeoLite2-City.mmdb.gz`](http://geo
-lite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz) to the project
-root (keep it up to date), in order to retrieve geo information when parsing
-your DMARC reports.
+geo information for IP addresses. Download
+[`GeoLite2-City.mmdb.gz`](http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz)
+to the project root (keep it up to date), in order to retrieve geo information
+when parsing your DMARC reports.
 ```shell
 # In the project root
 wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz

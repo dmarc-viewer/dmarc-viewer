@@ -173,10 +173,9 @@ chown -R root:root /var/www/dmarc_viewer/static/
 *`(deployment only)`*
 
 *Deploying Django with `Apache` and `mod_wsgi` is a tried and tested way to get
-Django into production.* You can read more about it in the Django [deployment
-howto](https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modws gi/)
-and [deployment
-checklist](https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/)
+Django into production.* You can read more about it in the Django
+[deployment howto](https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modwsgi/)
+and [deployment checklist](https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/).
 
 Note that `DMARC viewer` has no built-in authorization model, hence you might
 want to look elsewhere to make sure that only you can access your DMARC
