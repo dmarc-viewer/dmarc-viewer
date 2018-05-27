@@ -41,6 +41,7 @@ from website.forms import ViewForm, FilterSetFormSet
 from website.models import (View, DateRange, Report, Reporter, AuthResultDKIM,
         AuthResultSPF, OrderedModel, _clone)
 from website import choices
+from website.decorators import disabled_in_demo
 
 
 def overview(request):
@@ -57,7 +58,6 @@ def overview(request):
     return render(request, "website/overview.html", response)
 
 
-
 @cache_page(60 * 60 * 24)
 def overview_async(request):
     """Return JSON formatted statistics about DMARC aggregate report data per
@@ -71,6 +71,7 @@ def overview_async(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@disabled_in_demo("Cloning analysis views is disabled in this demo.")
 def clone(request, view_id=None):
     """Clone the passed (by id) analysis view and redirect to `View Management`
     page. """
@@ -90,6 +91,7 @@ def clone(request, view_id=None):
     return redirect(view_management)
 
 
+@disabled_in_demo("Adding or editing analysis views is disabled in this demo.")
 def edit(request, view_id=None):
     """On `GET` open analysis view editor for new or existing view. On `POST`
     save new or edited view and, in case of success, redirect to `View
@@ -215,6 +217,7 @@ def choices_async(request):
             content_type="application/json")
 
 
+@disabled_in_demo("Deleting analysis views is disabled in this demo.")
 def delete(request, view_id):
     """Delete analysis view by passed view id and redirect to `View Management`
     page. """
@@ -228,6 +231,7 @@ def delete(request, view_id):
     return redirect("view_management")
 
 
+@disabled_in_demo("Re-ordering analysis views is disabled in this demo.")
 def order(request):
     """Receive a JSON formatted ordered list of view ids and re-order view
     objects accordingly using `OrderedModel`'s static order method. """
