@@ -140,7 +140,7 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "dmarc_viewer.settings"
-os.environ["DMARC_VIEWER_SECRET_KEY"] = "${DMARC_VIEWER_DB_KEY}"
+os.environ["DMARC_VIEWER_SECRET_KEY"] = "${DMARC_VIEWER_SECRET_KEY}"
 os.environ["DMARC_VIEWER_DB_KEY"] = "${DMARC_VIEWER_DB_KEY}"
 os.environ["DMARC_VIEWER_ALLOWED_HOSTS"] = "${DMARC_VIEWER_ALLOWED_HOSTS}"
 
@@ -211,7 +211,7 @@ cat > /etc/apache2/sites-available/dmarc-viewer.conf <<EOL
         Require all granted
     </Directory>
 
-    WSGIDaemonProcess dmarcviewer user=dmarcviewer processes=5 threads=10 python-home=/home/dmarcviewer/.virtualenvs/dmarc-viewer-env python-path=/home/dmarcviewer/dmarc_viewer python-path=/home/dmarcviewer/dmarc-viewer
+    WSGIDaemonProcess dmarcviewer user=dmarcviewer processes=5 threads=10 python-home=/home/dmarcviewer/.virtualenvs/dmarc-viewer-env python-path=/home/dmarcviewer/dmarc-viewer
     WSGIProcessGroup dmarcviewer
 
     WSGIScriptAlias / /home/dmarcviewer/dmarc-viewer/dmarc_viewer/wsgi_prod.py process-group=dmarcviewer
@@ -224,11 +224,12 @@ cat > /etc/apache2/sites-available/dmarc-viewer.conf <<EOL
 EOL
 ```
 ### Load Config
-Once you enabled and loaded the configuration file, you should be able to serve
-DMARC viewer at the server name specified above.
+Once you have enabled the configuration file and started apache, you should be
+able to serve DMARC viewer at the server name specified above.
 ```shell
 a2ensite dmarc-viewer.conf
-service apache2 reload
+# NOTE: Alternatively, if already running, use `systemctl reload apache2`
+systemctl start apache2
 ```
 
 ## Troubleshooting
