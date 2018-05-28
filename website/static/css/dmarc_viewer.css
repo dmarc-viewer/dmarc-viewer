@@ -8120,6 +8120,7 @@ button.close {
 body {
   padding: 50px 0;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  margin-bottom: 40px;
 }
 
 /*
@@ -8128,6 +8129,20 @@ body {
  */
 .navbar-fixed-top {
   border: 0;
+}
+
+.navbar-fixed-top .brand {
+  color: white;
+  padding: 15px 15px;
+  font-size: 22px;
+  line-height: 20px;
+  height: 50px;
+}
+
+.navbar-fixed-top .brand small {
+  color: #f0ad4e;
+  font-variant: small-caps;
+  margin-left: 15px;
 }
 
 /*
@@ -8181,6 +8196,27 @@ body {
 .container-margin, #view-editor, #view-management, #overview, #help {
   width: 80%;
   margin: auto;
+}
+
+footer.navbar {
+  height: 35px;
+  min-height: 35px;
+  border-top: 2px solid #eee;
+}
+
+footer.navbar .navbar-header {
+  float: right;
+  padding: 5px 15px;
+}
+
+footer.navbar .navbar-header a span, footer.navbar .navbar-header a img {
+  vertical-align: middle;
+}
+
+footer.navbar .navbar-header a img {
+  margin-left: 15px;
+  height: 20px;
+  width: 20px;
 }
 
 /*
@@ -8502,14 +8538,6 @@ code {
 
 .right {
   float: right;
-}
-
-.brand {
-  color: white;
-  padding: 15px 15px;
-  font-size: 22px;
-  line-height: 20px;
-  height: 50px;
 }
 
 .circle {
