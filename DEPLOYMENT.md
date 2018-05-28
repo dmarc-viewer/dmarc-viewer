@@ -115,7 +115,7 @@ These commands will fetch the `DMARC viewer` source code repository, install
 the required Python dependencies, populate the db model, and copy all static
 files to the directory created above.
 ```
-git clone https://github.com/lukpueh/dmarc-viewer.git
+git clone https://github.com/dmarc-viewer/dmarc-viewer.git
 cd dmarc-viewer
 pip install -r requirements.txt
 python manage.py makemigrations website
