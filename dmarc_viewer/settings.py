@@ -34,7 +34,7 @@ GEO_LITE2_CITY_DB = os.path.join(BASE_DIR, "GeoLite2-City.mmdb")
 # NOTE: Override the setting here if you want to whitelist multiple names,
 # if you only have one, you can also use the environment variable
 allowed_host = os.environ.get("DMARC_VIEWER_ALLOWED_HOSTS")
-ALLOWED_HOSTS = list(allowed_host) if allowed_host else []
+ALLOWED_HOSTS = [allowed_host] if allowed_host else []
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = (u'::1', u'127.0.0.1')
