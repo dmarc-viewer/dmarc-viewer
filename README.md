@@ -33,7 +33,7 @@ contextual help throughout the website (look out for "**`?`**" symbols).
 ## Contribute
 `DMARC viewer` is an open source project [*(MIT)*](LICENSE). If you want a new
 feature, discover a bug or have some general feedback, feel free to file an
-[*issue*](https://github.com/lukpueh/dmarc-viewer/issues). You can also
+[*issue*](https://github.com/dmarc-viewer/dmarc-viewer/issues). You can also
 [*fork*](https://help.github.com/articles/fork-a-repo/) this repository,
 [**start coding**](CONTRIBUTE.md) and submit [*pull
-requests*](https://github.com/lukpueh/dmarc-viewer/pulls).
+requests*](https://github.com/dmarc-viewer/dmarc-viewer/pulls).

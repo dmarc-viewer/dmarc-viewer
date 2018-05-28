@@ -81,7 +81,7 @@ def clone(request, view_id=None):
         messages.add_message(request, messages.SUCCESS,
                 "Successfully cloned view '%s'" % (view.title,))
 
-    #FIXME: See lukpueh/dmarc-viewer#2
+    #FIXME: See dmarc-viewer/dmarc-viewer#2
     except Exception as e:
         messages.add_message(request, messages.ERROR,
                 "Something went wrong while cloning")
@@ -108,7 +108,7 @@ def edit(request, view_id=None):
         try:
             view = View.objects.get(pk=view_id)
 
-        #FIXME: See lukpueh/dmarc-viewer#2
+        #FIXME: See dmarc-viewer/dmarc-viewer#2
         except Exception as e:
             raise e
 
@@ -218,7 +218,7 @@ def choices_async(request):
 def delete(request, view_id):
     """Delete analysis view by passed view id and redirect to `View Management`
     page. """
-    #FIXME: See lukpueh/dmarc-viewer#2
+    #FIXME: See dmarc-viewer/dmarc-viewer#2
     view = View.objects.get(pk=view_id)
     view.delete()
 
@@ -243,7 +243,7 @@ def order(request):
         messages.add_message(request, messages.SUCCESS,
                 "Successfully sorted views.")
 
-    #FIXME: See lukpueh/dmarc-viewer#2
+    #FIXME: See dmarc-viewer/dmarc-viewer#2
     except Exception as e:
         messages.add_message(request, messages.ERROR, "Sorting did not work.")
         raise e
@@ -254,7 +254,7 @@ def order(request):
 def export_svg(request, view_id):
     """Export analysis view map or line chart as pdf for a passed view (by id).
     """
-    #FIXME: See lukpueh/dmarc-viewer#2
+    #FIXME: See dmarc-viewer/dmarc-viewer#2
 
     # Extract SVG data and type (map or line chart) from POST request
     svg_data = request.POST.get("svg")
@@ -425,7 +425,7 @@ def table_async(request, view_id):
             records = records.filter(date_range_filter)
             records_filtered = records.count()
 
-        #FIXME: See lukpueh/dmarc-viewer#2
+        #FIXME: See dmarc-viewer/dmarc-viewer#2
         except Exception as e:
             pass
 
