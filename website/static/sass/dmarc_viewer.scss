@@ -6,6 +6,7 @@
 $dmarc-blue: #006699;
 $panel-border-radius: 0;
 
+
 /*
  * ---------------------------------------------------------------------------------------------------------------------
  * JUST COPIED THIS FROM BOOTSTRAP TEMPLATE
@@ -15,6 +16,7 @@ $panel-border-radius: 0;
 body {
     padding: 50px 0;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    margin-bottom: 40px;
 }
 /*
  * Top navigation
@@ -84,10 +86,31 @@ body {
     }
 }
 
-
 .container-margin {
     width: 80%;
     margin: auto;
+}
+
+footer.navbar {
+    height: 35px;
+    min-height: 35px;
+    border-top: 2px solid #eee;
+    .navbar-header {
+        float: right;
+        padding: 5px 15px;
+        & a {
+            & span, & img {
+                vertical-align: middle;
+            }
+            & img {
+                margin-left: 15px;
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+    }
+
 }
 
 /*
