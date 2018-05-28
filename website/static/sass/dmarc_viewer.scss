@@ -22,6 +22,18 @@ body {
  */
 .navbar-fixed-top {
     border: 0;
+    .brand {
+        color: white;
+        padding: 15px 15px;
+        font-size: 22px;
+        line-height: 20px;
+        height: 50px;
+        small {
+            color: $brand-warning;
+            font-variant: small-caps;
+            margin-left: 15px;
+        }
+    }
 }
 
 /*
@@ -459,13 +471,6 @@ code {
     float:right;
 }
 
-.brand {
-    color: white;
-    padding: 15px 15px;
-    font-size: 22px;
-    line-height: 20px;
-    height: 50px;
-}
 
 // .anchor {
 //     padding-top: 50px;
