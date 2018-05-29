@@ -1,6 +1,6 @@
 {
   "name": "dmarc-viewer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "DMARC aggregate report viewer",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "/Users/topfpflanze/Dropbox/Master/code/mydmarc"
+    "url": "https://github.com/dmarc-viewer/dmarc-viewer"
   },
   "author": "",
   "license": "MIT",
