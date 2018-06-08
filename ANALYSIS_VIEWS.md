@@ -9,7 +9,7 @@ messages came from, a **time line** chart, showing when messages came, and a
 **table**, providing you with report details.
 
 ## Demo Views
-You can also use  this command to load some pre-generated `analysis views` to
+You can also use this command to load some pre-generated `analysis views` to
 jump right into analyzing your DMARC reports. The imported views can easily be
 modified and extended via the web interface.
 
@@ -25,7 +25,7 @@ reports](REPORTS.md#demo-reports)*.
 Feel free to explore the `loadviews` management command to exchange
 `analysis views` created on the web interface.
 
-The following built-in Django management command, exports `analysis views`
+The following built-in Django management command exports `analysis views`
 to a format that can be read by `loadviews`.
 
 ```shell
