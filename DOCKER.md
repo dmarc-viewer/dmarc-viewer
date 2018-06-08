@@ -1,9 +1,9 @@
 # Quickly deploy DMARC viewer with docker
 
 Make sure that you have [docker installed](https://www.docker.com/get-docker)
-on you system and use `docker-compose` to build and run two containers, one for
+on your system and use `docker-compose` to build and run two containers, one for
 the Django web app and one for the PostgreSQL database. If you prefer an *old
-school* setup, take a look at [`DEPLOYMENT.md`](DEPLOYMENT.md).
+school* non-dockerized setup, take a look at [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ## Variables
 On your host system, export these environment variables. They will be passed
@@ -12,8 +12,8 @@ through to the docker containers to set passwords and
 Don't forget to **replace the values**.
 
 ```shell
-export DMARC_VIEWER_DB_KEY="**** REPLACE WITH DATABSE PASSWORD ****"
-export DMARC_VIEWER_SECRET_KEY="**** REPLACE WITH LARGE RANDOM STRING ****"
+export DMARC_VIEWER_DB_KEY="**** REPLACE WITH DATABASE PASSWORD ****"
+export DMARC_VIEWER_SECRET_KEY="**** REPLACE WITH LONG RANDOM STRING ****"
 export DMARC_VIEWER_ALLOWED_HOSTS="**** REPLACE WITH YOUR DOMAIN OR IP ****"
 ```
 
