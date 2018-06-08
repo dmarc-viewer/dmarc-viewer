@@ -105,7 +105,7 @@ instance of `DMARC viewer`. The environment variables are loaded in
 [`settings.py`](dmarc_viewer/settings.py), which if you prefer, can be patched
 directly as well.
 ```shell
-export DMARC_VIEWER_SECRET_KEY="**** REPLACE WITH LARGE RANDOM STRING ****"
+export DMARC_VIEWER_SECRET_KEY="**** REPLACE WITH LONG RANDOM STRING ****"
 export DMARC_VIEWER_DB_KEY="**** REPLACE WITH DB PASSWORD CREATED ABOVE ****"
 export DMARC_VIEWER_ALLOWED_HOSTS="**** REPLACE WITH YOUR DOMAIN OR IP ****"
 ```
@@ -126,7 +126,7 @@ python manage.py collectstatic
 ## Create WSGI Config File
 *`(deployment only)`*
 
-[`Wsgi`](http://www.wsgi.org/) is the bridge between the webserver and the
+[`WSGI`](http://www.wsgi.org/) is the bridge between the webserver and the
 Python/Django-based `DMARC viewer` application. This snippet will create the
 required configuration file with above defined environment variables so that
 the `DMARC viewer` application can access them from its
