@@ -13,8 +13,8 @@
     3rd party frontend dependencies and are checked into version control.
     This allows users to run the app without using the frontend toolchain
     (node/npm/gulp/sass). {% endcomment %}
-    <script src="{% static "dist/dmarc_viewer.dist.npm.js" %}"></script>
-    <link href="{% static "dist/dmarc_viewer.dist.npm.css" %}" rel="stylesheet">
+    <script src="{% static "dist/dmarc_viewer.dist.npm.js" %}?011"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.npm.css" %}?011" rel="stylesheet">
 
 
     {% comment %} Local sources can be served either as they are or
@@ -26,8 +26,8 @@
     compile SCSS to CSS and create new dist files. {% endcomment %}
 
     {% if TEMPLATE_SETTINGS.use_dist %}
-    <script src="{% static "dist/dmarc_viewer.dist.js" %}"></script>
-    <link href="{% static "dist/dmarc_viewer.dist.css" %}" rel="stylesheet">
+    <script src="{% static "dist/dmarc_viewer.dist.js" %}?011"></script>
+    <link href="{% static "dist/dmarc_viewer.dist.css" %}?011" rel="stylesheet">
 
     {% else %}
     <script src="{% static "js/main.js" %}"></script>
