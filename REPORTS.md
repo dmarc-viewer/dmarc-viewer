@@ -48,7 +48,7 @@ send (outgoing) and two that you receive (incoming) per day, over a whole year
 # In the project root
 
 # Install DMARC demo data scripts
-git clone https://github.com/lukpueh/dmarc-demo-data
+git clone https://github.com/dmarc-viewer/dmarc-demo-data
 pip install -r dmarc-demo-data/requirements.txt
 
 # Generate demo data
