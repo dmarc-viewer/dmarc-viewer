@@ -26,6 +26,8 @@ To analyze your own DMARC aggregate reports you need to deploy an instance of
  1. [import](REPORTS.md) DMARC aggregate reports,
  1. and [create `analysis views`](ANALYSIS_VIEWS.md).
 
+Alternatively you can deploy [`DMARC viewer` using docker](DOCKER.md).
+
 You'll find further usage instructions on the
 [`DMARC viewer` help page](https://dmarc-viewer.abteil.org/help/) and plenty of
 contextual help throughout the website (look out for "**`?`**" symbols).
