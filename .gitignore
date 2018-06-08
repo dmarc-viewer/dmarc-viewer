@@ -4,3 +4,5 @@ node_modules
 GeoLite2-City.mmdb
 
 dmarc-demo-data/
+
+.docker-volumes/
