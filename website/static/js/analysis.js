@@ -37,11 +37,11 @@ var analysis = {
                 if (type == "disposition"){
                     color = d3.scale.ordinal()
                         .domain(["reject", "quarantine", "none"])
-                        .range(["#e41a1c", "#ff7f00", "#4daf4a"]);
+                        .range(["#998ec3", "#f1a340", "#f7f7f7"]);
                 } else {
                     color = d3.scale.ordinal()
                         .domain(["fail", "pass"])
-                        .range(["#e41a1c", "#4daf4a"]);
+                        .range(["#d95f02", "#1b9e77"]);
                 }
 
                 var arc = d3.svg.arc()
@@ -65,8 +65,10 @@ var analysis = {
                     .attr("class", "arc");
 
                 g.append("path")
-                   .attr("d", arc)
-                   .style("fill", function(d) { return color(d.data.label); });
+                    .attr("d", arc)
+                    .attr("stroke-width", 0.5)
+                    .attr("stroke", "lightgrey")
+                    .style("fill", function(d) { return color(d.data.label); });
 
                 // Title
                 if (type == "spf" || type == "dkim")
