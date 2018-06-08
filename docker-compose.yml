@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  dmarc-viewer-db:
+    # Docker container names must be unique
+    # If you plan on using more containers, remove `container_name`
+    # https://docs.docker.com/compose/compose-file/#container_name
+    container_name: dmarc-viewer-db
+    environment:
+      # User and db name defined in dmarc_viewer.settings.DATABASES
+      POSTGRES_DB: dmarc_viewer_db
+      POSTGRES_USER: dmarc_viewer_db
+      POSTGRES_PASSWORD: ${DMARC_VIEWER_DB_KEY}
+    restart: always
+    image: postgres:9.4
+    expose:
+      - "5432"
+    volumes:
+      # Persist container DB data in mounted host system directory
+      - "./.docker-volumes/db:/var/lib/postgresql/data"
+  dmarc-viewer-app:
+    # Docker container names must be unique
+    # If you plan on using more containers, remove `container_name`
+    # https://docs.docker.com/compose/compose-file/#container_name
+    container_name: dmarc-viewer-app
+    environment:
+      # Pass environment variables required in `dmarc_viewer.settings`
+      # Make sure these environment variables are available in the environment,
+      # where you run `docker-compose up`, i.e. your host system
+      - DMARC_VIEWER_DB_KEY
+      - DMARC_VIEWER_ALLOWED_HOSTS
+      - DMARC_VIEWER_SECRET_KEY
+      # The db service name (see above) can be used as path to access the db
+      - DMARC_VIEWER_DB_HOST=dmarc-viewer-db
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount read-only host system directory to access reports
+      - "./.docker-volumes/app:/code/shared:ro"
