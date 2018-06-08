@@ -118,7 +118,7 @@ DATABASES = {
         'NAME': 'dmarc_viewer_db',
         'USER': 'dmarc_viewer_db',
         'PASSWORD': os.environ.get("DMARC_VIEWER_DB_KEY", ""),
-        'HOST': '127.0.0.1'
+        'HOST': os.environ.get("DMARC_VIEWER_DB_HOST", "127.0.0.1")
     }
 }
 
@@ -162,17 +162,17 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'log/dmarc_viewer.log')
-        }
+        # 'file': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     'filename': os.path.join(BASE_DIR, 'log/dmarc_viewer.log')
+        # }
     },
     'loggers': {
-        'parser': {
-            'handlers': ['file'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
-        },
+        # 'parser': {
+        #     'handlers': ['file'],
+        #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        # },
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
