@@ -40,9 +40,9 @@
 },
 {
   "fields": {
-    "color": "#ffd479",
     "multiple_dkim": null,
     "label": "All Mail",
+    "color": "#67a9cf",
     "view": 1
   },
   "model": "website.filterset",
@@ -50,9 +50,9 @@
 },
 {
   "fields": {
-    "color": "#ff2600",
     "multiple_dkim": null,
     "label": "DMARC Fail",
+    "color": "#d95f02",
     "view": 1
   },
   "model": "website.filterset",
@@ -60,9 +60,9 @@
 },
 {
   "fields": {
-    "color": "#ff9300",
     "multiple_dkim": null,
     "label": "Disposition Quarantine",
+    "color": "#b2abd2",
     "view": 2
   },
   "model": "website.filterset",
@@ -70,9 +70,9 @@
 },
 {
   "fields": {
-    "color": "#0433ff",
     "multiple_dkim": null,
     "label": "Dispostion Reject",
+    "color": "#5e3c99",
     "view": 2
   },
   "model": "website.filterset",
@@ -80,9 +80,9 @@
 },
 {
   "fields": {
-    "color": "#ff2600",
     "multiple_dkim": null,
     "label": "Aligned Fail",
+    "color": "#e66101",
     "view": 2
   },
   "model": "website.filterset",
@@ -90,9 +90,9 @@
 },
 {
   "fields": {
-    "color": "#ff2600",
     "multiple_dkim": null,
     "label": "permerror",
+    "color": "#d7191c",
     "view": 3
   },
   "model": "website.filterset",
@@ -100,9 +100,9 @@
 },
 {
   "fields": {
-    "color": "#ff9300",
     "multiple_dkim": null,
     "label": "temperror",
+    "color": "#fdae61",
     "view": 3
   },
   "model": "website.filterset",
@@ -110,9 +110,9 @@
 },
 {
   "fields": {
-    "color": "#00fdff",
     "multiple_dkim": null,
     "label": "neutral",
+    "color": "#abd9e9",
     "view": 3
   },
   "model": "website.filterset",
