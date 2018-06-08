@@ -1,0 +1,7 @@
+dmarc-demo-data
+docker-volumes
+node_modules
+.git
+.DS_Store
+*.mmdb
+*.md
