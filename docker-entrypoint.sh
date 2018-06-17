@@ -23,4 +23,9 @@ python manage.py migrate --noinput
 >&2 echo "Collect and move static files"
 python manage.py collectstatic --noinput
 
+# Change cache dir ownership (see dmarc-viewer/dmarc-viewer#10)
+# The cache dir is created when running `makemigrations` above (as root), but
+# the uwsgi daemon is running with `UWSGI_UID` (see Dockerfile)
+chown ${UWSGI_UID} /var/tmp/django_cache
+
 exec "$@"
