@@ -71,7 +71,7 @@
 {
   "fields": {
     "multiple_dkim": null,
-    "label": "Dispostion Reject",
+    "label": "Disposition Reject",
     "color": "#5e3c99",
     "view": 2
   },
