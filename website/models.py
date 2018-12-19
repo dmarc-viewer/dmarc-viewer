@@ -126,7 +126,7 @@ class Report(models.Model):
         """
         return {
             "domain_cnt" : Report.objects.filter(
-                    report_type=report_type).distinct("domain").count(),
+                    report_type=report_type).values("domain").distinct().count(),
             "report_cnt" : Report.objects.filter(
                     report_type=report_type).count(),
             "message_cnt" : Record.objects.filter(
