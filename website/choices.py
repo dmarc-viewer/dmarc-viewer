@@ -1,6 +1,6 @@
 """
 <Program Name>
-    choice.py
+    choices.py
 
 <Author>
     Lukas Puehringer <luk.puehringer@gmail.com>
