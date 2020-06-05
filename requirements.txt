@@ -1,4 +1,4 @@
-Django==1.11
+Django==1.11.29
 psycopg2==2.7.3.2
 django-bootstrap3==9.1.0
 django-formset-js==0.5.0
