@@ -7,10 +7,6 @@ domains are used and abused. Moreover, with `DMARC viewer` you can create and
 store custom `analysis views` that filter reports based on the criteria you are
 interested in.
 
-## Live Demo
-A  `DMARC viewer` demo is available at
-[dmarc-viewer.abteil.org](https://dmarc-viewer.abteil.org).
-
 
 ## Configure DNS
 To **receive DMARC aggregate reports** for your domains all you need to do is
@@ -29,7 +25,7 @@ To analyze your own DMARC aggregate reports you need to deploy an instance of
 Alternatively you can deploy [`DMARC viewer` using docker](DOCKER.md).
 
 You'll find further usage instructions on the
-[`DMARC viewer` help page](https://dmarc-viewer.abteil.org/help/) and plenty of
+[`DMARC viewer` help page](website/templates/website/help.html) and plenty of
 contextual help throughout the website (look out for "**`?`**" symbols).
 
 ## Contribute
