@@ -19,9 +19,8 @@ RUN set -ex \
             pcre-dev \
             postgresql-dev \
             libpq \
-            py-psycopg2 \
             cairo-dev \
-    && pip install -U pip \
+    && pip install -U pip psycopg2 \
     && pip install --no-cache-dir -r /requirements.txt \
     && pip install --no-cache-dir uwsgi \
     && find /usr/local \
